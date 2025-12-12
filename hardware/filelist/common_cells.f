@@ -1,4 +1,3 @@
--work common_cells
 -sv
 -d XSIM
 -d VERILATOR

@@ -1,4 +1,3 @@
--work ariane
 -sv
 
 ${COMMON}/rtl/gray_to_bin.sv

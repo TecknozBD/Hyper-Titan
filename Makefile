@@ -4,8 +4,8 @@ export SHELL=/bin/bash
 # General Variables
 ####################################################################################################
 
-EW_HL := | grep -E "WARNING:|ERROR:|" --color=auto
-EW_O := | grep -E "WARNING:|ERROR:" --color=auto || true
+TOP  := hyper_titan_tb_cfg
+TEST := default
 
 ####################################################################################################
 # Directory Variables
@@ -23,6 +23,13 @@ export AXI=${SUBMODULE}/axi
 export COMMON=${SUBMODULE}/common
 export COMMON_CELLS=${SUBMODULE}/common_cells
 export SOC=${SUBMODULE}/SoC
+
+####################################################################################################
+# Command Output Filtering
+####################################################################################################
+
+EW_HL := | grep -E "WARNING:|ERROR:|" --color=auto
+EW_O := | grep -E "WARNING:|ERROR:" --color=auto || true
 
 ####################################################################################################
 # Targets
@@ -51,7 +58,7 @@ submodules:
 
 define COMPILE
 	$(eval BASENAME=$(shell basename $1 .f))
-	echo -e " * ${BASENAME}\033[20G ${LOG}/xvlog_${BASENAME}.log"
+	echo -e " \033[0;33m*\033[0m ${BASENAME}\033[25G ${LOG}/xvlog_${BASENAME}.log"
 	cd ${BUILD} && xvlog -f ${FILELIST}/${BASENAME}.f --log ${LOG}/xvlog_${BASENAME}.log ${EW_O}
 endef
 
@@ -61,5 +68,10 @@ all:
 	@make -s ${LOG}
 	@echo -e "\033[1;33mCOMPILING:\033[0m"
 	@$(foreach file, $(shell find ${FILELIST} -type f -name "*.f"),$(call COMPILE,${file}))
-# TODO XELAB and XSIM steps
+	@echo -e "\033[1;33mELABORATING:\033[0m"
+	@echo -e " \033[0;33m*\033[0m ${TOP}\033[25G ${LOG}/xelab_${TOP}.log"
+	@cd ${BUILD} && xelab work.${TOP} --log ${LOG}/xelab_${TOP}.log ${EW_O}
+	@echo -e "\033[1;33mSIMULATING:\033[0m"
+	@echo -e " \033[0;33m*\033[0m ${TOP}::${TEST} ${LOG}/xsim_${TOP}_${TEST}.log"
+	@cd ${BUILD} && xsim ${TOP} --log ${LOG}/xsim_${TOP}_${TEST}.log --runall ${EW_HL}
 
