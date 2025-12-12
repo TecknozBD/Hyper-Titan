@@ -54,7 +54,7 @@ clean_full:
 
 .PHONY: submodules
 submodules:
-	@git submodule update --init --depth
+	@git submodule update --init --depth 1
 
 define COMPILE
 	$(eval BASENAME=$(shell basename $1 .f))
