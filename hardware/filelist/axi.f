@@ -1,4 +1,3 @@
--work axi
 -sv
 -d XSIM
 -d VERILATOR
