@@ -7,7 +7,7 @@
 | CLINT                              | 0x0000_2000     | 0x0000_2FFF     |
 | PLIC                               | 0x0000_3000     | 0x0000_3FFF     |
 | [UART](./reg_maps/uart.md)         | 0x0000_4000     | 0x0000_4FFF     |
-| DMA                                | 0x0000_5000     | 0x0000_5FFF     |
+| [DMA](./reg_maps/dma.md)           | 0x0000_5000     | 0x0000_5FFF     |
 | SPI_CSR                            | 0x0000_6000     | 0x0000_6FFF     |
 | **RESERVED**                       | **0x0000_7000** | **0x07FF_FFFF** |
 | TCDM                               | 0x0800_0000     | 0x080F_FFFF     |
