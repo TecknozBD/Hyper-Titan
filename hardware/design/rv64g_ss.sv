@@ -4,7 +4,7 @@ module rv64g_ss #() (
 );
 
 ariane #(
-   .DmBaseAddress (),  // TODO
+    .DmBaseAddress (),  // TODO
     .CachedAddrBeg ()  // TODO
 ) (
     .clk_i(clk_i),
@@ -19,7 +19,6 @@ ariane #(
     .axi_req_o(),     // TODO
     .axi_resp_i()     // TODO
 );
-
 
 axi_ram #(
     .MEM_BASE     (), // TODO
@@ -62,8 +61,8 @@ axi_dma #(
 module axi_xbar
 import cf_math_pkg::idx_width;
 #(
-.Cfg                                                    (), //TODO
-. ATOPs                                                 (), //TODO
+  .Cfg                                                    (), //TODO
+  . ATOPs                                                 (), //TODO
   .Connectivity                                         (), //TODO
   .slv_aw_chan_t                                        (), //TODO
   .mst_aw_chan_t                                        (), //TODO
@@ -82,15 +81,15 @@ import cf_math_pkg::idx_width;
   )  
 (
   
-.clk_i                                                  (), //TODO
-.rst_ni                                                 (), //TODO  
-.test_i                                                 (), //TODO  
-.slv_ports_req_i                                        (), //TODO  
-.slv_ports_resp_o                                       (), //TODO  
-.mst_ports_req_o                                        (), //TODO  
-.mst_ports_resp_i                                       (), //TODO  
-.addr_map_i                                             (), //TODO  
-.en_default_mst_port_i                                  (), //TODO  
+.clk_i                                                  (clk_i),   //TODO
+.rst_ni                                                 (arst_ni), //TODO  
+.test_i                                                 (),        //TODO  
+.slv_ports_req_i                                        (),        //TODO  
+.slv_ports_resp_o                                       (),        //TODO  
+.mst_ports_req_o                                        (),        //TODO  
+.mst_ports_resp_i                                       (),        //TODO  
+.addr_map_i                                             (),        //TODO  
+.en_default_mst_port_i                                  (),        //TODO  
 .default_mst_port_i
 );
 
