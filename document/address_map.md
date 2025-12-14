@@ -6,7 +6,7 @@
 | [SYS_CTRL](./reg_maps/sys_ctrl.md) | 0x0000_1000     | 0x0000_1FFF     |
 | CLINT                              | 0x0000_2000     | 0x0000_2FFF     |
 | PLIC                               | 0x0000_3000     | 0x0000_3FFF     |
-| UART                               | 0x0000_4000     | 0x0000_4FFF     |
+| [UART](./reg_maps/uart.md)         | 0x0000_4000     | 0x0000_4FFF     |
 | DMA                                | 0x0000_5000     | 0x0000_5FFF     |
 | SPI_CSR                            | 0x0000_6000     | 0x0000_6FFF     |
 | **RESERVED**                       | **0x0000_7000** | **0x07FF_FFFF** |
