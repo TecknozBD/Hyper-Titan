@@ -4,8 +4,9 @@ export SHELL=/bin/bash
 # General
 ####################################################################################################
 
-TOP  := hyper_titan_tb_cfg
-TEST := default
+TOP     := hyper_titan_tb_cfg
+TEST    := default
+HART_ID := 0
 
 ####################################################################################################
 # Directory
@@ -16,7 +17,6 @@ export HYPER_TITAN=${CURDIR}
 BUILD    := ${HYPER_TITAN}/build
 LOG      := ${HYPER_TITAN}/log
 FILELIST := ${HYPER_TITAN}/hardware/filelist
-SOFTWARE := ${HYPER_TITAN}/software
 
 export SUBMODULE=${HYPER_TITAN}/submodule
 export AXI=${SUBMODULE}/axi
@@ -87,10 +87,10 @@ all:
 .PHONY: test
 test:
 	@make -s ${BUILD}
-	@$(eval TEST_PATH := $(shell find ${SOFTWARE}/source -type f -name "*${TEST}*"))
+	@$(eval TEST_PATH := $(shell find software/source -type f -name "*${TEST}*"))
 	@if [ -z "${TEST_PATH}" ]; then echo -e "\033[1;31mTest file ${TEST} not found!\033[0m"; exit 1; fi
 	@if [ $$(echo "${TEST_PATH}" | wc -w) -gt 1 ]; then echo -e "\033[1;31mMultiple test files found for ${TEST}:\n${TEST_PATH}\033[0m"; exit 1; fi
-	@${RISCV64_GCC} -march=rv32imf -mabi=ilp32f -nostdlib -nostartfiles -T ${SOFTWARE}/linkers/core_${HART_ID}.ld -o ${BUILD}/prog_${HART_ID}.elf ${SOFTWARE}/include/startup.S ${TEST_PATH} -I ${SOFTWARE}/include
+	@${RISCV64_GCC} -march=rv32imf -mabi=ilp32f -nostdlib -nostartfiles -T software/linkers/core_${HART_ID}.ld -o ${BUILD}/prog_${HART_ID}.elf software/include/startup.S ${TEST_PATH} -I software/include
 	@${RISCV64_OBJCOPY} -O verilog ${BUILD}/prog_${HART_ID}.elf ${BUILD}/prog_${HART_ID}.hex
 	@${RISCV64_NM} -n ${BUILD}/prog_${HART_ID}.elf > ${BUILD}/prog_${HART_ID}.sym
 	@${RISCV64_OBJDUMP} -d ${BUILD}/prog_${HART_ID}.elf > ${BUILD}/prog_${HART_ID}.dis
