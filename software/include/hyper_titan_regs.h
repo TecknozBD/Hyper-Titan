@@ -7,6 +7,7 @@
 
 #define SYS_CTRL_BASE      0x00001000
 #define UART_BASE          0x00004000
+#define DMA_BASE           0x00005000
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // SYS_CTRL REGISTERS
@@ -38,5 +39,19 @@
 #define REG_UART_RX_DATA_PEEK  *(volatile int*)(UART_BASE+0x01C)
 #define REG_UART_TX_FIFO_COUNT *(volatile int*)(UART_BASE+0x020)
 #define REG_UART_RX_FIFO_COUNT *(volatile int*)(UART_BASE+0x024)
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// DMA REGISTERS
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#define REG_DMA_CTRL               *(volatile int*)(DMA_BASE+0x000)
+#define REG_DMA_STATUS             *(volatile int*)(DMA_BASE+0x004)
+#define REG_DMA_TRANSFER_SIZE      *(volatile int*)(DMA_BASE+0x008)
+#define REG_DMA_TRANSFER_REMAINING *(volatile int*)(DMA_BASE+0x00C)
+#define REG_DMA_TRANSFER_SIDEBAND  *(volatile int*)(DMA_BASE+0x010)
+#define REG_DMA_SRC_ADDR_LOWER     *(volatile int*)(DMA_BASE+0x020)
+#define REG_DMA_SRC_ADDR_UPPER     *(volatile int*)(DMA_BASE+0x024)
+#define REG_DMA_DEST_ADDR_LOWER    *(volatile int*)(DMA_BASE+0x028)
+#define REG_DMA_DEST_ADDR_UPPER    *(volatile int*)(DMA_BASE+0x02C)
 
 #endif
