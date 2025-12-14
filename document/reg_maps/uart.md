@@ -6,7 +6,7 @@
 | ------------------ | ------ | ------------------- |
 | UART_CTRL          | 0x000  | Control Register    |
 | UART_REQ_ID        | 0x004  | Request ID          |
-| UART_GNT_PEEKING   | 0x008  | Grant Peek          |
+| UART_GNT_PEEK      | 0x008  | Grant Peek          |
 | UART_GNT_POP       | 0x00C  | Grant Pop           |
 | UART_CFG           | 0x010  | Clock Divider       |
 | UART_TX_DATA       | 0x014  | Transmit Data       |
@@ -44,7 +44,7 @@ Description: Contains the requester ID for the UART device.
 | ---- | ---- | ------ | ----------- | ---------------------------- |
 | 31:0 | ID   | RW     | 0           | Requester ID for UART device |
 
-### UART_GNT_PEEKING
+### UART_GNT_PEEK
 
 Offset: 0x008
 Description: Peek Granted Requester ID to the UART device.

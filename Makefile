@@ -1,14 +1,15 @@
 export SHELL=/bin/bash
 
 ####################################################################################################
-# General Variables
+# General
 ####################################################################################################
 
-TOP  := hyper_titan_tb_cfg
-TEST := default
+TOP     := hyper_titan_tb_cfg
+TEST    := default
+HART_ID := 0
 
 ####################################################################################################
-# Directory Variables
+# Directory
 ####################################################################################################
 
 export HYPER_TITAN=${CURDIR}
@@ -18,11 +19,19 @@ LOG      := ${HYPER_TITAN}/log
 FILELIST := ${HYPER_TITAN}/hardware/filelist
 
 export SUBMODULE=${HYPER_TITAN}/submodule
-
 export AXI=${SUBMODULE}/axi
 export COMMON=${SUBMODULE}/common
 export COMMON_CELLS=${SUBMODULE}/common_cells
 export SOC=${SUBMODULE}/SoC
+
+####################################################################################################
+# Tools
+####################################################################################################
+
+RISCV64_GCC     ?= riscv64-unknown-elf-gcc
+RISCV64_OBJCOPY ?= riscv64-unknown-elf-objcopy
+RISCV64_NM      ?= riscv64-unknown-elf-nm
+RISCV64_OBJDUMP ?= riscv64-unknown-elf-objdump
 
 ####################################################################################################
 # Command Output Filtering
@@ -75,3 +84,13 @@ all:
 	@echo -e " \033[0;33m*\033[0m ${TOP}::${TEST} ${LOG}/xsim_${TOP}_${TEST}.log"
 	@cd ${BUILD} && xsim ${TOP} --log ${LOG}/xsim_${TOP}_${TEST}.log --runall ${EW_HL}
 
+.PHONY: test
+test:
+	@make -s ${BUILD}
+	@$(eval TEST_PATH := $(shell find software/source -type f -name "*${TEST}*"))
+	@if [ -z "${TEST_PATH}" ]; then echo -e "\033[1;31mTest file ${TEST} not found!\033[0m"; exit 1; fi
+	@if [ $$(echo "${TEST_PATH}" | wc -w) -gt 1 ]; then echo -e "\033[1;31mMultiple test files found for ${TEST}:\n${TEST_PATH}\033[0m"; exit 1; fi
+	@${RISCV64_GCC} -march=rv32imf -mabi=ilp32f -nostdlib -nostartfiles -T software/linkers/core_${HART_ID}.ld -o build/prog_${HART_ID}.elf software/include/startup.S ${TEST_PATH} -I software/include
+	@${RISCV64_OBJCOPY} -O verilog build/prog_${HART_ID}.elf build/prog_${HART_ID}.hex
+	@${RISCV64_NM} -n build/prog_${HART_ID}.elf > build/prog_${HART_ID}.sym
+	@${RISCV64_OBJDUMP} -d build/prog_${HART_ID}.elf > build/prog_${HART_ID}.dis
