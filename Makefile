@@ -73,6 +73,7 @@ endef
 
 .PHONY: all
 all:
+	@make -s clean_full
 	@make -s ${BUILD}
 	@make -s ${LOG}
 	@echo -e "\033[1;33mCOMPILING:\033[0m"

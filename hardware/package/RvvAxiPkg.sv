@@ -19,76 +19,11 @@
 //   and UVM/verification environments.
 //------------------------------------------------------------------------------
 
+`include "axi/typedef.svh"
+
 package RvvAxiPkg;
 
-  typedef struct packed {
-    logic        valid;
-    logic [31:0] addr;
-    logic [2:0]  prot;
-    logic [5:0]  id;
-    logic [7:0]  len;
-    logic [2:0]  size;
-    logic [1:0]  burst;
-    logic        lock;
-    logic [3:0]  cache;
-    logic [3:0]  qos;
-    logic [3:0]  region;
-  } axi_aw_req_t;
-
-  typedef struct packed {
-    logic ready;
-  } axi_aw_rsp_t;
-
-  typedef struct packed {
-    logic         valid;
-    logic [127:0] data;
-    logic         last;
-    logic [15:0]  strb;
-  } axi_w_req_t;
-
-  typedef struct packed {
-    logic ready;
-  } axi_w_rsp_t;
-
-  typedef struct packed {
-    logic ready;
-  } axi_b_req_t;
-
-  typedef struct packed {
-    logic        valid;
-    logic [5:0]  id;
-    logic [1:0]  resp;
-  } axi_b_rsp_t;
-
-  typedef struct packed {
-    logic        valid;
-    logic [31:0] addr;
-    logic [2:0]  prot;
-    logic [5:0]  id;
-    logic [7:0]  len;
-    logic [2:0]  size;
-    logic [1:0]  burst;
-    logic        lock;
-    logic [3:0]  cache;
-    logic [3:0]  qos;
-    logic [3:0]  region;
-  } axi_ar_req_t;
-
-  typedef struct packed {
-    logic ready;
-  } axi_ar_rsp_t;
-
-  typedef struct packed {
-    logic ready;
-  } axi_r_req_t;
-
-  typedef struct packed {
-    logic         valid;
-    logic [127:0] data;
-    logic [5:0]   id;
-    logic [1:0]   resp;
-    logic         last;
-  } axi_r_rsp_t;
+  `define AXI_TYPEDEF_ALL(rvv_axi, logic [31:0], logic [5:0], logic [127:0], logic [15:0], logic [7:0])
 
   typedef struct packed {
   
