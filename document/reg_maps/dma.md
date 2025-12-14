@@ -1,6 +1,6 @@
 # Direct Memory Access (DMA) Controller Register Map
 
-**Base Address:** `0x0000_5000`
+**Base Address:** `0x0000_F000`
 
 | Register Name          | Offset | Description                      |
 | ---------------------- | ------ | -------------------------------- |

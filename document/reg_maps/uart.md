@@ -1,6 +1,6 @@
 # Universal Asynchronous Receiver-Transmitter (UART) Register Map
 
-**Base Address:** `0x0000_4000`
+**Base Address:** `0x0000_5000`
 
 | Register Name      | Offset | Description         |
 | ------------------ | ------ | ------------------- |
