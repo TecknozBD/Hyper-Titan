@@ -2,14 +2,17 @@
 
 | Device                             | Base Address    | Ending Address  |
 | ---------------------------------- | --------------- | --------------- |
-| **RESERVED**                       | **0x0000_0000** | **0x0000_0FFF** |
-| [SYS_CTRL](./reg_maps/sys_ctrl.md) | 0x0000_1000     | 0x0000_1FFF     |
-| CLINT                              | 0x0000_2000     | 0x0000_2FFF     |
-| PLIC                               | 0x0000_3000     | 0x0000_3FFF     |
-| [UART](./reg_maps/uart.md)         | 0x0000_4000     | 0x0000_4FFF     |
-| [DMA](./reg_maps/dma.md)           | 0x0000_5000     | 0x0000_5FFF     |
+| ITCM_E_CORE                        | 0x0000_0000     | 0x0000_1FFF     |
+| [SYS_CTRL](./reg_maps/sys_ctrl.md) | 0x0000_2000     | 0x0000_2FFF     |
+| CLINT                              | 0x0000_3000     | 0x0000_3FFF     |
+| PLIC                               | 0x0000_4000     | 0x0000_4FFF     |
+| [UART](./reg_maps/uart.md)         | 0x0000_5000     | 0x0000_5FFF     |
 | SPI_CSR                            | 0x0000_6000     | 0x0000_6FFF     |
-| **RESERVED**                       | **0x0000_7000** | **0x07FF_FFFF** |
+| **RESERVED**                       | **0x0000_7000** | **0x0000_EFFF** |
+| [DMA](./reg_maps/dma.md)           | 0x0000_F000     | 0x0000_FFFF     |
+| DTCM_E_CORE                        | 0x0001_0000     | 0x0001_7FFF     |
+| **RESERVED**                       | **0x0001_8000** | **0x0002_FFFF** |
+| **CSR RESERVED**                   | **0x0003_0000** | **0x07FF_FFFF** |
 | TCDM                               | 0x0800_0000     | 0x080F_FFFF     |
 | **RESERVED**                       | **0x0810_0000** | **0x08FF_FFFF** |
 | BOOT_ROM                           | 0x0900_0000     | 0x0900_FFFF     |

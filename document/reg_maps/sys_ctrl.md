@@ -1,6 +1,6 @@
 # System Control (SYS_CTRL) Register Map
 
-**Base Address:** `0x0000_1000`
+**Base Address:** `0x0000_2000`
 
 | Register Name      | Offset | Description                          |
 | ------------------ | ------ | ------------------------------------ |
