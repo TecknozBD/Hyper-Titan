@@ -13,17 +13,18 @@
 // SYS_CTRL REGISTERS
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#define REG_E_CORE_CLK_RST     *(volatile int*)(SYS_CTRL_BASE+0x000)
-#define REG_P_CORE_CLK_RST     *(volatile int*)(SYS_CTRL_BASE+0x004)
-#define REG_CORE_LINK_CLK_RST  *(volatile int*)(SYS_CTRL_BASE+0x008)
-#define REG_SYS_LINK_CLK_RST   *(volatile int*)(SYS_CTRL_BASE+0x00C)
-#define REG_BOOT_ADDR_E_CORE   *(volatile int*)(SYS_CTRL_BASE+0x040)
-#define REG_BOOT_ADDR_P_CORE   *(volatile int*)(SYS_CTRL_BASE+0x044)
-#define REG_BOOT_HARTID_E_CORE *(volatile int*)(SYS_CTRL_BASE+0x080)
-#define REG_BOOT_HARTID_P_CORE *(volatile int*)(SYS_CTRL_BASE+0x084)
-#define REG_PLL_CFG_E_CORE     *(volatile int*)(SYS_CTRL_BASE+0x0C0)
-#define REG_PLL_CFG_P_CORE     *(volatile int*)(SYS_CTRL_BASE+0x0C4)
-#define REG_PLL_CFG_SYS_LINK   *(volatile int*)(SYS_CTRL_BASE+0x0CC)
+#define REG_E_CORE_CLK_RST      *(volatile int*)(SYS_CTRL_BASE+0x000)
+#define REG_P_CORE_CLK_RST      *(volatile int*)(SYS_CTRL_BASE+0x004)
+#define REG_CORE_LINK_CLK_RST   *(volatile int*)(SYS_CTRL_BASE+0x008)
+#define REG_SYS_LINK_CLK_RST    *(volatile int*)(SYS_CTRL_BASE+0x00C)
+#define REG_PERIPH_LINK_CLK_RST *(volatile int*)(SYS_CTRL_BASE+0x010)
+#define REG_BOOT_ADDR_E_CORE    *(volatile int*)(SYS_CTRL_BASE+0x040)
+#define REG_BOOT_ADDR_P_CORE    *(volatile int*)(SYS_CTRL_BASE+0x044)
+#define REG_BOOT_HARTID_E_CORE  *(volatile int*)(SYS_CTRL_BASE+0x080)
+#define REG_BOOT_HARTID_P_CORE  *(volatile int*)(SYS_CTRL_BASE+0x084)
+#define REG_PLL_CFG_E_CORE      *(volatile int*)(SYS_CTRL_BASE+0x0C0)
+#define REG_PLL_CFG_P_CORE      *(volatile int*)(SYS_CTRL_BASE+0x0C4)
+#define REG_PLL_CFG_SYS_LINK    *(volatile int*)(SYS_CTRL_BASE+0x0CC)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // UART REGISTERS

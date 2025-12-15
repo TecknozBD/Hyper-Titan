@@ -8,21 +8,22 @@
 // ============================================================================
 
 module sys_ctrl_reg_if
-import sys_ctrl_pkg::REG_E_CORE_CLK_RST;
-import sys_ctrl_pkg::REG_P_CORE_CLK_RST;
-import sys_ctrl_pkg::REG_CORE_LINK_CLK_RST;
-import sys_ctrl_pkg::REG_SYS_LINK_CLK_RST;
-import sys_ctrl_pkg::REG_BOOT_ADDR_E_CORE;
-import sys_ctrl_pkg::REG_BOOT_ADDR_P_CORE;
-import sys_ctrl_pkg::REG_BOOT_HARTID_E_CORE;
-import sys_ctrl_pkg::REG_BOOT_HARTID_P_CORE;
-import sys_ctrl_pkg::REG_PLL_CFG_E_CORE;
-import sys_ctrl_pkg::REG_PLL_CFG_P_CORE;
-import sys_ctrl_pkg::REG_PLL_CFG_SYS_LINK;
-  #(
+  import sys_ctrl_pkg::REG_E_CORE_CLK_RST;
+  import sys_ctrl_pkg::REG_P_CORE_CLK_RST;
+  import sys_ctrl_pkg::REG_CORE_LINK_CLK_RST;
+  import sys_ctrl_pkg::REG_SYS_LINK_CLK_RST;
+  import sys_ctrl_pkg::REG_PERIPH_LINK_CLK_RST;
+  import sys_ctrl_pkg::REG_BOOT_ADDR_E_CORE;
+  import sys_ctrl_pkg::REG_BOOT_ADDR_P_CORE;
+  import sys_ctrl_pkg::REG_BOOT_HARTID_E_CORE;
+  import sys_ctrl_pkg::REG_BOOT_HARTID_P_CORE;
+  import sys_ctrl_pkg::REG_PLL_CFG_E_CORE;
+  import sys_ctrl_pkg::REG_PLL_CFG_P_CORE;
+  import sys_ctrl_pkg::REG_PLL_CFG_SYS_LINK;
+#(
     localparam int ADDR_WIDTH = 12,  // Address bus width (supports 4KB address space)
     localparam int DATA_WIDTH = 32   // Data bus width
-  ) (
+) (
     // ========================================================================
     // Global Signals
     // ========================================================================
@@ -50,23 +51,32 @@ import sys_ctrl_pkg::REG_PLL_CFG_SYS_LINK;
     // E_CORE_CLK_RST Register Outputs
     // ========================================================================
     output logic e_core_clk_en_o,  // Clock enable for efficiency core
-    output logic e_core_rst_no,   // Active-low reset for efficiency core
+    output logic e_core_rst_no,    // Active-low reset for efficiency core
 
     // ========================================================================
     // P_CORE_CLK_RST Register Outputs
     // ========================================================================
     output logic p_core_clk_en_o,  // Clock enable for performance core
-    output logic p_core_rst_no,   // Active-low reset for performance core
+    output logic p_core_rst_no,    // Active-low reset for performance core
 
     // ========================================================================
     // CORE_LINK_CLK_RST Register Outputs
     // ========================================================================
-    output logic core_link_rst_no,  // Active-low reset for core link
+    output logic       core_link_clk_en_o,  // Clock enable for core link
+    output logic       core_link_rst_no,    // Active-low reset for core link
+    input  logic [1:0] core_link_clk_src_i, // Clock source selection for core link
 
     // ========================================================================
     // SYS_LINK_CLK_RST Register Outputs
     // ========================================================================
-    output logic sys_link_rst_no,   // Active-low reset for system link
+    output logic sys_link_clk_en_o,  // Clock enable for system link
+    output logic sys_link_rst_no,    // Active-low reset for system link
+
+    // ========================================================================
+    // PERIPH_LINK_CLK_RST Register Outputs
+    // ========================================================================
+    output logic periph_link_clk_en_o,  // Clock enable for peripheral link
+    output logic periph_link_rst_no,    // Active-low reset for peripheral link
 
     // ========================================================================
     // BOOT_ADDR_E_CORE Register Output
@@ -91,31 +101,31 @@ import sys_ctrl_pkg::REG_PLL_CFG_SYS_LINK;
     // ========================================================================
     // PLL_CFG_E_CORE Register Interface
     // ========================================================================
-    output logic [3:0]  pll_ref_div_e_core_o,   // Reference divider for E core PLL
-    output logic [11:0] pll_fb_div_e_core_o,    // Feedback divider for E core PLL
-    input  logic        pll_locked_e_core_i,    // PLL lock status input
+    output logic [ 3:0] pll_ref_div_e_core_o,  // Reference divider for E core PLL
+    output logic [11:0] pll_fb_div_e_core_o,   // Feedback divider for E core PLL
+    input  logic        pll_locked_e_core_i,   // PLL lock status input
 
     // ========================================================================
     // PLL_CFG_P_CORE Register Interface
     // ========================================================================
-    output logic [3:0]  pll_ref_div_p_core_o,   // Reference divider for P core PLL
-    output logic [11:0] pll_fb_div_p_core_o,    // Feedback divider for P core PLL
-    input  logic        pll_locked_p_core_i,    // PLL lock status input
+    output logic [ 3:0] pll_ref_div_p_core_o,  // Reference divider for P core PLL
+    output logic [11:0] pll_fb_div_p_core_o,   // Feedback divider for P core PLL
+    input  logic        pll_locked_p_core_i,   // PLL lock status input
 
     // ========================================================================
     // PLL_CFG_SYS_LINK Register Interface
     // ========================================================================
-    output logic [3:0]  pll_ref_div_sys_link_o, // Reference divider for system link PLL
-    output logic [11:0] pll_fb_div_sys_link_o,  // Feedback divider for system link PLL
-    input  logic        pll_locked_sys_link_i   // PLL lock status input
-  );
+    output logic [ 3:0] pll_ref_div_sys_link_o,  // Reference divider for system link PLL
+    output logic [11:0] pll_fb_div_sys_link_o,   // Feedback divider for system link PLL
+    input  logic        pll_locked_sys_link_i    // PLL lock status input
+);
 
   // ==========================================================================
   // Write Logic (Combinational)
   // ==========================================================================
   always_comb begin : write_logic
-    mem_wresp_o = 2'b10;  // Default: SLVERR
-    
+    mem_wresp_o = 2'b10;
+
     if (mem_we_i) begin
       case (mem_waddr_i)
         REG_E_CORE_CLK_RST: begin
@@ -134,6 +144,11 @@ import sys_ctrl_pkg::REG_PLL_CFG_SYS_LINK;
         end
 
         REG_SYS_LINK_CLK_RST: begin
+          // Control register: Always writable
+          mem_wresp_o = 2'b00;  // OKAY
+        end
+
+        REG_PERIPH_LINK_CLK_RST: begin
           // Control register: Always writable
           mem_wresp_o = 2'b00;  // OKAY
         end
@@ -185,8 +200,9 @@ import sys_ctrl_pkg::REG_PLL_CFG_SYS_LINK;
   // Read Logic (Combinational)
   // ==========================================================================
   always_comb begin : read_logic
-    mem_rresp_o = 2'b10;  // Default: SLVERR
-    
+    mem_rresp_o = 2'b10;
+    mem_rdata_o = 32'h0;
+
     if (mem_re_i) begin
       case (mem_raddr_i)
         REG_E_CORE_CLK_RST: begin
@@ -204,13 +220,19 @@ import sys_ctrl_pkg::REG_PLL_CFG_SYS_LINK;
         REG_CORE_LINK_CLK_RST: begin
           // Read control register
           mem_rresp_o = 2'b00;  // OKAY
-          mem_rdata_o = {30'b0, core_link_rst_no, 1'b0};
+          mem_rdata_o = {28'b0, core_link_clk_src_i, core_link_rst_no, core_link_clk_en_o};
         end
 
         REG_SYS_LINK_CLK_RST: begin
           // Read control register
           mem_rresp_o = 2'b00;  // OKAY
-          mem_rdata_o = {30'b0, sys_link_rst_no, 1'b0};
+          mem_rdata_o = {30'b0, sys_link_rst_no, sys_link_clk_en_o};
+        end
+
+        REG_PERIPH_LINK_CLK_RST: begin
+          // Read control register
+          mem_rresp_o = 2'b00;  // OKAY
+          mem_rdata_o = {30'b0, periph_link_rst_no, periph_link_clk_en_o};
         end
 
         REG_BOOT_ADDR_E_CORE: begin
@@ -240,29 +262,26 @@ import sys_ctrl_pkg::REG_PLL_CFG_SYS_LINK;
         REG_PLL_CFG_E_CORE: begin
           // Read PLL configuration register 
           mem_rresp_o = 2'b00;  // OKAY
-          mem_rdata_o = {15'b0, pll_locked_e_core_i, 
-                         pll_fb_div_e_core_o, pll_ref_div_e_core_o};
+          mem_rdata_o = {15'b0, pll_locked_e_core_i, pll_fb_div_e_core_o, pll_ref_div_e_core_o};
         end
 
         REG_PLL_CFG_P_CORE: begin
           // Read PLL configuration register
           mem_rresp_o = 2'b00;  // OKAY
-          mem_rdata_o = {15'b0, pll_locked_p_core_i, 
-                         pll_fb_div_p_core_o, pll_ref_div_p_core_o};
+          mem_rdata_o = {15'b0, pll_locked_p_core_i, pll_fb_div_p_core_o, pll_ref_div_p_core_o};
         end
 
         REG_PLL_CFG_SYS_LINK: begin
           // Read PLL configuration register
           mem_rresp_o = 2'b00;  // OKAY
-          mem_rdata_o = {15'b0, pll_locked_sys_link_i, 
-                         pll_fb_div_sys_link_o, pll_ref_div_sys_link_o};
+          mem_rdata_o = {
+            15'b0, pll_locked_sys_link_i, pll_fb_div_sys_link_o, pll_ref_div_sys_link_o
+          };
         end
 
         default: begin
-          // Unmapped address space
-          mem_rresp_o = 2'b10;  // SLVERR
-          mem_rdata_o = 32'h0;
         end
+
       endcase
     end
   end
@@ -273,16 +292,20 @@ import sys_ctrl_pkg::REG_PLL_CFG_SYS_LINK;
   always_ff @(posedge clk_i or negedge arst_ni) begin
     if (~arst_ni) begin
       // Reset all registers to default values 
-      e_core_clk_en_o     <= 1'b0;
-      e_core_rst_no      <= 1'b0;
-      p_core_clk_en_o     <= 1'b0;
-      p_core_rst_no      <= 1'b0;
-      core_link_rst_no   <= 1'b0;
-      sys_link_rst_no    <= 1'b0;
-      boot_addr_e_core_o  <= '0;
-      boot_addr_p_core_o  <= '0;
-      boot_hartid_e_core_o<= '0;
-      boot_hartid_p_core_o<= 32'h0000_0001;
+      e_core_clk_en_o        <= 1'b0;
+      e_core_rst_no          <= 1'b0;
+      p_core_clk_en_o        <= 1'b0;
+      p_core_rst_no          <= 1'b0;
+      core_link_clk_en_o     <= 1'b1;
+      core_link_rst_no       <= 1'b1;
+      sys_link_clk_en_o      <= 1'b1;
+      sys_link_rst_no        <= 1'b1;
+      periph_link_clk_en_o   <= 1'b1;
+      periph_link_rst_no     <= 1'b1;
+      boot_addr_e_core_o     <= '0;
+      boot_addr_p_core_o     <= '0;
+      boot_hartid_e_core_o   <= '0;
+      boot_hartid_p_core_o   <= 32'h0000_0001;
       pll_ref_div_e_core_o   <= '0;
       pll_fb_div_e_core_o    <= '0;
       pll_ref_div_p_core_o   <= '0;
@@ -295,20 +318,27 @@ import sys_ctrl_pkg::REG_PLL_CFG_SYS_LINK;
         unique case (mem_waddr_i)
           REG_E_CORE_CLK_RST: begin
             e_core_clk_en_o <= mem_wdata_i[0];
-            e_core_rst_no  <= mem_wdata_i[1];
+            e_core_rst_no   <= mem_wdata_i[1];
           end
 
           REG_P_CORE_CLK_RST: begin
             p_core_clk_en_o <= mem_wdata_i[0];
-            p_core_rst_no  <= mem_wdata_i[1];
+            p_core_rst_no   <= mem_wdata_i[1];
           end
 
           REG_CORE_LINK_CLK_RST: begin
-            core_link_rst_no <= mem_wdata_i[1];
+            core_link_clk_en_o <= mem_wdata_i[0];
+            core_link_rst_no   <= mem_wdata_i[1];
           end
 
           REG_SYS_LINK_CLK_RST: begin
-            sys_link_rst_no <= mem_wdata_i[1];
+            sys_link_clk_en_o <= mem_wdata_i[0];
+            sys_link_rst_no   <= mem_wdata_i[1];
+          end
+
+          REG_PERIPH_LINK_CLK_RST: begin
+            periph_link_clk_en_o <= mem_wdata_i[0];
+            periph_link_rst_no   <= mem_wdata_i[1];
           end
 
           REG_BOOT_ADDR_E_CORE: begin
