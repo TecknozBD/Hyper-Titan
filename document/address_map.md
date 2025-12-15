@@ -13,7 +13,7 @@
 | DTCM_E_CORE                        | 0x0001_0000     | 0x0001_7FFF     |
 | **RESERVED**                       | **0x0001_8000** | **0x0002_FFFF** |
 | **CSR RESERVED**                   | **0x0003_0000** | **0x07FF_FFFF** |
-| TCDM                               | 0x0800_0000     | 0x080F_FFFF     |
+| TCDM_P_CORE                        | 0x0800_0000     | 0x080F_FFFF     |
 | **RESERVED**                       | **0x0810_0000** | **0x08FF_FFFF** |
 | BOOT_ROM                           | 0x0900_0000     | 0x0900_FFFF     |
 | **RESERVED**                       | **0x0901_0000** | **0x0FFF_FFFF** |
