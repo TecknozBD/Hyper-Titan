@@ -8,20 +8,20 @@
 // ============================================================================
 
 module sys_ctrl_reg_if
-  import sys_ctrl_pkg::REG_E_CORE_CLK_RST;
-  import sys_ctrl_pkg::REG_P_CORE_CLK_RST;
-  import sys_ctrl_pkg::REG_CORE_LINK_CLK_RST;
-  import sys_ctrl_pkg::REG_SYS_LINK_CLK_RST;
-  import sys_ctrl_pkg::REG_PERIPH_LINK_CLK_RST;
-  import sys_ctrl_pkg::REG_BOOT_ADDR_E_CORE;
-  import sys_ctrl_pkg::REG_BOOT_ADDR_P_CORE;
-  import sys_ctrl_pkg::REG_BOOT_HARTID_E_CORE;
-  import sys_ctrl_pkg::REG_BOOT_HARTID_P_CORE;
-  import sys_ctrl_pkg::REG_PLL_CFG_E_CORE;
-  import sys_ctrl_pkg::REG_PLL_CFG_P_CORE;
-  import sys_ctrl_pkg::REG_PLL_CFG_SYS_LINK;
+  import hyper_titan_pkg::REG_OFFSET_E_CORE_CLK_RST;
+  import hyper_titan_pkg::REG_OFFSET_P_CORE_CLK_RST;
+  import hyper_titan_pkg::REG_OFFSET_CORE_LINK_CLK_RST;
+  import hyper_titan_pkg::REG_OFFSET_SYS_LINK_CLK_RST;
+  import hyper_titan_pkg::REG_OFFSET_PERIPH_LINK_CLK_RST;
+  import hyper_titan_pkg::REG_OFFSET_BOOT_ADDR_E_CORE;
+  import hyper_titan_pkg::REG_OFFSET_BOOT_ADDR_P_CORE;
+  import hyper_titan_pkg::REG_OFFSET_BOOT_HARTID_E_CORE;
+  import hyper_titan_pkg::REG_OFFSET_BOOT_HARTID_P_CORE;
+  import hyper_titan_pkg::REG_OFFSET_PLL_CFG_E_CORE;
+  import hyper_titan_pkg::REG_OFFSET_PLL_CFG_P_CORE;
+  import hyper_titan_pkg::REG_OFFSET_PLL_CFG_SYS_LINK;
 #(
-    localparam int ADDR_WIDTH = 12,  // Address bus width (supports 4KB address space)
+    localparam int ADDR_WIDTH = 32,  // Address bus width (supports 4KB address space)
     localparam int DATA_WIDTH = 32   // Data bus width
 ) (
     // ========================================================================
@@ -128,62 +128,62 @@ module sys_ctrl_reg_if
 
     if (mem_we_i) begin
       case (mem_waddr_i)
-        REG_E_CORE_CLK_RST: begin
+        REG_OFFSET_E_CORE_CLK_RST: begin
           // Control register: Always writable
           mem_wresp_o = 2'b00;  // OKAY
         end
 
-        REG_P_CORE_CLK_RST: begin
+        REG_OFFSET_P_CORE_CLK_RST: begin
           // Control register: Always writable
           mem_wresp_o = 2'b00;  // OKAY
         end
 
-        REG_CORE_LINK_CLK_RST: begin
+        REG_OFFSET_CORE_LINK_CLK_RST: begin
           // Control register: Always writable
           mem_wresp_o = 2'b00;  // OKAY
         end
 
-        REG_SYS_LINK_CLK_RST: begin
+        REG_OFFSET_SYS_LINK_CLK_RST: begin
           // Control register: Always writable
           mem_wresp_o = 2'b00;  // OKAY
         end
 
-        REG_PERIPH_LINK_CLK_RST: begin
+        REG_OFFSET_PERIPH_LINK_CLK_RST: begin
           // Control register: Always writable
           mem_wresp_o = 2'b00;  // OKAY
         end
 
-        REG_BOOT_ADDR_E_CORE: begin
+        REG_OFFSET_BOOT_ADDR_E_CORE: begin
           // Boot address register: Always writable
           mem_wresp_o = 2'b00;  // OKAY
         end
 
-        REG_BOOT_ADDR_P_CORE: begin
+        REG_OFFSET_BOOT_ADDR_P_CORE: begin
           // Boot address register: Always writable
           mem_wresp_o = 2'b00;  // OKAY
         end
 
-        REG_BOOT_HARTID_E_CORE: begin
+        REG_OFFSET_BOOT_HARTID_E_CORE: begin
           // HART_ID register: Always writable
           mem_wresp_o = 2'b00;  // OKAY
         end
 
-        REG_BOOT_HARTID_P_CORE: begin
+        REG_OFFSET_BOOT_HARTID_P_CORE: begin
           // HART_ID register: Always writable
           mem_wresp_o = 2'b00;  // OKAY
         end
 
-        REG_PLL_CFG_E_CORE: begin
+        REG_OFFSET_PLL_CFG_E_CORE: begin
           // PLL configuration register: Always writable (except RO bit 16)
           mem_wresp_o = 2'b00;  // OKAY
         end
 
-        REG_PLL_CFG_P_CORE: begin
+        REG_OFFSET_PLL_CFG_P_CORE: begin
           // PLL configuration register: Always writable (except RO bit 16)
           mem_wresp_o = 2'b00;  // OKAY
         end
 
-        REG_PLL_CFG_SYS_LINK: begin
+        REG_OFFSET_PLL_CFG_SYS_LINK: begin
           // PLL configuration register: Always writable (except RO bit 16)
           mem_wresp_o = 2'b00;  // OKAY
         end
@@ -205,73 +205,73 @@ module sys_ctrl_reg_if
 
     if (mem_re_i) begin
       case (mem_raddr_i)
-        REG_E_CORE_CLK_RST: begin
+        REG_OFFSET_E_CORE_CLK_RST: begin
           // Read control register 
           mem_rresp_o = 2'b00;  // OKAY
           mem_rdata_o = {30'b0, e_core_rst_no, e_core_clk_en_o};
         end
 
-        REG_P_CORE_CLK_RST: begin
+        REG_OFFSET_P_CORE_CLK_RST: begin
           // Read control register
           mem_rresp_o = 2'b00;  // OKAY
           mem_rdata_o = {30'b0, p_core_rst_no, p_core_clk_en_o};
         end
 
-        REG_CORE_LINK_CLK_RST: begin
+        REG_OFFSET_CORE_LINK_CLK_RST: begin
           // Read control register
           mem_rresp_o = 2'b00;  // OKAY
           mem_rdata_o = {28'b0, core_link_clk_src_i, core_link_rst_no, core_link_clk_en_o};
         end
 
-        REG_SYS_LINK_CLK_RST: begin
+        REG_OFFSET_SYS_LINK_CLK_RST: begin
           // Read control register
           mem_rresp_o = 2'b00;  // OKAY
           mem_rdata_o = {30'b0, sys_link_rst_no, sys_link_clk_en_o};
         end
 
-        REG_PERIPH_LINK_CLK_RST: begin
+        REG_OFFSET_PERIPH_LINK_CLK_RST: begin
           // Read control register
           mem_rresp_o = 2'b00;  // OKAY
           mem_rdata_o = {30'b0, periph_link_rst_no, periph_link_clk_en_o};
         end
 
-        REG_BOOT_ADDR_E_CORE: begin
+        REG_OFFSET_BOOT_ADDR_E_CORE: begin
           // Read boot address register
           mem_rresp_o = 2'b00;  // OKAY
           mem_rdata_o = boot_addr_e_core_o;
         end
 
-        REG_BOOT_ADDR_P_CORE: begin
+        REG_OFFSET_BOOT_ADDR_P_CORE: begin
           // Read boot address register
           mem_rresp_o = 2'b00;  // OKAY
           mem_rdata_o = boot_addr_p_core_o;
         end
 
-        REG_BOOT_HARTID_E_CORE: begin
+        REG_OFFSET_BOOT_HARTID_E_CORE: begin
           // Read HART_ID register
           mem_rresp_o = 2'b00;  // OKAY
           mem_rdata_o = boot_hartid_e_core_o;
         end
 
-        REG_BOOT_HARTID_P_CORE: begin
+        REG_OFFSET_BOOT_HARTID_P_CORE: begin
           // Read HART_ID register
           mem_rresp_o = 2'b00;  // OKAY
           mem_rdata_o = boot_hartid_p_core_o;
         end
 
-        REG_PLL_CFG_E_CORE: begin
+        REG_OFFSET_PLL_CFG_E_CORE: begin
           // Read PLL configuration register 
           mem_rresp_o = 2'b00;  // OKAY
           mem_rdata_o = {15'b0, pll_locked_e_core_i, pll_fb_div_e_core_o, pll_ref_div_e_core_o};
         end
 
-        REG_PLL_CFG_P_CORE: begin
+        REG_OFFSET_PLL_CFG_P_CORE: begin
           // Read PLL configuration register
           mem_rresp_o = 2'b00;  // OKAY
           mem_rdata_o = {15'b0, pll_locked_p_core_i, pll_fb_div_p_core_o, pll_ref_div_p_core_o};
         end
 
-        REG_PLL_CFG_SYS_LINK: begin
+        REG_OFFSET_PLL_CFG_SYS_LINK: begin
           // Read PLL configuration register
           mem_rresp_o = 2'b00;  // OKAY
           mem_rdata_o = {
@@ -316,58 +316,58 @@ module sys_ctrl_reg_if
       // Update registers on successful write (OKAY response)
       if (mem_wresp_o == 2'b00) begin
         unique case (mem_waddr_i)
-          REG_E_CORE_CLK_RST: begin
+          REG_OFFSET_E_CORE_CLK_RST: begin
             e_core_clk_en_o <= mem_wdata_i[0];
             e_core_rst_no   <= mem_wdata_i[1];
           end
 
-          REG_P_CORE_CLK_RST: begin
+          REG_OFFSET_P_CORE_CLK_RST: begin
             p_core_clk_en_o <= mem_wdata_i[0];
             p_core_rst_no   <= mem_wdata_i[1];
           end
 
-          REG_CORE_LINK_CLK_RST: begin
+          REG_OFFSET_CORE_LINK_CLK_RST: begin
             core_link_clk_en_o <= mem_wdata_i[0];
             core_link_rst_no   <= mem_wdata_i[1];
           end
 
-          REG_SYS_LINK_CLK_RST: begin
+          REG_OFFSET_SYS_LINK_CLK_RST: begin
             sys_link_clk_en_o <= mem_wdata_i[0];
             sys_link_rst_no   <= mem_wdata_i[1];
           end
 
-          REG_PERIPH_LINK_CLK_RST: begin
+          REG_OFFSET_PERIPH_LINK_CLK_RST: begin
             periph_link_clk_en_o <= mem_wdata_i[0];
             periph_link_rst_no   <= mem_wdata_i[1];
           end
 
-          REG_BOOT_ADDR_E_CORE: begin
+          REG_OFFSET_BOOT_ADDR_E_CORE: begin
             boot_addr_e_core_o <= mem_wdata_i;
           end
 
-          REG_BOOT_ADDR_P_CORE: begin
+          REG_OFFSET_BOOT_ADDR_P_CORE: begin
             boot_addr_p_core_o <= mem_wdata_i;
           end
 
-          REG_BOOT_HARTID_E_CORE: begin
+          REG_OFFSET_BOOT_HARTID_E_CORE: begin
             boot_hartid_e_core_o <= mem_wdata_i;
           end
 
-          REG_BOOT_HARTID_P_CORE: begin
+          REG_OFFSET_BOOT_HARTID_P_CORE: begin
             boot_hartid_p_core_o <= mem_wdata_i;
           end
 
-          REG_PLL_CFG_E_CORE: begin
+          REG_OFFSET_PLL_CFG_E_CORE: begin
             pll_ref_div_e_core_o <= mem_wdata_i[3:0];
             pll_fb_div_e_core_o  <= mem_wdata_i[15:4];
           end
 
-          REG_PLL_CFG_P_CORE: begin
+          REG_OFFSET_PLL_CFG_P_CORE: begin
             pll_ref_div_p_core_o <= mem_wdata_i[3:0];
             pll_fb_div_p_core_o  <= mem_wdata_i[15:4];
           end
 
-          REG_PLL_CFG_SYS_LINK: begin
+          REG_OFFSET_PLL_CFG_SYS_LINK: begin
             pll_ref_div_sys_link_o <= mem_wdata_i[3:0];
             pll_fb_div_sys_link_o  <= mem_wdata_i[15:4];
           end

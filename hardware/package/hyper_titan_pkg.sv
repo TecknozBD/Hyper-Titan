@@ -5,67 +5,116 @@ package hyper_titan_pkg;
   import axi_pkg::xbar_cfg_t;
   import axi_pkg::xbar_rule_32_t;
 
-  parameter int GLOBAL_AW = 32;
-  parameter int GLOBAL_UW = 8;
-
-  //////////////////////////////////////////////////////////////////////////////////////////////////
-  // MEMORY MAP PARAMETERS
-  //////////////////////////////////////////////////////////////////////////////////////////////////
+  localparam int GLOBAL_AW = 32;
+  localparam int GLOBAL_UW = 8;
 
   // verilog_format: off
-  parameter int ITCM_E_CORE_START = 'h0000_0000;
-  parameter int ITCM_E_CORE_END   = 'h0000_1FFF;
 
-  parameter int SYS_CTRL_START    = 'h0000_2000;
-  parameter int SYS_CTRL_END      = 'h0000_2FFF;
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // MEMORY MAP localparamS
+  //////////////////////////////////////////////////////////////////////////////////////////////////
 
-  parameter int CLINT_START       = 'h0000_3000;
-  parameter int CLINT_END         = 'h0000_3FFF;
+  localparam int ITCM_E_CORE_START = 'h0000_0000;
+  localparam int ITCM_E_CORE_END   = 'h0000_1FFF;
 
-  parameter int PLIC_START        = 'h0000_4000;
-  parameter int PLIC_END          = 'h0000_4FFF;
+  localparam int SYS_CTRL_START    = 'h0000_2000;
+  localparam int SYS_CTRL_END      = 'h0000_2FFF;
 
-  parameter int UART_START        = 'h0000_5000;
-  parameter int UART_END          = 'h0000_5FFF;
+  localparam int CLINT_START       = 'h0000_3000;
+  localparam int CLINT_END         = 'h0000_3FFF;
 
-  parameter int SPI_CSR_START     = 'h0000_6000;
-  parameter int SPI_CSR_END       = 'h0000_6FFF;
+  localparam int PLIC_START        = 'h0000_4000;
+  localparam int PLIC_END          = 'h0000_4FFF;
 
-  parameter int DMA_START         = 'h0000_F000;
-  parameter int DMA_END           = 'h0000_FFFF;
+  localparam int UART_START        = 'h0000_5000;
+  localparam int UART_END          = 'h0000_5FFF;
 
-  parameter int DTCM_E_CORE_START = 'h0001_0000;
-  parameter int DTCM_E_CORE_END   = 'h0001_7FFF;
+  localparam int SPI_CSR_START     = 'h0000_6000;
+  localparam int SPI_CSR_END       = 'h0000_6FFF;
 
-  parameter int TCDM_P_CORE_START = 'h0800_0000;
-  parameter int TCDM_P_CORE_END   = 'h080F_FFFF;
+  localparam int DMA_START         = 'h0000_F000;
+  localparam int DMA_END           = 'h0000_FFFF;
 
-  parameter int BOOT_ROM_START    = 'h0900_0000;
-  parameter int BOOT_ROM_END      = 'h0900_FFFF;
+  localparam int DTCM_E_CORE_START = 'h0001_0000;
+  localparam int DTCM_E_CORE_END   = 'h0001_7FFF;
 
-  parameter int SPI_MEM_START     = 'h1000_0000;
-  parameter int SPI_MEM_END       = 'h1FFF_FFFF;
+  localparam int TCDM_P_CORE_START = 'h0800_0000;
+  localparam int TCDM_P_CORE_END   = 'h080F_FFFF;
 
-  parameter int RAM_START         = 'h8000_0000;
-  parameter int RAM_END           = 'hFFFF_FFFF;
+  localparam int BOOT_ROM_START    = 'h0900_0000;
+  localparam int BOOT_ROM_END      = 'h0900_FFFF;
+
+  localparam int SPI_MEM_START     = 'h1000_0000;
+  localparam int SPI_MEM_END       = 'h1FFF_FFFF;
+
+  localparam int RAM_START         = 'h8000_0000;
+  localparam int RAM_END           = 'hFFFF_FFFF;
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // SYSTEM CONTROL REGISTER OFFSETS
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+
+  localparam int REG_OFFSET_E_CORE_CLK_RST      = 'h000;
+  localparam int REG_OFFSET_P_CORE_CLK_RST      = 'h004;
+  localparam int REG_OFFSET_CORE_LINK_CLK_RST   = 'h008;
+  localparam int REG_OFFSET_SYS_LINK_CLK_RST    = 'h00C;
+  localparam int REG_OFFSET_PERIPH_LINK_CLK_RST = 'h010;
+  localparam int REG_OFFSET_BOOT_ADDR_E_CORE    = 'h040;
+  localparam int REG_OFFSET_BOOT_ADDR_P_CORE    = 'h044;
+  localparam int REG_OFFSET_BOOT_HARTID_E_CORE  = 'h080;
+  localparam int REG_OFFSET_BOOT_HARTID_P_CORE  = 'h084;
+  localparam int REG_OFFSET_PLL_CFG_E_CORE      = 'h0C0;
+  localparam int REG_OFFSET_PLL_CFG_P_CORE      = 'h0C4;
+  localparam int REG_OFFSET_PLL_CFG_SYS_LINK    = 'h0CC;
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+  // UART REGISTERS OFFSETS
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  localparam int REG_OFFSET_UART_CTRL          = 'h000;
+  localparam int REG_OFFSET_UART_REQ_ID_PUSH   = 'h004;
+  localparam int REG_OFFSET_UART_GNT_ID_PEEK   = 'h008;
+  localparam int REG_OFFSET_UART_GNT_ID_POP    = 'h00C;
+  localparam int REG_OFFSET_UART_CFG           = 'h010;
+  localparam int REG_OFFSET_UART_TX_DATA       = 'h014;
+  localparam int REG_OFFSET_UART_RX_DATA       = 'h018;
+  localparam int REG_OFFSET_UART_RX_DATA_PEEK  = 'h01C;
+  localparam int REG_OFFSET_UART_TX_FIFO_COUNT = 'h020;
+  localparam int REG_OFFSET_UART_RX_FIFO_COUNT = 'h024;
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+  // DMA REGISTERS OFFSETS
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  localparam int REG_OFFSET_DMA_CTRL               = 'h000;
+  localparam int REG_OFFSET_DMA_STATUS             = 'h004;
+  localparam int REG_OFFSET_DMA_TRANSFER_SIZE      = 'h008;
+  localparam int REG_OFFSET_DMA_TRANSFER_REMAINING = 'h00C;
+  localparam int REG_OFFSET_DMA_TRANSFER_SIDEBAND  = 'h010;
+  localparam int REG_OFFSET_DMA_SRC_ADDR_LOWER     = 'h020;
+  localparam int REG_OFFSET_DMA_SRC_ADDR_UPPER     = 'h024;
+  localparam int REG_OFFSET_DMA_DEST_ADDR_LOWER    = 'h028;
+  localparam int REG_OFFSET_DMA_DEST_ADDR_UPPER    = 'h02C;
+
   // verilog_format: on
 
+
   //////////////////////////////////////////////////////////////////////////////////////////////////
-  // CORE LINK PARAMETERS
+  // CORE LINK localparamS
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
-  parameter int CL_NUM_SP = 3;
-  parameter int CL_NUM_MP = 3;
+  localparam int CL_NUM_SP = 3;
+  localparam int CL_NUM_MP = 3;
 
-  parameter int CL_SP_IW = 2;
-  parameter int CL_SP_AW = GLOBAL_AW;
-  parameter int CL_SP_UW = GLOBAL_UW;
-  parameter int CL_SP_DW = 128;
+  localparam int CL_SP_IW = 2;
+  localparam int CL_SP_AW = GLOBAL_AW;
+  localparam int CL_SP_UW = GLOBAL_UW;
+  localparam int CL_SP_DW = 128;
 
-  parameter int CL_MP_IW = CL_SP_IW + $clog2(CL_NUM_SP);
-  parameter int CL_MP_AW = CL_SP_AW;
-  parameter int CL_MP_UW = CL_SP_UW;
-  parameter int CL_MP_DW = CL_SP_DW;
+  localparam int CL_MP_IW = CL_SP_IW + $clog2(CL_NUM_SP);
+  localparam int CL_MP_AW = CL_SP_AW;
+  localparam int CL_MP_UW = CL_SP_UW;
+  localparam int CL_MP_DW = CL_SP_DW;
 
   `AXI_TYPEDEF_ALL(cl_s_axi, logic [CL_SP_AW-1:0], logic [CL_SP_IW-1:0], logic [CL_SP_DW-1:0],
                    logic [CL_SP_DW/8-1:0], logic [CL_SP_UW-1:0])
@@ -98,24 +147,24 @@ package hyper_titan_pkg;
   };
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
-  // SYSTEM LINK PARAMETERS
+  // SYSTEM LINK localparamS
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
-  parameter int SL_NUM_SP = 2;
-  parameter int SL_NUM_MP = 4;
+  localparam int SL_NUM_SP = 2;
+  localparam int SL_NUM_MP = 4;
 
-  parameter int SL_SP_IW = 2;
-  parameter int SL_SP_AW = GLOBAL_AW;
-  parameter int SL_SP_UW = GLOBAL_UW;
-  parameter int SL_SP_DW = 64;
+  localparam int SL_SP_IW = 2;
+  localparam int SL_SP_AW = GLOBAL_AW;
+  localparam int SL_SP_UW = GLOBAL_UW;
+  localparam int SL_SP_DW = 64;
 
-  parameter int SL_MP_IW = SL_SP_IW + $clog2(SL_NUM_SP);
-  parameter int SL_MP_AW = SL_SP_AW;
-  parameter int SL_MP_UW = SL_SP_UW;
-  parameter int SL_MP_DW = SL_SP_DW;
+  localparam int SL_MP_IW = SL_SP_IW + $clog2(SL_NUM_SP);
+  localparam int SL_MP_AW = SL_SP_AW;
+  localparam int SL_MP_UW = SL_SP_UW;
+  localparam int SL_MP_DW = SL_SP_DW;
 
-  parameter int SL_NUM_SP = 1;
-  parameter int SL_NUM_MP = 6;
+  localparam int SL_NUM_SP = 1;
+  localparam int SL_NUM_MP = 6;
 
   `AXI_TYPEDEF_ALL(sl_s_axi, logic [SL_SP_AW-1:0], logic [SL_SP_IW-1:0], logic [SL_SP_DW-1:0],
                    logic [SL_SP_DW/8-1:0], logic [SL_SP_UW-1:0])
@@ -156,17 +205,17 @@ package hyper_titan_pkg;
   };
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
-  // PERIPHERAL LINK PARAMETERS
+  // PERIPHERAL LINK localparamS
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
-  parameter int PL_NUM_SP = 1;
-  parameter int PL_NUM_MP = 5;
+  localparam int PL_NUM_SP = 1;
+  localparam int PL_NUM_MP = 5;
 
-  parameter int PL_SP_AW = GLOBAL_AW;
-  parameter int PL_SP_DW = 32;
+  localparam int PL_SP_AW = GLOBAL_AW;
+  localparam int PL_SP_DW = 32;
 
-  parameter int PL_MP_AW = PL_SP_AW;
-  parameter int PL_MP_DW = PL_SP_DW;
+  localparam int PL_MP_AW = PL_SP_AW;
+  localparam int PL_MP_DW = PL_SP_DW;
 
   `AXI_LITE_TYPEDEF_ALL(pl_s_axil, logic [PL_SP_AW-1:0], logic [PL_SP_DW-1:0],
                         logic [PL_SP_DW/8-1:0])
@@ -200,21 +249,21 @@ package hyper_titan_pkg;
   };
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
-  // RV64G_SS LINK PARAMETERS
+  // RV64G_SS LINK localparamS
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
-  parameter int RS_NUM_SP = 3;
-  parameter int RS_NUM_MP = 3;
+  localparam int RS_NUM_SP = 3;
+  localparam int RS_NUM_MP = 3;
 
-  parameter int RS_SP_IW = 4;
-  parameter int RS_SP_AW = 64;
-  parameter int RS_SP_UW = 1;
-  parameter int RS_SP_DW = 64;
+  localparam int RS_SP_IW = 4;
+  localparam int RS_SP_AW = 64;
+  localparam int RS_SP_UW = 1;
+  localparam int RS_SP_DW = 64;
 
-  parameter int RS_MP_IW = RS_SP_IW + $clog2(RS_NUM_SP);
-  parameter int RS_MP_AW = RS_SP_AW;
-  parameter int RS_MP_UW = RS_SP_UW;
-  parameter int RS_MP_DW = RS_SP_DW;
+  localparam int RS_MP_IW = RS_SP_IW + $clog2(RS_NUM_SP);
+  localparam int RS_MP_AW = RS_SP_AW;
+  localparam int RS_MP_UW = RS_SP_UW;
+  localparam int RS_MP_DW = RS_SP_DW;
 
   `AXI_TYPEDEF_ALL(rs_s_axi, logic [RS_SP_AW-1:0], logic [RS_SP_IW-1:0], logic [RS_SP_DW-1:0],
                    logic [RS_SP_DW/8-1:0], logic [RS_SP_UW-1:0])
