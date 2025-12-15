@@ -2,6 +2,9 @@
 
 package hyper_titan_pkg;
 
+  import axi_pkg::xbar_cfg_t;
+  import axi_pkg::xbar_rule_32_t;
+
   parameter int GLOBAL_AW = 32;
   parameter int GLOBAL_UW = 8;
 
