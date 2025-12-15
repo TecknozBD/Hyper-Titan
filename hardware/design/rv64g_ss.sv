@@ -1,3 +1,5 @@
+`include "axi/typedef.svh"
+
 module rv64g_ss
   import axi_pkg::xbar_rule_32_t;
   import hyper_titan_pkg::rs_s_axi_aw_chan_t;
@@ -39,10 +41,18 @@ module rv64g_ss
 
 );
 
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // SIGNALS
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+
   rs_m_axi_req_t  xbar_mp_req [3];
   rs_m_axi_resp_t xbar_mp_resp[3];
   rs_s_axi_req_t  xbar_sp_req [3];
   rs_s_axi_resp_t xbar_sp_resp[3];
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // INSTANTIATIONS
+  //////////////////////////////////////////////////////////////////////////////////////////////////
 
   ariane #(
       .DmBaseAddress(RAM_START),
@@ -56,8 +66,8 @@ module rv64g_ss
       .ipi_i(ipi_i),
       .time_irq_i(time_irq_i),
       .debug_req_i(debug_req_i),
-      .axi_req_o(),  // TODO xbar_sp_req[0]
-      .axi_resp_i()  // TODO xbar_sp_resp[0]
+      .axi_req_o(xbar_sp_req[0]),
+      .axi_resp_i(xbar_sp_resp[0])
   );
 
   axi_ram #(
@@ -127,6 +137,10 @@ module rv64g_ss
       .en_default_mst_port_i('1),
       .default_mst_port_i   ('b101010)
   );
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // ASSIGNMENTS
+  //////////////////////////////////////////////////////////////////////////////////////////////////
 
   assign rs_m_axi_req_o  = xbar_mp_req[2];
   assign xbar_mp_resp[2] = rs_m_axi_resp_i;
