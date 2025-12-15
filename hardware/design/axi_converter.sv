@@ -175,55 +175,55 @@ module axi_converter #(
   end
 
   always_comb begin
-    n_3_req.aw.id     = n_2_req.aw.id;
-    n_3_req.aw.addr   = n_2_req.aw.addr;
-    n_3_req.aw.len    = n_2_req.aw.len;
-    n_3_req.aw.size   = n_2_req.aw.size;
-    n_3_req.aw.burst  = n_2_req.aw.burst;
-    n_3_req.aw.lock   = n_2_req.aw.lock;
-    n_3_req.aw.cache  = n_2_req.aw.cache;
-    n_3_req.aw.prot   = n_2_req.aw.prot;
-    n_3_req.aw.qos    = n_2_req.aw.qos;
-    n_3_req.aw.region = n_2_req.aw.region;
-    n_3_req.aw.user   = n_2_req.aw.user;
-    n_3_req.aw.atop   = n_2_req.aw.user;
-    n_3_req.aw_valid  = n_2_req.awvalid;
-    n_2_resp.awready  = n_3_resp.aw_ready;
+    n_3_req.aw.id     = {'0, n_2_req.aw.id};
+    n_3_req.aw.addr   = {'0, n_2_req.aw.addr};
+    n_3_req.aw.len    = {'0, n_2_req.aw.len};
+    n_3_req.aw.size   = {'0, n_2_req.aw.size};
+    n_3_req.aw.burst  = {'0, n_2_req.aw.burst};
+    n_3_req.aw.lock   = {'0, n_2_req.aw.lock};
+    n_3_req.aw.cache  = {'0, n_2_req.aw.cache};
+    n_3_req.aw.prot   = {'0, n_2_req.aw.prot};
+    n_3_req.aw.qos    = {'0, n_2_req.aw.qos};
+    n_3_req.aw.region = {'0, n_2_req.aw.region};
+    n_3_req.aw.user   = {'0, n_2_req.aw.user};
+    n_3_req.aw.atop   = {'0, n_2_req.aw.user};
+    n_3_req.aw_valid  = {'0, n_2_req.awvalid};
+    n_2_resp.awready  = {'0, n_3_resp.aw_ready};
 
-    n_3_req.w.data    = n_2_req.w.data;
-    n_3_req.w.strb    = n_2_req.w.strb;
-    n_3_req.w.last    = n_2_req.w.last;
-    n_3_req.w.user    = n_2_req.w.user;
-    n_3_req.w_valid   = n_2_req.wvalid;
-    n_2_resp.wready   = n_3_resp.w_ready;
+    n_3_req.w.data    = {'0, n_2_req.w.data};
+    n_3_req.w.strb    = {'0, n_2_req.w.strb};
+    n_3_req.w.last    = {'0, n_2_req.w.last};
+    n_3_req.w.user    = {'0, n_2_req.w.user};
+    n_3_req.w_valid   = {'0, n_2_req.wvalid};
+    n_2_resp.wready   = {'0, n_3_resp.w_ready};
 
-    n_3_resp.b_id     = n_2_resp.bid;
-    n_3_resp.b_resp   = n_2_resp.bresp;
-    n_3_resp.b_user   = n_2_resp.buser;
-    n_3_resp.b_valid  = n_2_resp.bvalid;
-    n_2_req.b_ready   = n_3_req.b_ready;
+    n_3_resp.b_id     = {'0, n_2_resp.bid};
+    n_3_resp.b_resp   = {'0, n_2_resp.bresp};
+    n_3_resp.b_user   = {'0, n_2_resp.buser};
+    n_3_resp.b_valid  = {'0, n_2_resp.bvalid};
+    n_2_req.b_ready   = {'0, n_3_req.b_ready};
 
-    n_3_req.ar.id     = n_2_req.ar.id;
-    n_3_req.ar.addr   = n_2_req.ar.addr;
-    n_3_req.ar.len    = n_2_req.ar.len;
-    n_3_req.ar.size   = n_2_req.ar.size;
-    n_3_req.ar.burst  = n_2_req.ar.burst;
-    n_3_req.ar.lock   = n_2_req.ar.lock;
-    n_3_req.ar.cache  = n_2_req.ar.cache;
-    n_3_req.ar.prot   = n_2_req.ar.prot;
-    n_3_req.ar.qos    = n_2_req.ar.qos;
-    n_3_req.ar.region = n_2_req.ar.region;
-    n_3_req.ar.user   = n_2_req.ar.user;
-    n_3_req.ar_valid  = n_2_req.arvalid;
-    n_2_resp.arready  = n_3_resp.ar_ready;
+    n_3_req.ar.id     = {'0, n_2_req.ar.id};
+    n_3_req.ar.addr   = {'0, n_2_req.ar.addr};
+    n_3_req.ar.len    = {'0, n_2_req.ar.len};
+    n_3_req.ar.size   = {'0, n_2_req.ar.size};
+    n_3_req.ar.burst  = {'0, n_2_req.ar.burst};
+    n_3_req.ar.lock   = {'0, n_2_req.ar.lock};
+    n_3_req.ar.cache  = {'0, n_2_req.ar.cache};
+    n_3_req.ar.prot   = {'0, n_2_req.ar.prot};
+    n_3_req.ar.qos    = {'0, n_2_req.ar.qos};
+    n_3_req.ar.region = {'0, n_2_req.ar.region};
+    n_3_req.ar.user   = {'0, n_2_req.ar.user};
+    n_3_req.ar_valid  = {'0, n_2_req.arvalid};
+    n_2_resp.arready  = {'0, n_3_resp.ar_ready};
 
-    n_2_resp.r_id     = n_3_resp.rid;
-    n_2_resp.r_data   = n_3_resp.rdata;
-    n_2_resp.r_resp   = n_3_resp.rresp;
-    n_2_resp.r_last   = n_3_resp.rlast;
-    n_2_resp.r_user   = n_3_resp.ruser;
-    n_2_resp.r_valid  = n_3_resp.rvalid;
-    n_3_req.r_ready   = n_2_req.r_ready;
+    n_2_resp.r_id     = {'0, n_3_resp.rid};
+    n_2_resp.r_data   = {'0, n_3_resp.rdata};
+    n_2_resp.r_resp   = {'0, n_3_resp.rresp};
+    n_2_resp.r_last   = {'0, n_3_resp.rlast};
+    n_2_resp.r_user   = {'0, n_3_resp.ruser};
+    n_2_resp.r_valid  = {'0, n_3_resp.rvalid};
+    n_3_req.r_ready   = {'0, n_2_req.r_ready};
 
   end
 
