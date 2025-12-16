@@ -7,7 +7,7 @@
 //   Address Range: 0x0000_2000 to 0x0000_2FFF (4KB)
 // ============================================================================
 
-module sys_ctrl_reg_if
+module sys_ctrl_regif
   import hyper_titan_pkg::REG_OFFSET_E_CORE_CLK_RST;
   import hyper_titan_pkg::REG_OFFSET_P_CORE_CLK_RST;
   import hyper_titan_pkg::REG_OFFSET_CORE_LINK_CLK_RST;
