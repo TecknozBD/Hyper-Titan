@@ -23,7 +23,7 @@
 
 package RvvAxiPkg;
 
-  `define AXI_TYPEDEF_ALL(rvv_axi, logic [31:0], logic [5:0], logic [127:0], logic [15:0], logic [7:0])
+  `AXI_TYPEDEF_ALL(rvv_axi, logic [31:0], logic [5:0], logic [127:0], logic [15:0], logic [7:0])
 
   typedef struct packed {
   

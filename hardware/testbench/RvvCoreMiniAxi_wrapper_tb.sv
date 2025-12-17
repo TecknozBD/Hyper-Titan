@@ -41,30 +41,14 @@ module RvvCoreMiniAxi_wrapper_tb;
   // AXI structs
   import RvvAxiPkg::*;
 
-  axi_aw_req_t s_aw_req;
-  axi_aw_rsp_t s_aw_rsp;
-  axi_w_req_t s_w_req;
-  axi_w_rsp_t s_w_rsp;
-  axi_b_req_t s_b_req;
-  axi_b_rsp_t s_b_rsp;
-  axi_ar_req_t s_ar_req;
-  axi_ar_rsp_t s_ar_rsp;
-  axi_r_req_t s_r_req;
-  axi_r_rsp_t s_r_rsp;
+  rvv_axi_req_t  m_axi_req_o;
+  rvv_axi_resp_t m_axi_resp_i;
 
-  axi_aw_req_t m_aw_req;
-  axi_aw_rsp_t m_aw_rsp;
-  axi_w_req_t m_w_req;
-  axi_w_rsp_t m_w_rsp;
-  axi_b_req_t m_b_req;
-  axi_b_rsp_t m_b_rsp;
-  axi_ar_req_t m_ar_req;
-  axi_ar_rsp_t m_ar_rsp;
-  axi_r_req_t m_r_req;
-  axi_r_rsp_t m_r_rsp;
+  rvv_axi_req_t  s_axi_req_i;
+  rvv_axi_resp_t s_axi_resp_o;
 
   io_debug_out_t io_debug_out;
-  slog_debug_t slog_debug;
+  slog_debug_t   slog_debug;
 
   // ------------------------------------------------------------
   // DUT instantiation
@@ -73,27 +57,10 @@ module RvvCoreMiniAxi_wrapper_tb;
       .io_aclk   (io_aclk),
       .io_aresetn(io_aresetn),
 
-      .s_aw_req(s_aw_req),
-      .s_aw_rsp(s_aw_rsp),
-      .s_w_req (s_w_req),
-      .s_w_rsp (s_w_rsp),
-      .s_b_req (s_b_req),
-      .s_b_rsp (s_b_rsp),
-      .s_ar_req(s_ar_req),
-      .s_ar_rsp(s_ar_rsp),
-      .s_r_req (s_r_req),
-      .s_r_rsp (s_r_rsp),
-
-      .m_aw_req(m_aw_req),
-      .m_aw_rsp(m_aw_rsp),
-      .m_w_req (m_w_req),
-      .m_w_rsp (m_w_rsp),
-      .m_b_req (m_b_req),
-      .m_b_rsp (m_b_rsp),
-      .m_ar_req(m_ar_req),
-      .m_ar_rsp(m_ar_rsp),
-      .m_r_req (m_r_req),
-      .m_r_rsp (m_r_rsp),
+      .m_axi_req_o (m_axi_req_o),
+      .m_axi_resp_i(m_axi_resp_i),
+      .s_axi_req_i (s_axi_req_i),
+      .s_axi_resp_o(s_axi_resp_o),
 
       .io_debug_out(io_debug_out),
       .slog_debug  (slog_debug),
@@ -145,18 +112,6 @@ module RvvCoreMiniAxi_wrapper_tb;
     clk_enable = 0;
     io_irq     = 0;
     io_te      = 0;
-
-    s_aw_req   = '0;
-    s_w_req    = '0;
-    s_b_req    = '{ready: 1'b1};
-    s_ar_req   = '0;
-    s_r_req    = '{ready: 1'b1};
-
-    m_aw_rsp   = '{ready: 1'b1};
-    m_w_rsp    = '{ready: 1'b1};
-    m_b_rsp    = '0;
-    m_ar_rsp   = '{ready: 1'b1};
-    m_r_rsp    = '0;
 
     start_clock();
     apply_reset();

@@ -39,15 +39,15 @@ module RvvCoreMiniAxi_wrapper
     input logic io_aclk,
     input logic io_aresetn,
 
-    output rvv_axi_req_t m_axi_req_o,
-    input  rvv_axi_req_t m_axi_resp_i,
+    output rvv_axi_req_t  m_axi_req_o,
+    input  rvv_axi_resp_t m_axi_resp_i,
 
-    input  rvv_axi_req_t s_axi_req_i,
-    output rvv_axi_req_t s_axi_resp_o,
+    input  rvv_axi_req_t  s_axi_req_i,
+    output rvv_axi_resp_t s_axi_resp_o,
 
 
-    output io_debug_out,
-    output slog_debug,
+    output io_debug_out_t io_debug_out,
+    output slog_debug_t slog_debug,
 
     // --------------------------
     // OTHER SIGNALS
