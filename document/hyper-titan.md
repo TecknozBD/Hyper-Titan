@@ -2,12 +2,12 @@
 
 ## Overview
 
-Hyper-Titan is a Dual Core SoC design with big-Little architecture, featuring an RV64G Performance core and an RV32IMF Efficiency core. The design incorporates TCDM memory for low-latency access, a DMA controller for efficient data transfers, and a suite of peripherals including UART & SPI.
+Hyper-Titan is a Dual Core SoC design with big-Little architecture, featuring an RV64G Performance core and an RV32IMF Efficiency core. The design incorporates TCM memory for low-latency access, a DMA controller for efficient data transfers, and a suite of peripherals including UART & SPI.
 
 ## Features
 
 - **Dual Core Architecture**: Combines a high-performance RV64G core with a power-efficient RV32IMF core.
-- **TCDM Memory**: Provides low-latency access to shared memory for both cores.
+- **TCM Memory**: Provides low-latency access to shared memory for both cores.
 - **DMA Controller**: Facilitates efficient data transfers between peripherals and memory without CPU intervention.
 - **Peripherals**: Includes UART for serial communication and SPI for high-speed data exchange.
 - **Open Source**: Fully open-source design, allowing for customization and extension.
@@ -28,18 +28,18 @@ The Hyper-Titan SoC architecture is designed to optimize performance and power e
 
 ![System Architecture](svg/architecture.drawio.svg)
 
-_Figure 1: Hyper-Titan SoC Architecture_
+_**Figure:** Hyper-Titan SoC Architecture_
 
 - _Efficiency Core:_ RV32IMF core designed for low power consumption.
 - _Performance Core:_ RV64G core optimized for high performance.
-- _ITCM Memory, DTCM Memory & TCDM Memory:_ Shared memories accessible by both cores for fast data exchange.
+- _TCM Memory:_ Shared memories accessible by both cores for fast data exchange.
 - _DMA Controller:_ Manages data transfers between different blocks.
-- _Interanl ROM:_ Non-volatile memory for boot code and firmware.
+- _Internal ROM:_ Read only memory for boot code and firmware.
 - _External RAM:_ Connections for external memory and I/O devices.
-- _APB Slave Interface:_ Facilitates external access to the system bus.
+- _APB Bridge:_ Facilitates external access to the system bus.
 - _System Controller:_ Manages system-level functions and configurations.
 - _Clock & Reset Generator:_ Provides clock signals and reset functionality.
-- _SPI Master:_ Serial Peripheral Interface for high-speed communication with external devices.
+- _SPI Host:_ Serial Peripheral Interface for high-speed communication with external devices.
 - _UART:_ Universal Asynchronous Receiver-Transmitter for serial communication.
 - _CLINT:_ Core Local Interruptor for handling interrupts.
 - _PLIC:_ Platform-Level Interrupt Controller for managing external interrupts.

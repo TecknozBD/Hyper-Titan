@@ -38,8 +38,8 @@ package hyper_titan_pkg;
   localparam int DTCM_E_CORE_START = 'h0001_0000;
   localparam int DTCM_E_CORE_END   = 'h0001_7FFF;
 
-  localparam int TCDM_P_CORE_START = 'h0800_0000;
-  localparam int TCDM_P_CORE_END   = 'h080F_FFFF;
+  localparam int DTCM_P_CORE_START = 'h0800_0000;
+  localparam int DTCM_P_CORE_END   = 'h080F_FFFF;
 
   localparam int BOOT_ROM_START    = 'h0900_0000;
   localparam int BOOT_ROM_END      = 'h0900_FFFF;
@@ -126,7 +126,7 @@ package hyper_titan_pkg;
   localparam xbar_rule_32_t [NUM_CL_RULES-1:0] cl_rules = '{
       '{idx: 0, start_addr: DTCM_E_CORE_START, end_addr: DTCM_E_CORE_END},
       '{idx: 0, start_addr: ITCM_E_CORE_START, end_addr: ITCM_E_CORE_END},
-      '{idx: 1, start_addr: TCDM_P_CORE_START, end_addr: TCDM_P_CORE_END}
+      '{idx: 1, start_addr: DTCM_P_CORE_START, end_addr: DTCM_P_CORE_END}
   };
   // DEFAULT 2
 
@@ -177,7 +177,7 @@ package hyper_titan_pkg;
       '{idx: 0, start_addr: DMA_START, end_addr: DMA_END},
       '{idx: 0, start_addr: DTCM_E_CORE_START, end_addr: DTCM_E_CORE_END},
       '{idx: 0, start_addr: ITCM_E_CORE_START, end_addr: ITCM_E_CORE_END},
-      '{idx: 0, start_addr: TCDM_P_CORE_START, end_addr: TCDM_P_CORE_END},
+      '{idx: 0, start_addr: DTCM_P_CORE_START, end_addr: DTCM_P_CORE_END},
       '{idx: 1, start_addr: BOOT_ROM_START, end_addr: BOOT_ROM_END},
       '{idx: 3, start_addr: CLINT_START, end_addr: CLINT_END},
       '{idx: 3, start_addr: PLIC_START, end_addr: PLIC_END},
@@ -273,7 +273,7 @@ package hyper_titan_pkg;
 
   localparam int NUM_RS_RULES = 2;
   localparam xbar_rule_32_t [NUM_RS_RULES-1:0] rs_rules = '{
-      '{idx: 0, start_addr: TCDM_P_CORE_START, end_addr: TCDM_P_CORE_END},
+      '{idx: 0, start_addr: DTCM_P_CORE_START, end_addr: DTCM_P_CORE_END},
       '{idx: 1, start_addr: DMA_START, end_addr: DMA_END}
   };
   // DEFAULT 2

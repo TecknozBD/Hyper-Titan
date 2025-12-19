@@ -105,6 +105,6 @@ gen_doc:
 	@cat document/hyper-titan.md > README.md
 	@echo "" >> README.md
 	@cat document/readme_others.md >> README.md
-	@sed -i "s/svg\/architecture\.drawio\.svg/document\/svg\/architecture\.drawio\.svg/g" README.md
-	@sed -i "s/detailed_architecture\.md/document\/detailed_architecture\.md/g" README.md
-
+	@sed -ri "s/\]\(/\]\(document\//g" README.md
+	@sed -ri "s/document\/http/http/g" README.md
+	@sed -ri "s/document\/LICENSE/LICENSE/g" README.md

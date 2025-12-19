@@ -76,7 +76,7 @@ module rv64g_ss
       .ALLOW_WRITES('1),
       .req_t       (rs_m_axi_req_t),
       .resp_t      (rs_m_axi_resp_t)
-  ) u_tcdm (
+  ) u_dtcm (
       .clk_i  (clk_i),
       .arst_ni(arst_ni),
       .req_i  (xbar_mp_req[0]),
