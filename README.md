@@ -1,117 +1,56 @@
 # Hyper-Titan SoC
 
-Hyper-Titan is a RISC‑V based heterogeneous System‑on‑Chip targeting both FPGA and future ASIC implementations. The design combines a high‑performance 64‑bit core with a smaller 32‑bit core, a hierarchical interconnect fabric, tightly‑coupled memories, and a scalable peripheral subsystem.
+Hyper-Titan is a Dual Core SoC design with big-Little architecture, featuring an RV64G Performance core and an RV32IMF Efficiency core. The design incorporates TCDM memory for low-latency access, a DMA controller for efficient data transfers, and a suite of peripherals including UART & SPI.
 
-This README describes the *project* and the SoC architecture; repository usage details and scripts can live elsewhere.
+## Features
 
-## High‑Level Architecture
+- **Dual Core Architecture**: Combines a high-performance RV64G core with a power-efficient RV32IMF core.
+- **TCDM Memory**: Provides low-latency access to shared memory for both cores.
+- **DMA Controller**: Facilitates efficient data transfers between peripherals and memory without CPU intervention.
+- **Peripherals**: Includes UART for serial communication and SPI for high-speed data exchange.
+- **Open Source**: Fully open-source design, allowing for customization and extension.
 
-At a high level, Hyper-Titan integrates the following components (see diagrams below and under `document/svg`):
+## Repository
 
-- **Cores**
-	- `rv64imafd` main core (64‑bit, with integer, multiplication/division, atomic, single/double‑precision FP extensions).
-	- `rv32imf` companion core (32‑bit, with integer, multiplication/division, single‑precision FP) for management, low‑power and off‑load tasks.
+This repository contains the complete RTL design, simulation testbenches, and documentation for the Hyper-Titan SoC.
 
-### Block Diagrams
+## Getting Started
 
-**Top‑Level Architecture**
+To get started with the Hyper-Titan SoC, clone this repository and follow the instructions
 
-![Hyper-Titan Architecture](document/svg/architecture.svg)
+| _TODO:_ Add details for running simulations
 
-**Detailed Interconnect & Clocking**
+## Architecture Overview
 
-![Hyper-Titan Detailed](document/svg/detailed.svg)
+The Hyper-Titan SoC architecture is designed to optimize performance and power efficiency through its dual-core configuration. The RV64G core is meant to handle compute-intensive tasks, while the RV32IMF core is meant to manage less demanding workloads. The Architecture diagram below illustrates the key components and their interactions.
 
-- **Instruction & Data Interfaces**
-	- **OBI.I / OBI.D**: Open Bus Interface ports from the main core.
-	- **OBI‑to‑AXI bridges**: Two `OBI 2 AXI` blocks convert OBI transactions to a shared **AXI4‑64** fabric.
+![System Architecture](document/svg/architecture.drawio.svg)
 
-- **Interconnect & Links**
-	- **Core Link**: High‑speed domain that connects the cores, OBI‑to‑AXI bridges, and TCDM banks.
-	- **System Link**: System‑level interconnect in a potentially different clock domain, interfacing AXI fabric to memories and peripherals.
-	- **CDC blocks**: Clock‑domain crossing cells between Core Link and System Link, and at key boundaries.
+_Figure 1: Hyper-Titan SoC Architecture_
 
-- **Memory Subsystem**
-	- Multiple **TCDM** (Tightly‑Coupled Data Memory) banks in the Core Link domain for low‑latency access.
-	- **RAM** and **ROM** attached on the System Link side via AXI.
+- _Efficiency Core:_ RV32IMF core designed for low power consumption.
+- _Performance Core:_ RV64G core optimized for high performance.
+- _ITCM Memory, DTCM Memory & TCDM Memory:_ Shared memories accessible by both cores for fast data exchange.
+- _DMA Controller:_ Manages data transfers between different blocks.
+- _Interanl ROM:_ Non-volatile memory for boot code and firmware.
+- _External RAM:_ Connections for external memory and I/O devices.
+- _APB Slave Interface:_ Facilitates external access to the system bus.
+- _System Controller:_ Manages system-level functions and configurations.
+- _Clock & Reset Generator:_ Provides clock signals and reset functionality.
+- _SPI Master:_ Serial Peripheral Interface for high-speed communication with external devices.
+- _UART:_ Universal Asynchronous Receiver-Transmitter for serial communication.
+- _CLINT:_ Core Local Interruptor for handling interrupts.
+- _PLIC:_ Platform-Level Interrupt Controller for managing external interrupts.
 
-- **DMA Engine**
-	- A standalone **DMA** block connected to the Core Link, used for memory‑to‑memory moves and off‑loading large transfers from the cores.
+#### [Detailed Architecture](document/detailed_architecture.md)
 
-- **Peripheral Subsystem**
-	- **Peripheral Link (AXI‑Lite)**: AXI‑to‑AXI‑Lite bridge (`AXI 2 AXIL`) feeding a peripheral interconnect.
-	- **APB Slave**: An **APB‑S** segment hanging off the peripheral link for simple low‑speed peripherals.
-	- **System Control**: SoC configuration, status, reset control and clock gating.
-	- **UART**: Serial debug/console interface.
-	- **Clock & Reset Generator**: Input clock handling, PLL/DFLL hooks and SoC‑wide reset generation.
+## Third-Party Components
+This project utilizes several third-party components, including:
+- [google-coral/coralnpu](https://github.com/google-coral/coralnpu)
+- [lowRISC/ariane](https://github.com/lowRISC/ariane)
+- [pulp-platform/axi](https://github.com/pulp-platform/axi)
 
-## Clocking Strategy
+| _TODO:_ Add more as necessary
 
-The diagrams capture an explicit multi‑domain clocking plan:
-
-- **CL (Core Low)**: 1–2000 MHz range for the `rv32imf` core and possibly low‑power operation of the main core.
-- **CH (Core High)**: 1–5000 MHz range for the `rv64imafd` core.
-- **System / Memory clocks**:
-	- System Link annotated at **3200 MHz** (target max for high‑speed interconnect / memory).
-	- Peripheral Link annotated at **100 MHz** (AXI‑Lite / APB region).
-- CDC modules isolate these domains, with the Core Link usually running at `max(CL, CH)` while peripherals stay at a much lower, synthesis‑friendly frequency.
-
-Actual realized frequencies will depend on the target FPGA/ASIC technology and timing closure results.
-
-## Project Goals
-
-- **RTL Implementation**
-	- Implement the complete SoC in **SystemVerilog**, with clean module boundaries that mirror the blocks in the diagrams.
-	- Use synthesizable coding style with parameterization where useful (e.g., number/size of TCDM banks, AXI data width, presence of the rv32 core).
-
-- **FPGA Bring‑Up**
-	- Target one or more FPGA evaluation boards for early prototyping.
-	- Integrate a minimal boot ROM, on‑chip RAM and UART‑based console for firmware bring‑up.
-
-- **ASIC‑Ready Micro‑Architecture**
-	- Keep clock‑domain crossings, resets, and power‑up sequencing explicitly modeled.
-	- Avoid FPGA‑only primitives in shared RTL; isolate any vendor‑specific constructs behind wrappers.
-	- Design CDC and reset schemes suitable for sign‑off in an ASIC flow (formal CDC, STA‑friendly resets).
-
-## Planned Module Breakdown
-
-The SystemVerilog codebase will roughly follow these top‑level blocks:
-
-- `hyper_titan_top` – SoC top‑level wrapper (ports, clocks, resets, pad ring hooks).
-- `ht_core_cluster` – Contains `rv64imafd`, `rv32imf`, OBI interfaces, OBI‑to‑AXI bridges, and TCDM banks.
-- `ht_dma` – DMA engine connected to the Core Link.
-- `ht_interconnect_core` – Core Link interconnect / arbitration.
-- `ht_interconnect_sys` – System Link (AXI) interconnect.
-- `ht_axi2axil` – AXI to AXI‑Lite down‑converter.
-- `ht_apb_subsys` – APB bus and simple APB peripherals.
-- `ht_sysctrl` – System control and configuration registers.
-- `ht_uart` – UART peripheral.
-- `ht_clk_rst_gen` – Clock/reset generator and distribution.
-
-Module names are provisional and will evolve with the code, but the intent is to keep one major RTL block per logical diagram block.
-
-## Verification & Firmware (Planned)
-
-- **Verification**
-	- UVM/SystemVerilog testbenches for OBI, AXI, and APB.
-	- Directed smoke tests for each major block (cores, DMA, TCDM, interconnects, UART, System Control).
-	- Clock‑domain crossing checks and basic formal properties for CDC cells.
-
-- **Firmware & Tooling**
-	- Bare‑metal bring‑up code for both `rv32imf` and `rv64imafd` cores.
-	- Linker scripts and memory maps aligned with the TCDM/RAM/ROM layout.
-	- Optional integration with standard RISC‑V toolchains for building and debugging.
-
-## Current Status
-
-- Architecture and clocking **captured in diagrams** under `document/svg/architecture.svg` and `document/svg/detailed.svg`.
-- RTL implementation and verification environment are **work in progress / not yet published**.
-
-## Contributing / Next Steps
-
-- Flesh out the SystemVerilog module hierarchy following the "Planned Module Breakdown" section.
-- Define a concrete memory map (TCDM size, RAM/ROM base addresses, peripheral address space).
-- Select target FPGA and (longer‑term) ASIC technology node, then refine clock targets.
-- Add separate documentation for build flow, simulation, and board support as the RTL lands.
-
-If you are interested in collaborating on the SystemVerilog or verification side, feel free to propose changes to this architecture description or suggest additional blocks (e.g., timers, GPIO, SPI, debug modules).
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
