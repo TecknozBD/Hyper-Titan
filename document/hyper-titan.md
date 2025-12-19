@@ -26,7 +26,7 @@ To get started with the Hyper-Titan SoC, clone this repository and follow the in
 
 The Hyper-Titan SoC architecture is designed to optimize performance and power efficiency through its dual-core configuration. The RV64G core is meant to handle compute-intensive tasks, while the RV32IMF core is meant to manage less demanding workloads. The Architecture diagram below illustrates the key components and their interactions.
 
-![System Architecture](document/svg/architecture.drawio.svg)
+![System Architecture](svg/architecture.drawio.svg)
 
 _Figure 1: Hyper-Titan SoC Architecture_
 
@@ -44,15 +44,4 @@ _Figure 1: Hyper-Titan SoC Architecture_
 - _CLINT:_ Core Local Interruptor for handling interrupts.
 - _PLIC:_ Platform-Level Interrupt Controller for managing external interrupts.
 
-#### [Detailed Architecture](document/detailed_architecture.md)
-
-## Third-Party Components
-This project utilizes several third-party components, including:
-- [google-coral/coralnpu](https://github.com/google-coral/coralnpu)
-- [lowRISC/ariane](https://github.com/lowRISC/ariane)
-- [pulp-platform/axi](https://github.com/pulp-platform/axi)
-
-| _TODO:_ Add more as necessary
-
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+#### [Detailed Architecture](detailed_architecture.md)

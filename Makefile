@@ -95,3 +95,16 @@ test:
 	@${RISCV64_OBJCOPY} -O verilog build/prog_${HART_ID}.elf build/prog_${HART_ID}.hex
 	@${RISCV64_NM} -n build/prog_${HART_ID}.elf > build/prog_${HART_ID}.sym
 	@${RISCV64_OBJDUMP} -d build/prog_${HART_ID}.elf > build/prog_${HART_ID}.dis
+
+####################################################################################################
+# GEN DOC
+####################################################################################################
+
+.PHONY: gen_doc
+gen_doc:
+	@cat document/hyper-titan.md > README.md
+	@echo "" >> README.md
+	@cat document/readme_others.md >> README.md
+	@sed -i "s/svg\/architecture\.drawio\.svg/document\/svg\/architecture\.drawio\.svg/g" README.md
+	@sed -i "s/detailed_architecture\.md/document\/detailed_architecture\.md/g" README.md
+
