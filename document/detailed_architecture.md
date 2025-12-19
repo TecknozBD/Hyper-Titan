@@ -100,4 +100,35 @@ The Peripheral Link module manages communication between the core subsystems and
 
 #### [Peripheral Link Detailed]() TODO: Add link
 
+### Memory Subsystem
 
+The Memory Subsystem includes an on chip ROM and outbound AXI4 master interfaces to connect to DDR Phy when available. It is responsible for managing memory access and ensuring data integrity. The basic specifications are as follows:
+
+- **Clock:** clk_mem (200-3200 MHz)
+- **Reset:** arst_n_mem
+- **Interface Type:** AXI4
+- **Number of Slave Ports:** 2
+
+#### [Memory Subsystem Detailed]() TODO: Add link
+
+### IO Subsystem
+
+The IO Subsystem provides interfaces for various input/output peripherals such as the UART & SPI. It also house low speed components such as the CLINT, PLIC, System Control CSR. The basic specifications are as follows:
+
+- **Clock:** clk_io (100 MHz)
+- **Reset:** arst_n_io
+- **Interface Type:** AXI4 Lite
+- **Number of Slave Ports:** 5
+
+#### [IO Subsystem Detailed]() TODO: Add link
+
+### APB Bridge
+
+The APB Bridge module grants access to the system bus. It allows an external APB master to communicate with the SoC's internal components. The basic specifications are as follows:
+
+- **Clock:** clk_apb (100 MHz)
+- **Reset:** arst_n_apb
+- **Interface Type:** AXI4 
+- **Number of Master Ports:** 1
+
+#### [APB Bridge Detailed]() TODO: Add link
