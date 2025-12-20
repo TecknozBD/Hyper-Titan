@@ -50,8 +50,8 @@
 
 | Field Name | Width | Description        |
 | ---------- | ----- | ------------------ |
-| id         | 4     | Transaction ID     |
-| addr       | 64    | Address            |
+| id         | 6     | Transaction ID     |
+| addr       | 32    | Address            |
 | len        | 8     | Burst length       |
 | size       | 3     | Burst size         |
 | burst      | 2     | Burst type         |
@@ -60,32 +60,32 @@
 | prot       | 3     | Protection type    |
 | qos        | 4     | Quality of Service |
 | region     | 4     | Region identifier  |
-| atop       | 4     | User signal        |
-| user       | 4     | User signal        |
+| atop       | 6     | Atomic Operation   |
+| user       | 8     | User signal        |
 
 #### rvv_axi_w_chan_t
 
 | Field Name | Width | Description   |
 | ---------- | ----- | ------------- |
-| data       | 512   | Write data    |
-| strb       | 64    | Write strobe  |
+| data       | 128   | Write data    |
+| strb       | 16    | Write strobe  |
 | last       | 1     | Last transfer |
-| user       | 4     | User signal   |
+| user       | 8     | User signal   |
 
 #### rvv_axi_b_chan_t
 
 | Field Name | Width | Description    |
 | ---------- | ----- | -------------- |
-| id         | 4     | Transaction ID |
+| id         | 6     | Transaction ID |
 | resp       | 2     | Write response |
-| user       | 4     | User signal    |
+| user       | 8     | User signal    |
 
 #### rvv_axi_ar_chan_t
 
 | Field Name | Width | Description        |
 | ---------- | ----- | ------------------ |
-| id         | 4     | Transaction ID     |
-| addr       | 64    | Address            |
+| id         | 6     | Transaction ID     |
+| addr       | 32    | Address            |
 | len        | 8     | Burst length       |
 | size       | 3     | Burst size         |
 | burst      | 2     | Burst type         |
@@ -94,26 +94,28 @@
 | prot       | 3     | Protection type    |
 | qos        | 4     | Quality of Service |
 | region     | 4     | Region identifier  |
-| user       | 4     | User signal        |
+| user       | 8     | User signal        |
 
 #### rvv_axi_r_chan_t
 
 | Field Name | Width | Description    |
 | ---------- | ----- | -------------- |
-| id         | 4     | Transaction ID |
-| data       | 512   | Read data      |
+| id         | 6     | Transaction ID |
+| data       | 128   | Read data      |
 | resp       | 2     | Read response  |
 | last       | 1     | Last transfer  |
-| user       | 4     | User signal    |
+| user       | 8     | User signal    |
 
 #### io_debug_out_t
 
-| Field Name       | Width | Description                        |
-| ---------------- | ----- | ---------------------------------- |
+| Field Name | Width | Description |
+| ---------- | ----- | ----------- |
+
 // TODO AMIT
 
 #### slog_debug_t
 
-| Field Name       | Width | Description                        |
-| ---------------- | ----- | ---------------------------------- |
+| Field Name | Width | Description |
+| ---------- | ----- | ----------- |
+
 // TODO AMIT
