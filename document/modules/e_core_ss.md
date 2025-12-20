@@ -108,14 +108,47 @@
 
 #### io_debug_out_t
 
-| Field Name | Width | Description |
-| ---------- | ----- | ----------- |
-
-// TODO AMIT
+| Field Name                  | Width  | Description                                             |
+| ----------------------------| ------ | ------------------------------------------------------- |
+| inst                        | 128    | Instruction words corresponding to each PC              |
+| addr                        | 128    | Program counter (PC) addresses for up to 4 instructions |
+| cycles                      | 32     | Global cycle counter for timestamping/debug correlation |
+| dbus_valid                  | 1      | Indicates a valid debug bus transaction                 |
+| dbus_addr                   | 32     | Debug bus address                                       |
+| dbus_wdata                  | 128    | Debug bus write data                                    |
+| dbus_write                  | 1      | Debug bus direction                                     |
+| dispatch_instFire           | 4      | Indicates which dispatch lanes issued an instruction    |
+| dispatch_instAddr           | 128    | PC of instructions dispatched per lane                  |
+| dispatch_instInst           | 128    | Instruction opcode dispatched per lane                  |
+| regfile_waddr_valid         | 4      | Valid flags for integer register write addresses        |
+| regfile_waddr_bits          | 20     | Integer register destination indices (x0–x31)           |
+| regfile_wdata_valid         | 6      | Valid flags for register write data ports               |
+| regfile_wdata_bits_addr     | 30     | Register destination addresses for writeback            |
+| regfile_wdata_bits_data     | 192    | Register writeback data values                          |
+| float_writeAddr_valid       | 1      | Floating-point register write address valid             |
+| float_writeAddr_bits        | 5      | Floating-point destination register index               |
+| float_writeData_0_valid     | 1      | FP writeback port 0 valid                               |
+| float_writeData_0_bits_addr | 32     | FP register address (port 0)                            |
+| float_writeData_0_bits_data | 32     | FP writeback data (port 0)                              |
+| float_writeData_1_valid     | 1      | FP writeback port 1 valid                               |
+| float_writeData_1_bits_addr | 32     | FP register address (port 1)                            |
+| float_writeData_1_bits_data | 32     | FP writeback data (port 1)                              |
 
 #### slog_debug_t
 
-| Field Name | Width | Description |
-| ---------- | ----- | ----------- |
+| Field Name | Width | Description                                       |
+| ---------- | ----- | --------------------------------------------------|
+| valid      | 1     | Indicates whether the debug log entry is valid    |
+| addr       | 5     | Address or index associated with the debug event  |
+| data       | 32    | Debug data payload corresponding to the address   |
 
-// TODO AMIT
+#### other_io
+
+| Field Name | Width | Description                                                 |
+| ---------- | ----- | ------------------------------------------------------------|
+| io_irq     | 1	 | Interrupt request signal to the core                        |
+| io_te      | 1	 | Test / trace enable signal                                  |
+| io_halted  | 1	 | Indicates the core is halted                                |
+| io_fault   | 1	 | Indicates a fault or exception condition                    |
+| io_wfi     | 1	 | Indicates the core is in WFI (Wait For Interrupt) state     |
+| io_debug_en| 4	 | Debug enable bus; each bit enables a specific debug feature |
