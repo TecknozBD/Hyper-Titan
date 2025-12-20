@@ -4,7 +4,7 @@
 // Date        : 14-Dec-2025
 // Description :
 //   This is a linear (non-UVM) SystemVerilog testbench for the
-//   RvvCoreMiniAxi_wrapper module. The testbench is intended for
+//   e_core_ss module. The testbench is intended for
 //   basic bring-up, smoke testing, and functional sanity verification
 //   of the RVV Core Mini design.
 //
@@ -13,14 +13,14 @@
 //     - Active-low reset sequencing
 //------------------------------------------------------------------------------
 
-config RvvCoreMiniAxi_wrapper_tb_cfg;
-    design work.RvvCoreMiniAxi_wrapper_tb;
+config e_core_ss_tb_cfg;
+    design work.e_core_ss_tb;
     default liblist work;
-    instance RvvCoreMiniAxi_wrapper_tb.dut.u_core liblist rvvcoreminiaxi;
+    instance e_core_ss_tb.dut.u_core liblist rvvcoreminiaxi;
 endconfig
 
 
-module RvvCoreMiniAxi_wrapper_tb;
+module e_core_ss_tb;
 
   // ------------------------------------------------------------
   // Clock / Reset
@@ -53,7 +53,7 @@ module RvvCoreMiniAxi_wrapper_tb;
   // ------------------------------------------------------------
   // DUT instantiation
   // ------------------------------------------------------------
-  RvvCoreMiniAxi_wrapper dut (
+  e_core_ss dut (
       .io_aclk   (io_aclk),
       .io_aresetn(io_aresetn),
 
@@ -108,7 +108,7 @@ module RvvCoreMiniAxi_wrapper_tb;
   // ------------------------------------------------------------
   initial begin
     // defaults
-    $display("%0t ns: Starting RvvCoreMiniAxi_wrapper Linear TB", $stime);
+    $display("%0t ns: Starting e_core_ss Linear TB", $stime);
     clk_enable = 0;
     io_irq     = 0;
     io_te      = 0;

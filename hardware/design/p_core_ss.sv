@@ -1,6 +1,6 @@
 `include "axi/typedef.svh"
 
-module rv64g_ss
+module p_core_ss
   import axi_pkg::xbar_rule_32_t;
   import hyper_titan_pkg::rs_s_axi_aw_chan_t;
   import hyper_titan_pkg::rs_s_axi_w_chan_t;

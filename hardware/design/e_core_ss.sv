@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // File Name   : RvvCoreWrapper.sv
-// Module Name : RvvCoreMiniAxi_wrapper
+// Module Name : e_core_ss
 // Project     : RVV Core Mini (AXI-Based)
 // Author      : Amit Sikder
 // Organization: Technoz
@@ -25,7 +25,7 @@
 //   - rvvcoreminiaxi.sv
 //------------------------------------------------------------------------------
 
-module RvvCoreMiniAxi_wrapper
+module e_core_ss
   import RvvAxiPkg::rvv_axi_aw_chan_t;
   import RvvAxiPkg::rvv_axi_w_chan_t;
   import RvvAxiPkg::rvv_axi_b_chan_t;
