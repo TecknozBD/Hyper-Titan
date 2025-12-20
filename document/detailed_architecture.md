@@ -51,7 +51,7 @@ This subsystem is built around the RV32IMF core and its internal memories. A 32-
 - **Master Interface:** AXI4
 - **Slave Interface:** AXI4
 
-#### [Efficiency Core Subsystem Detailed]() TODO: Add link
+#### [Efficiency Core Subsystem Detailed](modules/e_core_ss.md)
 
 ### Performance Core Subsystem
 
@@ -62,7 +62,7 @@ This subsystem is built around the RV64G core, Tightly Coupled Data Memorie and 
 - **Master Interface:** AXI4
 - **Slave Interface:** AXI4
 
-#### [Performance Core Subsystem Detailed]() TODO: Add link
+#### [Performance Core Subsystem Detailed](modules/p_core_ss.md)
 
 ### Core Link
 
@@ -74,19 +74,19 @@ The Core Link module facilitates communication between the Efficiency Core Subsy
 - **Number of Slave Ports:** 3
 - **Number of Master Ports:** 3
 
-#### [Core Link Detailed]() TODO: Add link
+#### [Core Link Detailed](modules/cl.md)
 
 ### System Link
 
 The System Link module connects the core subsystems to the broader system components, including memory controllers and peripheral interfaces. It handles data routing and arbitration to maintain system performance. The basic specifications are as follows:
 
-- **Clock:** clk_sl (400-3200 MHz)
+- **Clock:** clk_sl (200-3200 MHz)
 - **Reset:** arst_n_sl
 - **Interface Type:** AXI4
 - **Number of Slave Ports:** 2
 - **Number of Master Ports:** 4
 
-#### [System Link Detailed]() TODO: Add link
+#### [System Link Detailed](modules/sl.md)
 
 ### Peripheral Link
 
@@ -98,37 +98,60 @@ The Peripheral Link module manages communication between the core subsystems and
 - **Number of Slave Ports:** 1
 - **Number of Master Ports:** 5
 
-#### [Peripheral Link Detailed]() TODO: Add link
+#### [Peripheral Link Detailed](modules/pl.md)
 
 ### Memory Subsystem
 
 The Memory Subsystem includes an on chip ROM and outbound AXI4 master interfaces to connect to DDR Phy when available. It is responsible for managing memory access and ensuring data integrity. The basic specifications are as follows:
 
-- **Clock:** clk_mem (200-3200 MHz)
-- **Reset:** arst_n_mem
+- **Clock:** clk_sl (200-3200 MHz)
+- **Reset:** arst_n_sl
 - **Interface Type:** AXI4
 - **Number of Slave Ports:** 2
 
-#### [Memory Subsystem Detailed]() TODO: Add link
+#### [Memory Subsystem Detailed](modules/mem_ss.md)
 
 ### IO Subsystem
 
 The IO Subsystem provides interfaces for various input/output peripherals such as the UART & SPI. It also house low speed components such as the CLINT, PLIC, System Control CSR. The basic specifications are as follows:
 
-- **Clock:** clk_io (100 MHz)
-- **Reset:** arst_n_io
+- **Clock:** clk_pl (100 MHz)
+- **Reset:** arst_n_pl
 - **Interface Type:** AXI4 Lite
 - **Number of Slave Ports:** 5
 
-#### [IO Subsystem Detailed]() TODO: Add link
+#### [IO Subsystem Detailed](modules/io_ss.md)
 
 ### APB Bridge
 
 The APB Bridge module grants access to the system bus. It allows an external APB master to communicate with the SoC's internal components. The basic specifications are as follows:
 
-- **Clock:** clk_apb (100 MHz)
-- **Reset:** arst_n_apb
-- **Interface Type:** AXI4 
-- **Number of Master Ports:** 1
+- **Clock:** clk_apb & clk_sl (200-3200 MHz)
+- **Reset:** arst_n_apb & arst_n_sl
+- **Interface Type:** APB3 & AXI4
+- **Number of Master Ports:** 1 (APB3)
+- **Number of Slave Ports:** 1 (AXI4)
 
-#### [APB Bridge Detailed]() TODO: Add link
+#### [APB Bridge Detailed](modules/apb_bridge.md)
+
+### AXI 2 AXI Lite Bridge
+
+The AXI to AXI Lite Bridge module converts AXI4 transactions to AXI4 Lite transactions. This is essential for interfacing high-performance components with low-speed peripherals. The basic specifications are as follows:
+
+- **Clock:** clk_sl (200-3200 MHz)
+- **Reset:** arst_n_sl
+- **Interface Type:** AXI4 & AXI4 Lite
+- **Number of Master Ports:** 1 (AXI4)
+- **Number of Master Ports:** 1 (AXI4 Lite)
+
+#### [AXI to AXI Lite Bridge Detailed](modules/axi2axil.md)
+
+### AXI Converter
+
+The AXI Converter module translates between different AXI4 protocols, enabling compatibility between diverse ID, Address, and Data widths. The basic specifications are as follows:
+
+- **Interface Type:** AXI4
+- **Number of Master Ports:** 1
+- **Number of Slave Ports:** 1
+
+#### [AXI Converter Detailed](modules/axi_converter.md)
