@@ -14,6 +14,8 @@ The Hyper-Titan SoC is composed of several key subsystems, each designed to hand
 - [Memory Subsystem](#memory-subsystem)
 - [IO Subsystem](#io-subsystem)
 - [APB Bridge](#apb-bridge)
+- [AXI to AXI Lite Bridge](#axi-to-axi-lite-bridge)
+- [AXI Converter](#axi-converter)
 
 ## Hyper-Titan Address Map
 
