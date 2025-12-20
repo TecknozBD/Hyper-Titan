@@ -176,9 +176,149 @@ module axi_dma #(
   end
 
   // ------------------------------------------------------------
-  // MASTER PORT (NOT USED YET)
+  // MASTER PORT
   // ------------------------------------------------------------
-  assign mp_req_i = '0;
-  assign mp_resp_o = '0;
+  // ============================================================
+  // DMA CORE (AXI MASTER)
+  // ============================================================
 
+  typedef enum logic [2:0] {
+    DMA_IDLE,
+    DMA_AR,
+    DMA_R,
+    DMA_AW,
+    DMA_W
+  } dma_state_e;
+
+  dma_state_e dma_state_q, dma_state_d;
+
+  // Internal working registers
+  logic [63:0] src_addr_q;
+  logic [63:0] dest_addr_q;
+  logic [31:0] data_buf;
+
+  // ------------------------------------------------------------
+  // Status back to CSR
+  // ------------------------------------------------------------
+  assign BUSY = (dma_state_q != DMA_IDLE);
+
+  // ------------------------------------------------------------
+  // Sequential logic
+  // ------------------------------------------------------------
+  always_ff @(posedge clk_i or negedge arst_ni) begin
+    if (!arst_ni) begin
+      dma_state_q <= DMA_IDLE;
+      REM         <= 32'd0;
+      src_addr_q  <= 64'd0;
+      dest_addr_q <= 64'd0;
+    end else begin
+      dma_state_q <= dma_state_d;
+
+      // Latch CSR values on START
+      if (dma_state_q == DMA_IDLE && START) begin
+        REM         <= SIZE;
+        src_addr_q  <= {SRC_ADDR_U,  SRC_ADDR_L};
+        dest_addr_q <= {DEST_ADDR_U, DEST_ADDR_L};
+      end
+
+      // After each successful write (one word transferred)
+      if (dma_state_q == DMA_W && mp_req_i.w_ready) begin
+        REM         <= REM - 32'd4;
+        src_addr_q  <= src_addr_q + 64'd4;
+        dest_addr_q <= dest_addr_q + 64'd4;
+      end
+    end
+  end
+
+  // ------------------------------------------------------------
+  // Next-state logic
+  // ------------------------------------------------------------
+  always_comb begin
+    dma_state_d = dma_state_q;
+
+    case (dma_state_q)
+      DMA_IDLE: begin
+        if (START)
+          dma_state_d = DMA_AR;
+      end
+
+      DMA_AR: begin
+        if (mp_req_i.ar_ready)
+          dma_state_d = DMA_R;
+      end
+
+      DMA_R: begin
+        if (mp_req_i.r_valid)
+          dma_state_d = DMA_AW;
+      end
+
+      DMA_AW: begin
+        if (mp_req_i.aw_ready)
+          dma_state_d = DMA_W;
+      end
+
+      DMA_W: begin
+        if (mp_req_i.w_ready)
+          dma_state_d = (REM == 32'd4) ? DMA_IDLE : DMA_AR;
+      end
+
+      default: dma_state_d = DMA_IDLE;
+    endcase
+  end
+
+  // ------------------------------------------------------------
+  // AXI MASTER REQUESTS (mp_resp_o)
+  // ------------------------------------------------------------
+  always_comb begin
+    mp_resp_o = '0;
+
+    // -------------------------
+    // READ ADDRESS
+    // -------------------------
+    if (dma_state_q == DMA_AR) begin
+      mp_resp_o.ar_valid = 1'b1;
+      mp_resp_o.ar.addr  = src_addr_q;
+      mp_resp_o.ar.len   = 8'd0;
+      mp_resp_o.ar.size  = 3'b010; // 4 bytes
+      mp_resp_o.ar.burst = 2'b01;  // INCR
+    end
+
+    // -------------------------
+    // READ DATA
+    // -------------------------
+    if (dma_state_q == DMA_R) begin
+      mp_resp_o.r_ready = 1'b1;
+    end
+
+    // -------------------------
+    // WRITE ADDRESS
+    // -------------------------
+    if (dma_state_q == DMA_AW) begin
+      mp_resp_o.aw_valid = 1'b1;
+      mp_resp_o.aw.addr  = dest_addr_q;
+      mp_resp_o.aw.len   = 8'd0;
+      mp_resp_o.aw.size  = 3'b010;
+      mp_resp_o.aw.burst = 2'b01;
+    end
+
+    // -------------------------
+    // WRITE DATA
+    // -------------------------
+    if (dma_state_q == DMA_W) begin
+      mp_resp_o.w_valid = 1'b1;
+      mp_resp_o.w.data  = data_buf;
+      mp_resp_o.w.strb  = 4'hF;
+      mp_resp_o.w.last  = 1'b1;
+      mp_resp_o.b_ready = 1'b1;
+    end
+  end
+
+  // ------------------------------------------------------------
+  // Capture read data
+  // ------------------------------------------------------------
+  always_ff @(posedge clk_i) begin
+    if (dma_state_q == DMA_R && mp_req_i.r_valid)
+      data_buf <= mp_req_i.r.data;
+  end
+  
 endmodule
