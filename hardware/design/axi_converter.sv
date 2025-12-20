@@ -149,11 +149,11 @@ module axi_converter #(
     axi_iw_converter #(
         .AxiSlvPortIdWidth     (SRC_IW),
         .AxiMstPortIdWidth     (DST_IW),
-        .AxiSlvPortMaxUniqIds  (0),           // TODO double check purpose
-        .AxiSlvPortMaxTxnsPerId(0),           // TODO double check purpose
-        .AxiSlvPortMaxTxns     (0),           // TODO double check purpose
-        .AxiMstPortMaxUniqIds  (0),           // TODO double check purpose
-        .AxiMstPortMaxTxnsPerId(0),           // TODO double check purpose
+        .AxiSlvPortMaxUniqIds  (2**SRC_IW),
+        .AxiSlvPortMaxTxnsPerId(1),
+        .AxiSlvPortMaxTxns     (2**SRC_IW),
+        .AxiMstPortMaxUniqIds  (2**DST_IW),
+        .AxiMstPortMaxTxnsPerId(1),
         .AxiAddrWidth          (SRC_AW),
         .AxiDataWidth          (SRC_DW),
         .AxiUserWidth          (SRC_UW),
