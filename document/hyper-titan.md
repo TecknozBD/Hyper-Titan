@@ -24,12 +24,14 @@ To get started with the Hyper-Titan SoC, clone this repository and follow the in
 
 ## Architecture Overview
 
-The Hyper-Titan SoC architecture is designed to optimize performance and power efficiency through its dual-core configuration. The RV64G core is meant to handle compute-intensive tasks, while the RV32IMF core is meant to manage less demanding workloads. The Architecture diagram below illustrates the key components and their interactions.
+The Hyper-Titan SoC architecture is designed to optimize performance and power efficiency through its dual-core configuration. The RV64G core is meant to handle compute-intensive tasks, while the RV32IMF core is meant to manage less demanding workloads. The Architecture diagram below illustrates the key components and their interactions. Both clocks operate on their own dedicated clock domains, allowing for independent frequency scaling and power management. For connecting the cores to a common system bus, the design employs a Core Link module, which manages communication between the two cores. Additionally, the System Link and Peripheral Link modules facilitate connections to memory controllers and peripheral devices, respectively. The Core Link operate on the fastest clock domain between the two cores to minimize latency in inter-core communication. The System Link and Peripheral Link modules operate on their own clock domains, optimized for their specific performance and power requirements. The Peripheral Link module connects to various peripherals, including UART and SPI, ensuring efficient data transfer between the cores and external devices. As the bandwidth demands of peripherals are generally lower than those of the cores, the Peripheral Link operates at a lower frequency of 100 MHz to conserve power.
+
 
 ![System Architecture](svg/architecture.drawio.svg)
 
 _**Figure:** Hyper-Titan SoC Architecture_
 
+### Key Components
 - _Efficiency Core:_ RV32IMF core designed for low power consumption.
 - _Performance Core:_ RV64G core optimized for high performance.
 - _TCM Memory:_ Shared memories accessible by both cores for fast data exchange.
