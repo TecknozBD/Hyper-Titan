@@ -17,15 +17,9 @@ The `core_link` module is responsible for facilitating communication between the
 | mst_req_o | Output    | [3] cl_m_axi_req_t  | Master request signal to connected memory    |
 | mst_rsp_i | Input     | [3] cl_m_axi_resp_t | Master response signal from connected memory |
 
-### Address Routing
+## Struct Definitions
 
-- DTCM (Efficiency Core) and ITCM (Efficiency Core) map to Master Port 0.
-- DTCM (Performance Core) maps to Master Port 1.
-- All other addresses fall through to Master Port 2 (default route).
-
-### Struct Definitions
-
-#### cl_s_axi_req_t
+### cl_s_axi_req_t
 
 | Field Name | Width              | Description           |
 | ---------- | ------------------ | --------------------- |
@@ -38,7 +32,7 @@ The `core_link` module is responsible for facilitating communication between the
 | ar_valid   | 1                  | Read address valid    |
 | r_ready    | 1                  | Read data ready       |
 
-#### cl_s_axi_resp_t
+### cl_s_axi_resp_t
 
 | Field Name | Width             | Description          |
 | ---------- | ----------------- | -------------------- |
@@ -50,7 +44,7 @@ The `core_link` module is responsible for facilitating communication between the
 | r          | cl_s_axi_r_chan_t | Read data Channel    |
 | r_valid    | 1                 | Read data valid      |
 
-#### cl_s_axi_aw_chan_t
+### cl_s_axi_aw_chan_t
 
 | Field Name | Width | Description        |
 | ---------- | ----- | ------------------ |
@@ -67,7 +61,7 @@ The `core_link` module is responsible for facilitating communication between the
 | atop       | 6     | Atomic Operation   |
 | user       | 8     | User signal        |
 
-#### cl_s_axi_w_chan_t
+### cl_s_axi_w_chan_t
 
 | Field Name | Width | Description   |
 | ---------- | ----- | ------------- |
@@ -76,7 +70,7 @@ The `core_link` module is responsible for facilitating communication between the
 | last       | 1     | Last transfer |
 | user       | 8     | User signal   |
 
-#### cl_s_axi_b_chan_t
+### cl_s_axi_b_chan_t
 
 | Field Name | Width | Description    |
 | ---------- | ----- | -------------- |
@@ -84,7 +78,7 @@ The `core_link` module is responsible for facilitating communication between the
 | resp       | 2     | Write response |
 | user       | 8     | User signal    |
 
-#### cl_s_axi_ar_chan_t
+### cl_s_axi_ar_chan_t
 
 | Field Name | Width | Description        |
 | ---------- | ----- | ------------------ |
@@ -100,7 +94,7 @@ The `core_link` module is responsible for facilitating communication between the
 | region     | 4     | Region identifier  |
 | user       | 8     | User signal        |
 
-#### cl_s_axi_r_chan_t
+### cl_s_axi_r_chan_t
 
 | Field Name | Width | Description    |
 | ---------- | ----- | -------------- |
@@ -110,7 +104,7 @@ The `core_link` module is responsible for facilitating communication between the
 | last       | 1     | Last transfer  |
 | user       | 8     | User signal    |
 
-#### cl_m_axi_req_t
+### cl_m_axi_req_t
 
 | Field Name | Width              | Description           |
 | ---------- | ------------------ | --------------------- |
@@ -123,7 +117,7 @@ The `core_link` module is responsible for facilitating communication between the
 | ar_valid   | 1                  | Read address valid    |
 | r_ready    | 1                  | Read data ready       |
 
-#### cl_m_axi_resp_t
+### cl_m_axi_resp_t
 
 | Field Name | Width             | Description          |
 | ---------- | ----------------- | -------------------- |
@@ -135,7 +129,7 @@ The `core_link` module is responsible for facilitating communication between the
 | r          | cl_m_axi_r_chan_t | Read data Channel    |
 | r_valid    | 1                 | Read data valid      |
 
-#### cl_m_axi_aw_chan_t
+### cl_m_axi_aw_chan_t
 
 | Field Name | Width | Description        |
 | ---------- | ----- | ------------------ |
@@ -152,7 +146,7 @@ The `core_link` module is responsible for facilitating communication between the
 | atop       | 6     | Atomic Operation   |
 | user       | 8     | User signal        |
 
-#### cl_m_axi_w_chan_t
+### cl_m_axi_w_chan_t
 
 | Field Name | Width | Description   |
 | ---------- | ----- | ------------- |
@@ -161,7 +155,7 @@ The `core_link` module is responsible for facilitating communication between the
 | last       | 1     | Last transfer |
 | user       | 8     | User signal   |
 
-#### cl_m_axi_b_chan_t
+### cl_m_axi_b_chan_t
 
 | Field Name | Width | Description    |
 | ---------- | ----- | -------------- |
@@ -169,7 +163,7 @@ The `core_link` module is responsible for facilitating communication between the
 | resp       | 2     | Write response |
 | user       | 8     | User signal    |
 
-#### cl_m_axi_ar_chan_t
+### cl_m_axi_ar_chan_t
 
 | Field Name | Width | Description        |
 | ---------- | ----- | ------------------ |
@@ -185,7 +179,7 @@ The `core_link` module is responsible for facilitating communication between the
 | region     | 4     | Region identifier  |
 | user       | 8     | User signal        |
 
-#### cl_m_axi_r_chan_t
+### cl_m_axi_r_chan_t
 
 | Field Name | Width | Description    |
 | ---------- | ----- | -------------- |

@@ -19,9 +19,9 @@
 | io_wfi       | 1              | Output    | Core waiting for interrupt     |
 | io_debug_en  | 4              | Output    | Debug enable signals           |
 
-### Struct Definitions
+## Struct Definitions
 
-#### rvv_axi_req_t
+### rvv_axi_req_t
 
 | Field Name | Width             | Description           |
 | ---------- | ----------------- | --------------------- |
@@ -34,7 +34,7 @@
 | ar_valid   | 1                 | Read address valid    |
 | r_ready    | 1                 | Read data ready       |
 
-#### rvv_axi_resp_t
+### rvv_axi_resp_t
 
 | Field Name | Width            | Description          |
 | ---------- | ---------------- | -------------------- |
@@ -46,7 +46,7 @@
 | r          | rvv_axi_r_chan_t | Read data Channel    |
 | r_valid    | 1                | Read data valid      |
 
-#### rvv_axi_aw_chan_t
+### rvv_axi_aw_chan_t
 
 | Field Name | Width | Description        |
 | ---------- | ----- | ------------------ |
@@ -63,7 +63,7 @@
 | atop       | 6     | Atomic Operation   |
 | user       | 8     | User signal        |
 
-#### rvv_axi_w_chan_t
+### rvv_axi_w_chan_t
 
 | Field Name | Width | Description   |
 | ---------- | ----- | ------------- |
@@ -72,7 +72,7 @@
 | last       | 1     | Last transfer |
 | user       | 8     | User signal   |
 
-#### rvv_axi_b_chan_t
+### rvv_axi_b_chan_t
 
 | Field Name | Width | Description    |
 | ---------- | ----- | -------------- |
@@ -80,7 +80,7 @@
 | resp       | 2     | Write response |
 | user       | 8     | User signal    |
 
-#### rvv_axi_ar_chan_t
+### rvv_axi_ar_chan_t
 
 | Field Name | Width | Description        |
 | ---------- | ----- | ------------------ |
@@ -96,7 +96,7 @@
 | region     | 4     | Region identifier  |
 | user       | 8     | User signal        |
 
-#### rvv_axi_r_chan_t
+### rvv_axi_r_chan_t
 
 | Field Name | Width | Description    |
 | ---------- | ----- | -------------- |
@@ -106,7 +106,7 @@
 | last       | 1     | Last transfer  |
 | user       | 8     | User signal    |
 
-#### io_debug_out_t
+### io_debug_out_t
 
 | Field Name                  | Width  | Description                                             |
 | ----------------------------| ------ | ------------------------------------------------------- |
@@ -134,7 +134,7 @@
 | float_writeData_1_bits_addr | 32     | FP register address (port 1)                            |
 | float_writeData_1_bits_data | 32     | FP writeback data (port 1)                              |
 
-#### slog_debug_t
+### slog_debug_t
 
 | Field Name | Width | Description                                       |
 | ---------- | ----- | --------------------------------------------------|
@@ -142,7 +142,7 @@
 | addr       | 5     | Address or index associated with the debug event  |
 | data       | 32    | Debug data payload corresponding to the address   |
 
-#### other_io
+### other_io
 
 | Field Name | Width | Description                                                 |
 | ---------- | ----- | ------------------------------------------------------------|

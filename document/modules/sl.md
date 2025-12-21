@@ -19,9 +19,9 @@ _Figure: System Link Module Diagram_
 | mst_req_o | Output    | [4] sl_m_axi_req_t  | Master request signal to connected modules    |
 | mst_rsp_i | Input     | [4] sl_m_axi_resp_t | Master response signal from connected modules |
 
-### Struct Definitions
+## Struct Definitions
 
-#### sl_s_axi_req_t
+### sl_s_axi_req_t
 
 | Field Name | Width              | Description           |
 | ---------- | ------------------ | --------------------- |
@@ -34,7 +34,7 @@ _Figure: System Link Module Diagram_
 | ar_valid   | 1                  | Read address valid    |
 | r_ready    | 1                  | Read data ready       |
 
-#### sl_s_axi_resp_t
+### sl_s_axi_resp_t
 
 | Field Name | Width             | Description          |
 | ---------- | ----------------- | -------------------- |
@@ -46,7 +46,7 @@ _Figure: System Link Module Diagram_
 | r          | sl_s_axi_r_chan_t | Read data Channel    |
 | r_valid    | 1                 | Read data valid      |
 
-#### sl_s_axi_aw_chan_t
+### sl_s_axi_aw_chan_t
 
 | Field Name | Width | Description        |
 | ---------- | ----- | ------------------ |
@@ -63,7 +63,7 @@ _Figure: System Link Module Diagram_
 | atop       | 6     | Atomic Operation   |
 | user       | 8     | User signal        |
 
-#### sl_s_axi_w_chan_t
+### sl_s_axi_w_chan_t
 
 | Field Name | Width | Description   |
 | ---------- | ----- | ------------- |
@@ -72,7 +72,7 @@ _Figure: System Link Module Diagram_
 | last       | 1     | Last transfer |
 | user       | 8     | User signal   |
 
-#### sl_s_axi_b_chan_t
+### sl_s_axi_b_chan_t
 
 | Field Name | Width | Description    |
 | ---------- | ----- | -------------- |
@@ -80,7 +80,7 @@ _Figure: System Link Module Diagram_
 | resp       | 2     | Write response |
 | user       | 8     | User signal    |
 
-#### sl_s_axi_ar_chan_t
+### sl_s_axi_ar_chan_t
 
 | Field Name | Width | Description        |
 | ---------- | ----- | ------------------ |
@@ -96,7 +96,7 @@ _Figure: System Link Module Diagram_
 | region     | 4     | Region identifier  |
 | user       | 8     | User signal        |
 
-#### sl_s_axi_r_chan_t
+### sl_s_axi_r_chan_t
 
 | Field Name | Width | Description    |
 | ---------- | ----- | -------------- |
@@ -106,7 +106,7 @@ _Figure: System Link Module Diagram_
 | last       | 1     | Last transfer  |
 | user       | 8     | User signal    |
 
-#### sl_m_axi_req_t
+### sl_m_axi_req_t
 
 | Field Name | Width              | Description           |
 | ---------- | ------------------ | --------------------- |
@@ -119,7 +119,7 @@ _Figure: System Link Module Diagram_
 | ar_valid   | 1                  | Read address valid    |
 | r_ready    | 1                  | Read data ready       |
 
-#### sl_m_axi_resp_t
+### sl_m_axi_resp_t
 
 | Field Name | Width             | Description          |
 | ---------- | ----------------- | -------------------- |
@@ -131,7 +131,7 @@ _Figure: System Link Module Diagram_
 | r          | sl_m_axi_r_chan_t | Read data Channel    |
 | r_valid    | 1                 | Read data valid      |
 
-#### sl_m_axi_aw_chan_t
+### sl_m_axi_aw_chan_t
 
 | Field Name | Width | Description        |
 | ---------- | ----- | ------------------ |
@@ -148,7 +148,7 @@ _Figure: System Link Module Diagram_
 | atop       | 6     | Atomic Operation   |
 | user       | 8     | User signal        |
 
-#### sl_m_axi_w_chan_t
+### sl_m_axi_w_chan_t
 
 | Field Name | Width | Description   |
 | ---------- | ----- | ------------- |
@@ -157,7 +157,7 @@ _Figure: System Link Module Diagram_
 | last       | 1     | Last transfer |
 | user       | 8     | User signal   |
 
-#### sl_m_axi_b_chan_t
+### sl_m_axi_b_chan_t
 
 | Field Name | Width | Description    |
 | ---------- | ----- | -------------- |
@@ -165,7 +165,7 @@ _Figure: System Link Module Diagram_
 | resp       | 2     | Write response |
 | user       | 8     | User signal    |
 
-#### sl_m_axi_ar_chan_t
+### sl_m_axi_ar_chan_t
 
 | Field Name | Width | Description        |
 | ---------- | ----- | ------------------ |
@@ -181,7 +181,7 @@ _Figure: System Link Module Diagram_
 | region     | 4     | Region identifier  |
 | user       | 8     | User signal        |
 
-#### sl_m_axi_r_chan_t
+### sl_m_axi_r_chan_t
 
 | Field Name | Width | Description    |
 | ---------- | ----- | -------------- |

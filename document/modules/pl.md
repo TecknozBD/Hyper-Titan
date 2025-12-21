@@ -17,17 +17,9 @@ The `peripheral_link` module is an AXI4-Lite crossbar that connects the system c
 | mst_req_o | Output    | [5] pl_m_axil_req_t  | Master request signal to connected peripherals    |
 | mst_rsp_i | Input     | [5] pl_m_axil_resp_t | Master response signal from connected peripherals |
 
-### Address Routing
+## Struct Definitions
 
-- System Control CSR maps to Master Port 0.
-- UART maps to Master Port 2.
-- CLINT maps to Master Port 3.
-- PLIC maps to Master Port 4.
-- Unmapped addresses fall through to Master Port 1 (default route / reserved).
-
-### Struct Definitions
-
-#### pl_s_axil_req_t
+### pl_s_axil_req_t
 
 | Field Name | Width               | Description           |
 | ---------- | ------------------- | --------------------- |
@@ -40,7 +32,7 @@ The `peripheral_link` module is an AXI4-Lite crossbar that connects the system c
 | ar_valid   | 1                   | Read address valid    |
 | r_ready    | 1                   | Read data ready       |
 
-#### pl_s_axil_resp_t
+### pl_s_axil_resp_t
 
 | Field Name | Width              | Description          |
 | ---------- | ------------------ | -------------------- |
@@ -52,41 +44,41 @@ The `peripheral_link` module is an AXI4-Lite crossbar that connects the system c
 | r          | pl_s_axil_r_chan_t | Read data Channel    |
 | r_valid    | 1                  | Read data valid      |
 
-#### pl_s_axil_aw_chan_t
+### pl_s_axil_aw_chan_t
 
 | Field Name | Width | Description     |
 | ---------- | ----- | --------------- |
 | addr       | 32    | Address         |
 | prot       | 3     | Protection type |
 
-#### pl_s_axil_w_chan_t
+### pl_s_axil_w_chan_t
 
 | Field Name | Width | Description  |
 | ---------- | ----- | ------------ |
 | data       | 32    | Write data   |
 | strb       | 4     | Write strobe |
 
-#### pl_s_axil_b_chan_t
+### pl_s_axil_b_chan_t
 
 | Field Name | Width | Description    |
 | ---------- | ----- | -------------- |
 | resp       | 2     | Write response |
 
-#### pl_s_axil_ar_chan_t
+### pl_s_axil_ar_chan_t
 
 | Field Name | Width | Description     |
 | ---------- | ----- | --------------- |
 | addr       | 32    | Address         |
 | prot       | 3     | Protection type |
 
-#### pl_s_axil_r_chan_t
+### pl_s_axil_r_chan_t
 
 | Field Name | Width | Description   |
 | ---------- | ----- | ------------- |
 | data       | 32    | Read data     |
 | resp       | 2     | Read response |
 
-#### pl_m_axil_req_t
+### pl_m_axil_req_t
 
 | Field Name | Width               | Description           |
 | ---------- | ------------------- | --------------------- |
@@ -99,7 +91,7 @@ The `peripheral_link` module is an AXI4-Lite crossbar that connects the system c
 | ar_valid   | 1                   | Read address valid    |
 | r_ready    | 1                   | Read data ready       |
 
-#### pl_m_axil_resp_t
+### pl_m_axil_resp_t
 
 | Field Name | Width              | Description          |
 | ---------- | ------------------ | -------------------- |
@@ -111,34 +103,34 @@ The `peripheral_link` module is an AXI4-Lite crossbar that connects the system c
 | r          | pl_m_axil_r_chan_t | Read data Channel    |
 | r_valid    | 1                  | Read data valid      |
 
-#### pl_m_axil_aw_chan_t
+### pl_m_axil_aw_chan_t
 
 | Field Name | Width | Description     |
 | ---------- | ----- | --------------- |
 | addr       | 32    | Address         |
 | prot       | 3     | Protection type |
 
-#### pl_m_axil_w_chan_t
+### pl_m_axil_w_chan_t
 
 | Field Name | Width | Description  |
 | ---------- | ----- | ------------ |
 | data       | 32    | Write data   |
 | strb       | 4     | Write strobe |
 
-#### pl_m_axil_b_chan_t
+### pl_m_axil_b_chan_t
 
 | Field Name | Width | Description    |
 | ---------- | ----- | -------------- |
 | resp       | 2     | Write response |
 
-#### pl_m_axil_ar_chan_t
+### pl_m_axil_ar_chan_t
 
 | Field Name | Width | Description     |
 | ---------- | ----- | --------------- |
 | addr       | 32    | Address         |
 | prot       | 3     | Protection type |
 
-#### pl_m_axil_r_chan_t
+### pl_m_axil_r_chan_t
 
 | Field Name | Width | Description   |
 | ---------- | ----- | ------------- |
