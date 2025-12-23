@@ -2,7 +2,7 @@
 
 The `core_link` module is responsible for facilitating communication between the Efficiency Core Subsystem and the Performance Core Subsystem. It manages data transfers and synchronization between the two cores, ensuring efficient operation of the SoC. The module is an AXI XBar switch that routes data between the connected modules based on their addresses and control signals as depicted in the diagram below.
 
-![Core Link](../svg/modules/cl.drawio.svg)
+![Core Link](../svg/modules/cl.svg)
 
 **3 Slave Interfaces and 3 Master Interfaces**
 

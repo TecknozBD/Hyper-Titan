@@ -2,7 +2,7 @@
 
 This document provides an in-depth look into the architecture of the Hyper-Titan System on Chip (SoC). The diagram below illustrates the various components and their interconnections within the SoC.
 
-![Detailed Architecture of Hyper-Titan SoC](svg/detailed_architecture.drawio.svg)
+![Detailed Architecture of Hyper-Titan SoC](svg/detailed_architecture.svg)
 
 The Hyper-Titan SoC is composed of several key subsystems, each designed to handle specific tasks efficiently. The main components include:
 
@@ -104,7 +104,7 @@ The Peripheral Link module manages communication between the core subsystems and
 
 ### Memory Subsystem
 
-The Memory Subsystem includes an on chip ROM and outbound AXI4 master interfaces to connect to DDR Phy when available. It is responsible for managing memory access and ensuring data integrity. The basic specifications are as follows:
+The Memory Subsystem includes an on chip ROM and outbound AXI4 master interfaces to connect to DDR3 PHY. It is responsible for managing memory access and ensuring data integrity. The basic specifications are as follows:
 
 - **Clock:** clk_sl (200-3200 MHz)
 - **Reset:** arst_n_sl

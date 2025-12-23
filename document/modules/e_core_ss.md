@@ -2,7 +2,7 @@
 
 The `e_core_ss` module implements the Efficiency Core Subsystem, which includes a RISC-V based core optimized for low power consumption and efficient performance. It also includes itcm, dtcm, clock gate, etc.
 
-![e_core_ss](../svg/modules/e_core_ss.drawio.svg)
+![e_core_ss](../svg/modules/e_core_ss.svg)
 
 ## Ports
 

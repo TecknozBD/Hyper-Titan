@@ -2,7 +2,7 @@
 
 The `system_link` module is responsible for managing the communication links between the Core Link, Peripheral Link, Memory Subsystem, and APB Bridge. It ensures efficient data transfer and coordination among these components, facilitating seamless operation of the overall system architecture. The module is an AXI XBar switch that routes data between the connected modules based on their addresses and control signals as depicted in the diagram below.
 
-![System Link](../svg/modules/sl.drawio.svg)
+![System Link](../svg/modules/sl.svg)
 
 _Figure: System Link Module Diagram_
 

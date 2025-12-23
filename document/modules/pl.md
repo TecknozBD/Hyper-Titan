@@ -2,7 +2,7 @@
 
 The `peripheral_link` module is an AXI4-Lite crossbar that connects the system control and low-speed peripherals (UART, CLINT, PLIC) to the rest of the SoC. It accepts one slave-side AXI-Lite interface and routes transactions to up to five master-side ports based on the address map. Use this link for register-style, low-bandwidth accesses.
 
-![Peripheral Link](../svg/modules/pl.drawio.svg)
+![Peripheral Link](../svg/modules/pl.svg)
 
 **1 Slave Interface and 5 Master Interfaces**
 
