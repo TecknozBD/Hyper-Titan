@@ -6,6 +6,7 @@ This project utilizes several third-party components, including:
 - [pulp-platform/common_cells](https://github.com/pulp-platform/common_cells)
 - [squared-studio/common](https://github.com/squared-studio/common)
 - [squared-studio/SoC](https://github.com/squared-studio/SoC)
+- [ultraembedded/core_ddr3_controller](https://github.com/ultraembedded/core_ddr3_controller)
 
 | _TODO:_ Add more as necessary
 
