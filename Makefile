@@ -23,6 +23,8 @@ export AXI=${SUBMODULE}/axi
 export COMMON=${SUBMODULE}/common
 export COMMON_CELLS=${SUBMODULE}/common_cells
 export SOC=${SUBMODULE}/SoC
+export CORE_DDR3_CONTROLLER=${SUBMODULE}/core_ddr3_controller
+export XILINX_IPS=${SUBMODULE}/xilinx
 
 ####################################################################################################
 # Tools
@@ -61,9 +63,6 @@ clean_full:
 	@make -s clean
 	@rm -rf ${LOG}
 
-.PHONY: submodules
-submodules:
-	@git submodule update --init --depth 1
 
 define COMPILE
 	$(eval BASENAME=$(shell basename $1 .f))
@@ -73,6 +72,7 @@ endef
 
 .PHONY: all
 all:
+	@git submodule update --init --depth 1
 	@make -s clean_full
 	@make -s ${BUILD}
 	@make -s ${LOG}
