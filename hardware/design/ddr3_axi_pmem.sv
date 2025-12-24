@@ -110,14 +110,56 @@ module ddr3_axi_pmem (
     end
 `endif
 
+  wire         read_incr_w;
+  wire         read_decr_w;
+  wire         write_incr_w;
+  wire         write_decr_w;
+  wire         read_limit_w;
+  wire         write_limit_w;
+  wire         write_prio_w;
+  wire         read_prio_w;
+  wire         write_enable_w;
+  wire         read_enable_w;
+  wire         wr_cmd_accepted_w;
+  wire         wr_data_accepted_w;
+  wire         wr_data_last_w;
+  wire         awvalid_w;
+  wire [ 31:0] awaddr_w;
+  wire [  7:0] awlen_w;
+  wire [  3:0] awid_w;
+  wire         inport_accept_w;
+  wire         write_valid_w;
+  wire         read_valid_w;
+  wire [  1:0] wdata_idx_w;
+  wire         ram_accept_w;
+  wire [ 15:0] ram_wr_w;
+  wire         ram_rd_w;
+  wire [ 31:0] ram_addr_w;
+  wire [127:0] ram_write_data_w;
+  wire [ 15:0] ram_req_id_w;
+  wire         ram_rd_out_w;
+  wire [ 15:0] ram_wr_out_w;
+  wire         ram_valid_out_w;
+  wire         resp_valid_w;
+  wire         resp_last_w;
+  wire         resp_rd_w;
+  wire [  1:0] resp_offset_w;
+  wire [  7:0] resp_len_w;
+  wire [  3:0] resp_id_w;
+  wire         resp_accept_w;
+  wire         req_pop_w;
+  wire [  1:0] resp_idx_w;
+  wire [127:0] resp_data_w;
+
+
   //-------------------------------------------------------------
   // Request Counter
   //-------------------------------------------------------------
-  reg [3:0] read_pending_q;
-  reg [3:0] read_pending_r;
+  reg  [  3:0] read_pending_q;
+  reg  [  3:0] read_pending_r;
 
-  wire read_incr_w = (axi_arvalid_i && axi_arready_o);
-  wire read_decr_w = (axi_rvalid_o && axi_rlast_o && axi_rready_i);
+  assign read_incr_w = (axi_arvalid_i && axi_arready_o);
+  assign read_decr_w = (axi_rvalid_o && axi_rlast_o && axi_rready_i);
 
   always @* begin
     read_pending_r = read_pending_q;
@@ -134,8 +176,8 @@ module ddr3_axi_pmem (
   reg [3:0] write_pending_q;
   reg [3:0] write_pending_r;
 
-  wire write_incr_w = (axi_wvalid_i && axi_wlast_i && axi_wready_o);
-  wire write_decr_w = (axi_bvalid_o && axi_bready_i);
+  assign write_incr_w = (axi_wvalid_i && axi_wlast_i && axi_wready_o);
+  assign write_decr_w = (axi_bvalid_o && axi_bready_i);
 
   always @* begin
     write_pending_r = write_pending_q;
@@ -148,17 +190,17 @@ module ddr3_axi_pmem (
     if (rst_i) write_pending_q <= 4'b0;
     else write_pending_q <= write_pending_r;
 
-  wire read_limit_w = (read_pending_q > 4'd6);
-  wire write_limit_w = (write_pending_q > 4'd6);
+  assign read_limit_w  = (read_pending_q > 4'd6);
+  assign write_limit_w = (write_pending_q > 4'd6);
 
   //-------------------------------------------------------------
   // Read / Write arbitration
   //-------------------------------------------------------------
-  reg  prio_rd_q;
+  reg prio_rd_q;
 
   // Round robin priority between read and write
-  wire write_prio_w = ~prio_rd_q || !axi_arvalid_i;
-  wire read_prio_w = prio_rd_q || !awvalid_w;
+  assign write_prio_w = ~prio_rd_q || !axi_arvalid_i;
+  assign read_prio_w  = prio_rd_q || !awvalid_w;
 
   always @(posedge clk_i)
     if (rst_i) prio_rd_q <= 1'b0;
@@ -169,21 +211,21 @@ module ddr3_axi_pmem (
     else if ((axi_wvalid_i && axi_wlast_i && axi_wready_o) || (axi_arvalid_i && axi_arready_o))
       prio_rd_q <= ~prio_rd_q;
 
-  wire        write_enable_w = write_prio_w & ~write_limit_w;
-  wire        read_enable_w = read_prio_w & ~read_limit_w;
+  assign write_enable_w = write_prio_w & ~write_limit_w;
+  assign read_enable_w  = read_prio_w & ~read_limit_w;
 
   //-------------------------------------------------------------
   // Write Buffer
   //-------------------------------------------------------------
-  reg         awvalid_q;
-  reg  [31:0] awaddr_q;
-  reg  [ 7:0] awlen_q;
-  reg  [ 3:0] awid_q;
-  reg         wfirst_q;
+  reg        awvalid_q;
+  reg [31:0] awaddr_q;
+  reg [ 7:0] awlen_q;
+  reg [ 3:0] awid_q;
+  reg        wfirst_q;
 
-  wire        wr_cmd_accepted_w = (axi_awvalid_i && axi_awready_o) || awvalid_q;
-  wire        wr_data_accepted_w = (axi_wvalid_i && axi_wready_o);
-  wire        wr_data_last_w = (axi_wvalid_i && axi_wready_o && axi_wlast_i);
+  assign wr_cmd_accepted_w = (axi_awvalid_i && axi_awready_o) || awvalid_q;
+  assign wr_data_accepted_w = (axi_wvalid_i && axi_wready_o);
+  assign wr_data_last_w = (axi_wvalid_i && axi_wready_o && axi_wlast_i);
 
   always @(posedge clk_i)
     if (rst_i) awvalid_q <= 1'b0;
@@ -207,34 +249,33 @@ module ddr3_axi_pmem (
       awid_q   <= axi_awid_i;
     end
 
-  wire        awvalid_w = axi_awvalid_i | awvalid_q;
-  wire [31:0] awaddr_w = awvalid_q ? awaddr_q : axi_awaddr_i;
-  wire [ 7:0] awlen_w = awvalid_q ? awlen_q : axi_awlen_i;
-  wire [ 3:0] awid_w = awvalid_q ? awid_q : axi_awid_i;
+  assign awvalid_w = axi_awvalid_i | awvalid_q;
+  assign awaddr_w = awvalid_q ? awaddr_q : axi_awaddr_i;
+  assign awlen_w = awvalid_q ? awlen_q : axi_awlen_i;
+  assign awid_w = awvalid_q ? awid_q : axi_awid_i;
 
-  wire        inport_accept_w;
   assign axi_awready_o = write_enable_w & ~awvalid_q;
-  assign axi_wready_o  = write_enable_w & awvalid_w & inport_accept_w;
+  assign axi_wready_o = write_enable_w & awvalid_w & inport_accept_w;
   assign axi_arready_o = read_enable_w & inport_accept_w;
 
   //-----------------------------------------------------------------
   // Valids
   //-----------------------------------------------------------------
-  wire write_valid_w = write_enable_w & awvalid_w & axi_wvalid_i;
-  wire read_valid_w = axi_arvalid_i & read_enable_w;
+  assign write_valid_w = write_enable_w & awvalid_w & axi_wvalid_i;
+  assign read_valid_w = axi_arvalid_i & read_enable_w;
 
   //-----------------------------------------------------------------
   // Request
   //-----------------------------------------------------------------
-  reg [1:0] wdata_idx_q;
+  reg [  1:0] wdata_idx_q;
   reg [127:0] wdata_q;
-  reg [15:0] wstrb_q;
-  reg [7:0] rd_remain_q;
+  reg [ 15:0] wstrb_q;
+  reg [  7:0] rd_remain_q;
 
-  wire [1:0] wdata_idx_w = wfirst_q ? awaddr_w[3:2] : wdata_idx_q;
+  assign wdata_idx_w = wfirst_q ? awaddr_w[3:2] : wdata_idx_q;
 
   reg [127:0] wdata_r;
-  reg [15:0] wstrb_r;
+  reg [ 15:0] wstrb_r;
 
   always @* begin
     wdata_r = wdata_q;
@@ -271,15 +312,14 @@ module ddr3_axi_pmem (
     end
 
 
-  reg  [ 31:0] addr_q;
-  reg  [127:0] write_data_q;
-  reg  [ 15:0] write_mask_q;
-  reg          wr_q;
-  reg          rd_q;
-  reg          wr_last_q;
-  reg  [  7:0] len_q;
-  reg  [  3:0] id_q;
-  wire         ram_accept_w;
+  reg [ 31:0] addr_q;
+  reg [127:0] write_data_q;
+  reg [ 15:0] write_mask_q;
+  reg         wr_q;
+  reg         rd_q;
+  reg         wr_last_q;
+  reg [  7:0] len_q;
+  reg [  3:0] id_q;
 
   always @(posedge clk_i)
     if (rst_i) begin
@@ -323,20 +363,17 @@ module ddr3_axi_pmem (
       wr_last_q <= 1'b0;
     end
 
-  wire [ 15:0] ram_wr_w = {16{wr_q}} & write_mask_q;
-  wire         ram_rd_w = rd_q;
-  wire [ 31:0] ram_addr_w = {addr_q[31:4], 4'b0};
-  wire [127:0] ram_write_data_w = write_data_q;
-  wire [ 15:0] ram_req_id_w = {id_q, len_q, addr_q[3:2], rd_q, rd_q | wr_last_q};
+  assign ram_wr_w = {16{wr_q}} & write_mask_q;
+  assign ram_rd_w = rd_q;
+  assign ram_addr_w = {addr_q[31:4], 4'b0};
+  assign ram_write_data_w = write_data_q;
+  assign ram_req_id_w = {id_q, len_q, addr_q[3:2], rd_q, rd_q | wr_last_q};
 
   assign inport_accept_w = ((!wr_q && !rd_q) || ram_accept_w) && (rd_remain_q == 8'b0);
 
   //-----------------------------------------------------------------
   // Request FIFO - decouple AXI logic from RAM port
   //-----------------------------------------------------------------
-  wire        ram_rd_out_w;
-  wire [15:0] ram_wr_out_w;
-  wire        ram_valid_out_w;
 
   ddr3_axi_pmem_fifo #(
         .WIDTH (16 + 128 + 32 + 1 + 16)
@@ -363,16 +400,9 @@ module ddr3_axi_pmem (
   //-----------------------------------------------------------------
   // Response state
   //-----------------------------------------------------------------
-  wire       resp_valid_w;
-  wire       resp_last_w;
-  wire       resp_rd_w;
-  wire [1:0] resp_offset_w;
-  wire [7:0] resp_len_w;
-  wire [3:0] resp_id_w;
 
-  wire       resp_accept_w;
 
-  reg  [7:0] resp_cnt_q;
+  reg [7:0] resp_cnt_q;
 
   always @(posedge clk_i)
     if (rst_i) resp_cnt_q <= 8'b0;
@@ -381,10 +411,10 @@ module ddr3_axi_pmem (
       else resp_cnt_q <= 8'b0;
     end
 
-  wire req_pop_w = resp_valid_w && ((resp_cnt_q == resp_len_w) || (!resp_rd_w && resp_last_w));
+  assign req_pop_w = resp_valid_w && ((resp_cnt_q == resp_len_w) || (!resp_rd_w && resp_last_w));
 
   reg [1:0] resp_idx_q;
-  wire [1:0] resp_idx_w = (resp_cnt_q == 8'd0) ? resp_offset_w : resp_idx_q;
+  assign resp_idx_w = (resp_cnt_q == 8'd0) ? resp_offset_w : resp_idx_q;
 
   always @(posedge clk_i)
     if (rst_i) resp_idx_q <= 2'b0;
@@ -397,7 +427,6 @@ module ddr3_axi_pmem (
   //-----------------------------------------------------------------
   // Response
   //-----------------------------------------------------------------
-  wire [127:0] resp_data_w;
 
   ddr3_axi_pmem_fifo #(
         .WIDTH (128 + 2 + 2 + 8 + 4)
