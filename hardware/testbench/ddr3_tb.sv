@@ -8,8 +8,9 @@ module ddr3_tb;
   `define GEN_CLK(__NAME__, __PERIOD__, __QUATER_LAG__) \
     logic __NAME__ = '0;                                \
     initial begin                                       \
+      #300ns;                                           \
       repeat (__QUATER_LAG__) #(__PERIOD__ / 4);        \
-      forever #(__PERIOD__ / 2) __NAME__ = ~__NAME__;   \
+      forever #(__PERIOD__ / 2) __NAME__ <= ~__NAME__;  \
     end                                                 \
   
   // verilog_format: off
@@ -19,81 +20,88 @@ module ddr3_tb;
   `GEN_CLK(clk_ref, 5ns, 0)  // 200 MHz
   // verilog_format: on
 
-  logic        rst;
+  logic rst;
+  initial begin
+    #100ns;
+    rst <= 1'b0;
+    #100ns;
+    rst <= 1'b1;
+    #100ns;
+  end
 
   ////////////////////////////////////////////////
   // AXI
   ////////////////////////////////////////////////
 
-  wire         inport_awvalid;
-  wire  [31:0] inport_awaddr;
-  wire  [ 3:0] inport_awid;
-  wire  [ 7:0] inport_awlen;
-  wire  [ 1:0] inport_awburst;
-  wire         inport_wvalid;
-  wire  [31:0] inport_wdata;
-  wire  [ 3:0] inport_wstrb;
-  wire         inport_wlast;
-  wire         inport_bready;
-  wire         inport_arvalid;
-  wire  [31:0] inport_araddr;
-  wire  [ 3:0] inport_arid;
-  wire  [ 7:0] inport_arlen;
-  wire  [ 1:0] inport_arburst;
-  wire         inport_rready;
-  wire         inport_awready;
-  wire         inport_wready;
-  wire         inport_bvalid;
-  wire  [ 1:0] inport_bresp;
-  wire  [ 3:0] inport_bid;
-  wire         inport_arready;
-  wire         inport_rvalid;
-  wire  [31:0] inport_rdata;
-  wire  [ 1:0] inport_rresp;
-  wire  [ 3:0] inport_rid;
-  wire         inport_rlast;
+  wire        inport_awvalid;
+  wire [31:0] inport_awaddr;
+  wire [ 3:0] inport_awid;
+  wire [ 7:0] inport_awlen;
+  wire [ 1:0] inport_awburst;
+  wire        inport_wvalid;
+  wire [31:0] inport_wdata;
+  wire [ 3:0] inport_wstrb;
+  wire        inport_wlast;
+  wire        inport_bready;
+  wire        inport_arvalid;
+  wire [31:0] inport_araddr;
+  wire [ 3:0] inport_arid;
+  wire [ 7:0] inport_arlen;
+  wire [ 1:0] inport_arburst;
+  wire        inport_rready;
+  wire        inport_awready;
+  wire        inport_wready;
+  wire        inport_bvalid;
+  wire [ 1:0] inport_bresp;
+  wire [ 3:0] inport_bid;
+  wire        inport_arready;
+  wire        inport_rvalid;
+  wire [31:0] inport_rdata;
+  wire [ 1:0] inport_rresp;
+  wire [ 3:0] inport_rid;
+  wire        inport_rlast;
 
   ////////////////////////////////////////////////
   // DFI
   ////////////////////////////////////////////////
 
-  wire  [14:0] dfi_address;
-  wire  [ 2:0] dfi_bank;
-  wire         dfi_cas_n;
-  wire         dfi_cke;
-  wire         dfi_cs_n;
-  wire         dfi_odt;
-  wire         dfi_ras_n;
-  wire         dfi_reset_n;
-  wire         dfi_we_n;
-  wire  [31:0] dfi_wrdata;
-  wire         dfi_wrdata_en;
-  wire  [ 3:0] dfi_wrdata_mask;
-  wire         dfi_rddata_en;
-  wire  [31:0] dfi_rddata;
-  wire         dfi_rddata_valid;
-  wire  [ 1:0] dfi_rddata_dnv;
+  wire [14:0] dfi_address;
+  wire [ 2:0] dfi_bank;
+  wire        dfi_cas_n;
+  wire        dfi_cke;
+  wire        dfi_cs_n;
+  wire        dfi_odt;
+  wire        dfi_ras_n;
+  wire        dfi_reset_n;
+  wire        dfi_we_n;
+  wire [31:0] dfi_wrdata;
+  wire        dfi_wrdata_en;
+  wire [ 3:0] dfi_wrdata_mask;
+  wire        dfi_rddata_en;
+  wire [31:0] dfi_rddata;
+  wire        dfi_rddata_valid;
+  wire [ 1:0] dfi_rddata_dnv;
 
   ////////////////////////////////////////////////
   // DDR3
   ////////////////////////////////////////////////
 
-  wire         ddr3_reset_n_w;
-  wire         ddr3_ck_p_w;
-  wire         ddr3_ck_n_w;
-  wire         ddr3_cke_w;
-  wire         ddr3_cs_n_w;
-  wire         ddr3_ras_n_w;
-  wire         ddr3_cas_n_w;
-  wire         ddr3_we_n_w;
-  wire  [ 1:0] ddr3_dm_w;
-  wire  [ 2:0] ddr3_ba_w;
-  wire  [13:0] ddr3_addr_w;
-  wire  [15:0] ddr3_dq_w;
-  wire  [ 1:0] ddr3_dqs_p_w;
-  wire  [ 1:0] ddr3_dqs_n_w;
-  wire  [ 1:0] ddr3_tdqs_n_w;
-  wire         ddr3_odt_w;
+  wire        ddr3_reset_n_w;
+  wire        ddr3_ck_p_w;
+  wire        ddr3_ck_n_w;
+  wire        ddr3_cke_w;
+  wire        ddr3_cs_n_w;
+  wire        ddr3_ras_n_w;
+  wire        ddr3_cas_n_w;
+  wire        ddr3_we_n_w;
+  wire [ 1:0] ddr3_dm_w;
+  wire [ 2:0] ddr3_ba_w;
+  wire [13:0] ddr3_addr_w;
+  wire [15:0] ddr3_dq_w;
+  wire [ 1:0] ddr3_dqs_p_w;
+  wire [ 1:0] ddr3_dqs_n_w;
+  wire [ 1:0] ddr3_tdqs_n_w;
+  wire        ddr3_odt_w;
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
   // INSTANTIATIONS
