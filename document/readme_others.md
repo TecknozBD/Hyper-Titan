@@ -50,14 +50,14 @@ This project utilizes several third-party components, including:
 
 | _TODO:_ Add more as necessary
 
-**Example pie chart (Mermaid):**
-
 ```mermaid
-pie title Example
-  "UART" : 40
-  "SPI"  : 25
-  "DMA"  : 20
-  "Other": 15
+pie title IP Sources
+  "Tecknoz" : 15
+  "google-coral" : 20
+  "lowRISC" : 20
+  "pulp-platform" : 35
+  "squared-studio": 5
+  "ultraembedded": 5
 ```
 
 > Note: Pie chart rendering requires Mermaid support in your Markdown renderer.
