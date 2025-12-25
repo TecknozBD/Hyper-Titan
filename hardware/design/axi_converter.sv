@@ -49,7 +49,7 @@ module axi_converter #(
   localparam int DST_UW = $bits(dst_req_o.aw.user);
   localparam int DST_DW = $bits(dst_req_o.w.data);
 
-  localparam int GEN_IWC = (SRC_IW != DST_IW);
+  localparam int GEN_IWC = (SRC_IW > DST_IW);
   localparam int GEN_DWC = (SRC_DW != DST_DW);
 
   localparam int GEN_SRC_CDC = (enable_cdc && !faster_src);
@@ -149,10 +149,10 @@ module axi_converter #(
     axi_iw_converter #(
         .AxiSlvPortIdWidth     (SRC_IW),
         .AxiMstPortIdWidth     (DST_IW),
-        .AxiSlvPortMaxUniqIds  (2**SRC_IW),
+        .AxiSlvPortMaxUniqIds  (2 ** SRC_IW),
         .AxiSlvPortMaxTxnsPerId(1),
-        .AxiSlvPortMaxTxns     (2**SRC_IW),
-        .AxiMstPortMaxUniqIds  (2**DST_IW),
+        .AxiSlvPortMaxTxns     (2 ** SRC_IW),
+        .AxiMstPortMaxUniqIds  (2 ** DST_IW),
         .AxiMstPortMaxTxnsPerId(1),
         .AxiAddrWidth          (SRC_AW),
         .AxiDataWidth          (SRC_DW),

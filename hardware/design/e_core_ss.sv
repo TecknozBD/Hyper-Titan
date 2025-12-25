@@ -40,8 +40,9 @@ module e_core_ss
     input logic clk_i,
     input logic arst_ni,
 
-    // TODO BOOT ADDR
-    // TODO HART ID
+    // Boot address and hart ID
+    input logic [31:0] boot_addr_i,
+    input logic [31:0] hart_id_i,
 
     // AXI Master interface (to memory)
     output rvv_axi_req_t  m_axi_req_o,
@@ -422,5 +423,12 @@ module e_core_ss
       .io_debug_float_writeData_1_bits_addr(dbg_float_writeData_1_bits_addr),
       .io_debug_float_writeData_1_bits_data(dbg_float_writeData_1_bits_data)
   );
+
+  initial begin
+    // TODO FIXME: Remove this initial block force
+    force u_core.core.clock = clk_i;
+    force u_core.core.reset = arst_ni;
+    force u_core.core.io_csr_in_value_0 = {32'h0, boot_addr_i};
+  end
 
 endmodule
