@@ -2,36 +2,49 @@
 
 ## Overview
 
-Hyper-Titan is a Dual Core SoC design with big-Little architecture, featuring an RV64G Performance core and an RV32IMF Efficiency core. The design incorporates TCM memory for low-latency access, a DMA controller for efficient data transfers, and a suite of peripherals including UART & SPI.
+Hyper-Titan is an open-source dual-core RISC-V SoC built around a big-LITTLE style architecture: an RV64G Performance core for compute-heavy work and an RV32IMF Efficiency core for control-oriented tasks. It combines low-latency TCM, DMA-assisted data movement, and practical peripherals (UART/SPI) into a cohesive, research-friendly platform.
+
+Hyper-Titan is designed as a “middle ground” SoC: more capable than typical microcontroller-class designs, while staying smaller and more approachable than full Linux-class platforms.
 
 ## Features
 
-- **Dual Core Architecture**: Combines a high-performance RV64G core with a power-efficient RV32IMF core.
-- **TCM Memory**: Provides low-latency access to shared memory for both cores.
-- **DMA Controller**: Facilitates efficient data transfers between peripherals and memory without CPU intervention.
-- **Peripherals**: Includes UART for serial communication and SPI for high-speed data exchange.
-- **Open Source**: Fully open-source design, allowing for customization and extension.
+- **Big-LITTLE dual-core RISC-V**: Partition workloads between the RV64G Performance core and RV32IMF Efficiency core.
+- **Low-latency TCM**: Fast shared memory for tight control loops and inter-core data exchange.
+- **DMA-assisted transfers**: Move data between peripherals and memory with reduced CPU involvement.
+- **Practical peripherals**: UART for bring-up/debug and SPI for external device connectivity.
+- **Open-source RTL + docs**: A solid base for learning, experimentation, and customization.
 
-## Repository
+## Why Hyper-Titan
 
-This repository contains the complete RTL design, simulation testbenches, and documentation for the Hyper-Titan SoC.
+- **Faster bring-up for ideas**: A complete SoC integration target (cores, memory, interconnect, peripherals) for rapid iteration in simulation.
+- **Teachable architecture**: Clear separation of compute vs control roles and multiple clock domains for real-world SoC concepts.
+- **Extensible baseline**: Add/replace peripherals, expand memory, and evolve the interconnect while keeping a working reference design.
 
-## Getting Started
+## Ideal For
 
-To get started with the Hyper-Titan SoC, clone this repository and follow the instructions
-
-| _TODO:_ Add details for running simulations
+- RISC-V SoC exploration and architectural experiments
+- Verification and system-level testbench development
+- Firmware/driver bring-up against memory-mapped peripherals
+- Research projects needing a modifiable dual-core baseline
 
 ## Architecture Overview
 
-The Hyper-Titan SoC architecture is designed to optimize performance and power efficiency through its dual-core configuration. The RV64G core is meant to handle compute-intensive tasks, while the RV32IMF core is meant to manage less demanding workloads. The Architecture diagram below illustrates the key components and their interactions. Both clocks operate on their own dedicated clock domains, allowing for independent frequency scaling and power management. For connecting the cores to a common system bus, the design employs a Core Link module, which manages communication between the two cores. Additionally, the System Link and Peripheral Link modules facilitate connections to memory controllers and peripheral devices, respectively. The Core Link operate on the fastest clock domain between the two cores to minimize latency in inter-core communication. The System Link and Peripheral Link modules operate on their own clock domains, optimized for their specific performance and power requirements. The Peripheral Link module connects to various peripherals, including UART and SPI, ensuring efficient data transfer between the cores and external devices. As the bandwidth demands of peripherals are generally lower than those of the cores, the Peripheral Link operates at a lower frequency of 100 MHz to conserve power.
+Hyper-Titan uses a dual-core architecture to balance performance and efficiency: the RV64G core targets compute-intensive workloads, while the RV32IMF core targets control-oriented tasks.
 
+The diagram below shows the main blocks and how they connect. Each core runs in its own dedicated clock domain, enabling independent frequency scaling and power management.
+
+Interconnect is organized into three links:
+
+- **Core Link** connects the two cores to a common system bus and runs in the fastest clock domain of the two cores to minimize inter-core communication latency.
+- **System Link** connects the cores to memory controllers and operates in its own clock domain.
+- **Peripheral Link** connects peripherals (e.g., UART and SPI) and operates in its own clock domain. Since peripheral bandwidth requirements are typically lower than core bandwidth, the Peripheral Link runs at 100 MHz to conserve power.
 
 ![System Architecture](document/svg/architecture.svg)
 
 _**Figure:** Hyper-Titan SoC Architecture_
 
 ### Key Components
+
 - _Efficiency Core:_ RV32IMF core designed for low power consumption.
 - _Performance Core:_ RV64G core optimized for high performance.
 - _TCM Memory:_ Shared memories accessible by both cores for fast data exchange.
@@ -48,8 +61,48 @@ _**Figure:** Hyper-Titan SoC Architecture_
 
 #### [Detailed Architecture](document/detailed_architecture.md)
 
+## Repository
+
+This repository contains the complete RTL design, simulation testbenches, and documentation for the Hyper-Titan SoC.
+
+**Repository Structure:**
+
+```text
+Hyper-Titan/
+├── build/                 # Temporary build files
+├── document/              # Documentation files
+├── hardware/              # RTL source files and testbenches
+│   ├── design/            # SoC design source files
+│   ├── filelist/          # File lists for synthesis and simulation
+│   ├── include/           # Common include files
+│   ├── interface/         # Interface definitions
+│   ├── package/           # Common packages
+│   └── testbench/         # Testbenches for simulation
+├── log/                   # Simulation logs and reports
+├── software/              # Firmware and driver source code
+│   ├── include/           # Common include files
+│   ├── linkers/           # Linker scripts
+│   └── source/            # Firmware and driver source files
+├── submodule/             # External third-party dependencies
+├── .gitmodules            # Git submodule configuration
+├── LICENSE                # License information
+├── Makefile               # Top-level Makefile for build automation
+└── README.md              # Project overview
+```
+
+## Getting Started
+
+**Pre-requisites:**
+
+- A Unix-based development environment
+- GNU Makefile
+- GNU toolchain for RISC-V
+- AMD Xilinx Vivado
+
 ## Third-Party Components
+
 This project utilizes several third-party components, including:
+
 - [google-coral/coralnpu](https://github.com/google-coral/coralnpu)
 - [lowRISC/ariane](https://github.com/lowRISC/ariane)
 - [pulp-platform/axi](https://github.com/pulp-platform/axi)
@@ -60,5 +113,18 @@ This project utilizes several third-party components, including:
 
 | _TODO:_ Add more as necessary
 
+**Example pie chart (Mermaid):**
+
+```mermaid
+pie title Example
+  "UART" : 40
+  "SPI"  : 25
+  "DMA"  : 20
+  "Other": 15
+```
+
+> Note: Pie chart rendering requires Mermaid support in your Markdown renderer.
+
 ## License
+
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

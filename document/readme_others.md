@@ -16,7 +16,6 @@ Hyper-Titan/
 │   ├── package/           # Common packages
 │   └── testbench/         # Testbenches for simulation
 ├── log/                   # Simulation logs and reports
-├── scripts/               # Automation scripts
 ├── software/              # Firmware and driver source code
 │   ├── include/           # Common include files
 │   ├── linkers/           # Linker scripts
