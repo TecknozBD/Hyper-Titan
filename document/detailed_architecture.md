@@ -1,8 +1,10 @@
 # Detailed Architecture of Hyper-Titan SoC
 
-This document provides an in-depth look into the architecture of the Hyper-Titan System on Chip (SoC). The diagram below illustrates the various components and their interconnections within the SoC.
+This document provides an in-depth look into the architecture of the Hyper-Titan System on Chip (SoC). The Hyper-Titan SoC is a high-performance, energy-efficient platform designed for embedded applications, featuring dual-core RISC-V processors and advanced interconnects. The diagram below illustrates the various components and their interconnections within the SoC.
 
 ![Detailed Architecture of Hyper-Titan SoC](svg/detailed_architecture.svg)
+
+_**Figure:** Detailed Architecture of Hyper-Titan SoC_
 
 The Hyper-Titan SoC is composed of several key subsystems, each designed to handle specific tasks efficiently. The main components include:
 
@@ -17,7 +19,11 @@ The Hyper-Titan SoC is composed of several key subsystems, each designed to hand
 - [AXI to AXI Lite Bridge](#axi-to-axi-lite-bridge)
 - [AXI Converter](#axi-converter)
 
+These components are interconnected through advanced AXI-based links, enabling seamless data flow and efficient resource sharing across the SoC. This modular design allows for scalability and optimized performance tailored to specific application needs.
+
 ## Hyper-Titan Address Map
+
+The Hyper-Titan Address Map outlines the memory layout of the SoC, assigning unique address ranges to each component. This mapping is crucial for enabling efficient communication between software and hardware, preventing address conflicts, and facilitating proper resource allocation across the system.
 
 | Device                       | Base Address    | Ending Address  |
 | ---------------------------- | --------------- | --------------- |
@@ -40,13 +46,13 @@ The Hyper-Titan SoC is composed of several key subsystems, each designed to hand
 | **RESERVED**                 | **0x2000_0000** | **0x7FFF_FFFF** |
 | RAM                          | 0x8000_0000     | 0xFFFF_FFFF     |
 
-_**Figure:** Detailed Architecture of Hyper-Titan SoC_
-
 ## Components Description
+
+This section provides a brief, system-level summary of each major subsystem shown in the architecture diagram. For implementation details and signal-level interfaces, follow the corresponding detailed module links.
 
 ### Efficiency Core Subsystem
 
-This subsystem is built around the RV32IMF core and its internal memories. A 32-bit RISC-V core optimized for low power consumption, suitable for handling less demanding tasks. The basic specifications are as follows:
+This subsystem is built around the RV32IMF core and its internal memories. It is a 32-bit RISC-V core optimized for low power consumption and suited for less demanding tasks. The basic specifications are as follows:
 
 - **Clock:** clk_e_core (1-5000 MHz)
 - **Reset:** arst_n_e_core
@@ -57,7 +63,7 @@ This subsystem is built around the RV32IMF core and its internal memories. A 32-
 
 ### Performance Core Subsystem
 
-This subsystem is built around the RV64G core, Tightly Coupled Data Memorie and a Fly-by DMA. A 64-bit RISC-V core designed for high performance, capable of managing compute-intensive workloads. The basic specifications are as follows:
+This subsystem is built around the RV64G core, tightly coupled data memories, and a fly-by DMA. It is a 64-bit RISC-V core designed for high performance and capable of managing compute-intensive workloads. The basic specifications are as follows:
 
 - **Clock:** clk_p_core (1-5000 MHz)
 - **Reset:** arst_n_p_core
@@ -82,7 +88,7 @@ The Core Link module facilitates communication between the Efficiency Core Subsy
 
 The System Link module connects the core subsystems to the broader system components, including memory controllers and peripheral interfaces. It handles data routing and arbitration to maintain system performance. The basic specifications are as follows:
 
-- **Clock:** clk_sl (200-3200 MHz)
+- **Clock:** clk_sl (100-3200 MHz)
 - **Reset:** arst_n_sl
 - **Interface Type:** AXI4
 - **Number of Slave Ports:** 2
@@ -104,9 +110,9 @@ The Peripheral Link module manages communication between the core subsystems and
 
 ### Memory Subsystem
 
-The Memory Subsystem includes an on chip ROM and outbound AXI4 master interfaces to connect to DDR3 PHY. It is responsible for managing memory access and ensuring data integrity. The basic specifications are as follows:
+The Memory Subsystem includes an on-chip ROM and outbound AXI4 master interfaces to connect to a DDR3 PHY. It is responsible for managing memory access and ensuring data integrity. The basic specifications are as follows:
 
-- **Clock:** clk_sl (200-3200 MHz)
+- **Clock:** clk_sl (100-3200 MHz)
 - **Reset:** arst_n_sl
 - **Interface Type:** AXI4
 - **Number of Slave Ports:** 2
@@ -115,7 +121,7 @@ The Memory Subsystem includes an on chip ROM and outbound AXI4 master interfaces
 
 ### IO Subsystem
 
-The IO Subsystem provides interfaces for various input/output peripherals such as the UART & SPI. It also house low speed components such as the CLINT, PLIC, System Control CSR. The basic specifications are as follows:
+The IO Subsystem provides interfaces for low-speed peripherals such as UART and SPI. It also houses system components such as the CLINT, PLIC, and System Control CSR. The basic specifications are as follows:
 
 - **Clock:** clk_pl (100 MHz)
 - **Reset:** arst_n_pl
@@ -128,7 +134,7 @@ The IO Subsystem provides interfaces for various input/output peripherals such a
 
 The APB Bridge module grants access to the system bus. It allows an external APB master to communicate with the SoC's internal components. The basic specifications are as follows:
 
-- **Clock:** clk_apb & clk_sl (200-3200 MHz)
+- **Clock:** clk_apb & clk_sl (100-3200 MHz)
 - **Reset:** arst_n_apb & arst_n_sl
 - **Interface Type:** APB3 & AXI4
 - **Number of Master Ports:** 1 (APB3)
@@ -140,7 +146,7 @@ The APB Bridge module grants access to the system bus. It allows an external APB
 
 The AXI to AXI Lite Bridge module converts AXI4 transactions to AXI4 Lite transactions. This is essential for interfacing high-performance components with low-speed peripherals. The basic specifications are as follows:
 
-- **Clock:** clk_sl (200-3200 MHz)
+- **Clock:** clk_sl (100-3200 MHz)
 - **Reset:** arst_n_sl
 - **Interface Type:** AXI4 & AXI4 Lite
 - **Number of Master Ports:** 1 (AXI4)
