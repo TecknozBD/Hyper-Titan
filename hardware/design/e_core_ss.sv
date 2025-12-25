@@ -40,6 +40,9 @@ module e_core_ss
     input logic clk_i,
     input logic arst_ni,
 
+    // TODO BOOT ADDR
+    // TODO HART ID
+
     // AXI Master interface (to memory)
     output rvv_axi_req_t  m_axi_req_o,
     input  rvv_axi_resp_t m_axi_resp_i,
