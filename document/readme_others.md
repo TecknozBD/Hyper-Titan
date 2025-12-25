@@ -51,6 +51,7 @@ This project utilizes several third-party components, including:
 | _TODO:_ Add more as necessary
 
 ```mermaid
+%%{init: {"pie": {"sort": false}} }%%
 pie title IP Sources
   "Tecknoz" : ###TECKNOZ_IP_COUNT###
   "google-coral" : 59000
