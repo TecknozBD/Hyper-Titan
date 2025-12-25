@@ -1,3 +1,6 @@
+// UART RX: receives serial data, reconstructs bytes, and optionally
+// checks parity. Outputs `rx_data_o` with `rx_data_valid_o` when a
+// complete byte (and parity check) is available.
 module uart_rx (
     input logic arst_ni,
     input logic clk_i,
@@ -14,6 +17,7 @@ module uart_rx (
     input logic rx_i
 );
 
+  // RX FSM states: IDLE -> DATA_BIT0..7 -> optional PARITY -> STOP
   typedef enum logic [3:0] {
     IDLE,
     DATA_BIT0,
@@ -28,13 +32,18 @@ module uart_rx (
     STOP_BIT
   } tx_state_t;
 
+  // FSM registers
   tx_state_t current_state, next_state;
+  // Parity calculation: expected vs. received bit
   logic parity_expected;
   logic parity_received;
+  // Edge detection for start-bit sampling
   logic found_negedge;
+  // Counters used to sample mid-bit and advance FSM
   logic counter_en;
   logic [2:0] counter;
 
+  // Compute expected parity bit from received data and parity type
   assign parity_expected = (^rx_data_o) ^ cfg_parity_type_i;
 
   edge_detector #(
@@ -53,9 +62,11 @@ module uart_rx (
     if (~arst_ni) begin
       counter_en <= 1'b0;
     end else begin
+      // Enable the bit-sampling counter when a start edge is found
       if (~counter_en && current_state == IDLE && found_negedge) begin
         counter_en <= 1'b1;
       end
+      // Disable counter at end of STOP bit sequence
       if (counter_en && current_state == STOP_BIT && counter == 4) begin
         counter_en <= 1'b0;
       end
@@ -78,6 +89,8 @@ module uart_rx (
     next_state = IDLE;
     case (current_state)
       IDLE: begin
+        // After detecting start, move to first data bit (sampling
+        // happens in the sequential block when counter indicates).
         next_state = DATA_BIT0;
       end
       DATA_BIT0: begin
@@ -102,6 +115,7 @@ module uart_rx (
         next_state = DATA_BIT7;
       end
       DATA_BIT7: begin
+        // After last data bit, go to PARITY or STOP depending on config
         next_state = cfg_parity_en_i ? PARITY_BIT : STOP_BIT;
       end
       PARITY_BIT: begin
@@ -150,6 +164,7 @@ module uart_rx (
             rx_data_o[7] <= rx_i;
           end
           PARITY_BIT: begin
+            // Capture received parity bit for later comparison
             parity_received <= rx_i;
           end
           STOP_BIT: begin

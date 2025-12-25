@@ -1,3 +1,6 @@
+// UART TX: serialises bytes with optional parity and configurable
+// stop bits. Drives `tx_o` and provides `tx_data_ready_o` handshake
+// indicating when the module can accept another byte.
 module uart_tx (
     input logic arst_ni,
     input logic clk_i,
@@ -13,6 +16,7 @@ module uart_tx (
     output logic tx_o
 );
 
+  // TX FSM states: START -> DATA_BIT0..7 -> optional PARITY -> STOP(s)
   typedef enum logic [3:0] {
     IDLE,
     START_BIT,
@@ -29,9 +33,11 @@ module uart_tx (
     STOP_BIT2
   } tx_state_t;
 
+  // FSM registers and computed parity bit
   tx_state_t current_state, next_state;
   logic parity_bit;
 
+  // Parity to transmit computed from the byte and parity type
   assign parity_bit = (^tx_data_i) ^ cfg_parity_type_i;
 
   always_comb begin
@@ -46,10 +52,12 @@ module uart_tx (
       end
       START_BIT: begin
         next_state = DATA_BIT0;
+        // Drive start bit (logic 0)
         tx_o = 1'b0;
       end
       DATA_BIT0: begin
         next_state = DATA_BIT1;
+        // Shift out LSB first
         tx_o = tx_data_i[0];
       end
       DATA_BIT1: begin
@@ -77,14 +85,18 @@ module uart_tx (
         tx_o = tx_data_i[6];
       end
       DATA_BIT7: begin
+        // Last data bit then optional parity or stop
         next_state = cfg_parity_en_i ? PARITY_BIT : STOP_BIT1;
         tx_o = tx_data_i[7];
       end
       PARITY_BIT: begin
+        // Transmit computed parity bit
         next_state = STOP_BIT1;
         tx_o = parity_bit;
       end
       STOP_BIT1: begin
+        // Drive stop bit(s) high and signal ready once first stop
+        // bit is emitted so upstream can provide next byte.
         next_state = cfg_stop_bits_i ? STOP_BIT2 : IDLE;
         tx_o = 1'b1;
         tx_data_ready_o = 1'b1;

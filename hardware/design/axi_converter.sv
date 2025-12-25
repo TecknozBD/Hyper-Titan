@@ -35,9 +35,18 @@ module axi_converter #(
     input  dst_resp_t dst_resp_i
 );
 
+  // Top-level: AXI width/ID/user converters and optional CDC/FIFO
+  // - Converts between source and destination AXI interface widths
+  // - Optionally inserts CDC or FIFO stages depending on clock domains
+  // - Supports ID and data-width conversion paths
+
   //////////////////////////////////////////////////////////////////////////////////////////////////
   // LOCAL PARAMETERS
   //////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // Calculated bit-widths for AW/ID/USER/DATA fields derived from
+  // the provided typed request/response interfaces. Generation flags
+  // indicate which converter/CDC modules need to be instantiated.
 
   localparam int SRC_IW = $bits(src_req_i.aw.id);
   localparam int SRC_AW = $bits(src_req_i.aw.addr);
@@ -67,10 +76,15 @@ module axi_converter #(
   end
 `endif
 
+// Synthesis-time debug: prints chosen converter/CDC configuration
+// when simulation starts (disabled for synthesis builds).
+
   //////////////////////////////////////////////////////////////////////////////////////////////////
   // TYPE DEFINITIONS
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
+  // Macros below expand typed AXI channel structures for the
+  // various combinations of source/destination widths.
   // verilog_format: off
   `AXI_TYPEDEF_ALL(type_1, logic [SRC_AW-1:0], logic [SRC_IW-1:0], logic [SRC_DW-1:0], logic [SRC_DW/8-1:0], logic [SRC_UW-1:0])
   `AXI_TYPEDEF_ALL(type_2, logic [SRC_AW-1:0], logic [DST_IW-1:0], logic [SRC_DW-1:0], logic [SRC_DW/8-1:0], logic [SRC_UW-1:0])
@@ -81,6 +95,10 @@ module axi_converter #(
   //////////////////////////////////////////////////////////////////////////////////////////////////
   // SIGNAL DECLARATIONS
   //////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // Internal typed channel signals used between conversion stages.
+  // `internal_clk` selects which clock domain is used for internal
+  // FIFOs/converters (source or destination depending on faster_src).
 
   logic internal_clk;
 
@@ -101,6 +119,10 @@ module axi_converter #(
   //////////////////////////////////////////////////////////////////////////////////////////////////
   // MODULE INSTANTIATIONS
   //////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // Instantiate CDC or FIFO for source-side crossing depending on
+  // `GEN_SRC_CDC`. This isolates the source clock domain from the
+  // rest of the conversion pipeline when required.
 
   if (GEN_SRC_CDC) begin
     axi_cdc #(
@@ -146,6 +168,9 @@ module axi_converter #(
   end
 
   if (GEN_IWC) begin
+    // ID Width Converter: collapses/expands transaction IDs from
+    // source ID width to destination ID width while preserving
+    // ordering and outstanding transaction limits.
     axi_iw_converter #(
         .AxiSlvPortIdWidth     (SRC_IW),
         .AxiMstPortIdWidth     (DST_IW),
@@ -174,6 +199,9 @@ module axi_converter #(
     assign n_1_resp = n_2_resp;
   end
 
+  // Address/User width pass-through: pad or truncate fields so the
+  // downstream data-width converter always sees the destination
+  // address/user widths expected by the DWC block.
   always_comb begin
     n_3_req.aw.id     = {'0, n_2_req.aw.id};
     n_3_req.aw.addr   = {'0, n_2_req.aw.addr};
@@ -228,6 +256,9 @@ module axi_converter #(
   end
 
   if (GEN_DWC) begin
+    // Data Width Converter: handles widening/narrowing of the
+    // data channel between SRC_DW and DST_DW, including beats,
+    // byte-strobes, and read/write reassembly as required.
     axi_dw_converter #(
         .AxiMaxReads        (1),
         .AxiSlvPortDataWidth(SRC_DW),
@@ -259,6 +290,9 @@ module axi_converter #(
   end
 
   if (GEN_DST_CDC) begin
+    // Destination-side CDC: isolates the final converter output into
+    // the destination clock domain when required, or otherwise a
+    // FIFO is used to cross into the destination domain.
     axi_cdc #(
         .LogDepth  (2),
         .SyncStages(2),
