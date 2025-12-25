@@ -1,5 +1,46 @@
+## Repository
+
+This repository contains the complete RTL design, simulation testbenches, and documentation for the Hyper-Titan SoC.
+
+**Repository Structure:**
+
+```text
+Hyper-Titan/
+├── build/                 # Temporary build files
+├── document/              # Documentation files
+├── hardware/              # RTL source files and testbenches
+│   ├── design/            # SoC design source files
+│   ├── filelist/          # File lists for synthesis and simulation
+│   ├── include/           # Common include files
+│   ├── interface/         # Interface definitions
+│   ├── package/           # Common packages
+│   └── testbench/         # Testbenches for simulation
+├── log/                   # Simulation logs and reports
+├── scripts/               # Automation scripts
+├── software/              # Firmware and driver source code
+│   ├── include/           # Common include files
+│   ├── linkers/           # Linker scripts
+│   └── source/            # Firmware and driver source files
+├── submodule/             # External third-party dependencies
+├── .gitmodules            # Git submodule configuration
+├── LICENSE                # License information
+├── Makefile               # Top-level Makefile for build automation
+└── README.md              # Project overview
+```
+
+## Getting Started
+
+**Pre-requisites:**
+
+- A Unix-based development environment
+- GNU Makefile
+- GNU toolchain for RISC-V
+- AMD Xilinx Vivado
+
 ## Third-Party Components
+
 This project utilizes several third-party components, including:
+
 - [google-coral/coralnpu](https://github.com/google-coral/coralnpu)
 - [lowRISC/ariane](https://github.com/lowRISC/ariane)
 - [pulp-platform/axi](https://github.com/pulp-platform/axi)
@@ -10,5 +51,18 @@ This project utilizes several third-party components, including:
 
 | _TODO:_ Add more as necessary
 
+**Example pie chart (Mermaid):**
+
+```mermaid
+pie title Example
+  "UART" : 40
+  "SPI"  : 25
+  "DMA"  : 20
+  "Other": 15
+```
+
+> Note: Pie chart rendering requires Mermaid support in your Markdown renderer.
+
 ## License
+
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

@@ -30,6 +30,9 @@ export XILINX_IPS=${SUBMODULE}/xilinx
 # Tools
 ####################################################################################################
 
+XVLOG           ?= xvlog
+XELAB           ?= xelab
+XSIM            ?= xsim
 RISCV64_GCC     ?= riscv64-unknown-elf-gcc
 RISCV64_OBJCOPY ?= riscv64-unknown-elf-objcopy
 RISCV64_NM      ?= riscv64-unknown-elf-nm
@@ -67,7 +70,7 @@ clean_full:
 define COMPILE
 	$(eval BASENAME=$(shell basename $1 .f))
 	echo -e " \033[0;33m*\033[0m ${BASENAME}\033[25G ${LOG}/xvlog_${BASENAME}.log"
-	cd ${BUILD} && xvlog -f ${FILELIST}/${BASENAME}.f --log ${LOG}/xvlog_${BASENAME}.log ${EW_O}
+	cd ${BUILD} && ${XVLOG} -f ${FILELIST}/${BASENAME}.f --log ${LOG}/xvlog_${BASENAME}.log ${EW_O}
 endef
 
 .PHONY: all
@@ -80,10 +83,10 @@ all:
 	@$(foreach file, $(shell find ${FILELIST} -type f -name "*.f"),$(call COMPILE,${file}))
 	@echo -e "\033[1;33mELABORATING:\033[0m"
 	@echo -e " \033[0;33m*\033[0m ${TOP}\033[25G ${LOG}/xelab_${TOP}.log"
-	@cd ${BUILD} && xelab work.${TOP} --log ${LOG}/xelab_${TOP}.log ${EW_O}
+	@cd ${BUILD} && ${XELAB} work.${TOP} --log ${LOG}/xelab_${TOP}.log ${EW_O}
 	@echo -e "\033[1;33mSIMULATING:\033[0m"
 	@echo -e " \033[0;33m*\033[0m ${TOP}::${TEST} ${LOG}/xsim_${TOP}_${TEST}.log"
-	@cd ${BUILD} && xsim ${TOP} --log ${LOG}/xsim_${TOP}_${TEST}.log --runall ${EW_HL}
+	@cd ${BUILD} && ${XSIM} ${TOP} --log ${LOG}/xsim_${TOP}_${TEST}.log --runall ${EW_HL}
 
 .PHONY: test
 test:
