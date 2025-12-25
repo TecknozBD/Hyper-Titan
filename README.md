@@ -115,12 +115,12 @@ This project utilizes several third-party components, including:
 
 ```mermaid
 pie title IP Sources
-  "Tecknoz" : 15
-  "google-coral" : 20
-  "lowRISC" : 20
-  "pulp-platform" : 35
-  "squared-studio": 5
-  "ultraembedded": 5
+  "Tecknoz" : 4409
+  "google-coral" : 59000
+  "lowRISC" : 22000
+  "pulp-platform" : 36000
+  "squared-studio": 2000
+  "ultraembedded": 6000
 ```
 
 > Note: Pie chart rendering requires Mermaid support in your Markdown renderer.
