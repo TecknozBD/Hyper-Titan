@@ -112,5 +112,6 @@ gen_doc:
 	@sed -ri "s/document\/http/http/g" README.md
 	@sed -ri "s/document\/LICENSE/LICENSE/g" README.md
 	@$(eval FILES=$(shell find hardware -name "*.*v*"))
+	@$(eval FILES+=$(shell find document -name "*.*"))
 	@$(eval LINES=$(shell cat ${FILES} | wc -l))
 	@sed -i "s/###TECKNOZ_IP_COUNT###/${LINES}/g" README.md
