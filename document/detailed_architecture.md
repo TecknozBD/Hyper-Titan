@@ -15,6 +15,7 @@ The Hyper-Titan SoC is composed of several key subsystems, each designed to hand
 - [Peripheral Link](#peripheral-link)
 - [Memory Subsystem](#memory-subsystem)
 - [IO Subsystem](#io-subsystem)
+- [Clock Reset Generator](#clock-reset-generator)
 - [APB Bridge](#apb-bridge)
 - [AXI to AXI Lite Bridge](#axi-to-axi-lite-bridge)
 - [AXI Converter](#axi-converter)
@@ -141,6 +142,15 @@ The APB Bridge module grants access to the system bus. It allows an external APB
 - **Number of Slave Ports:** 1 (AXI4)
 
 #### [APB Bridge Detailed](modules/apb_bridge.md)
+
+### Clock Reset Generator
+
+The Clock Reset Generator module is responsible for generating and distributing clock and reset signals throughout the SoC. It ensures that all components operate synchronously and can be reset appropriately. The basic specifications are as follows:
+
+- **Input Clock:** ref_clk_i (100 MHz)
+- **Input Reset:** glob_arst_n_i
+
+#### [Clock Reset Generator Detailed](modules/crg.md)
 
 ### AXI 2 AXI Lite Bridge
 
