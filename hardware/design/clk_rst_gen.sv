@@ -36,43 +36,43 @@ module clk_rst_gen (
     // E CORE
     // E-core domain clock enable/reset and outputs
     // - `clk_en_e_core_i`: enable E-core clock
-    // - `rst_e_core_ni`:  E-core reset input (active-low)
+    // - `arst_e_core_ni`:  E-core reset input (active-low)
     // - `clk_e_core_o`:   E-core generated clock output
-    // - `rst_e_core_o`:   E-core reset output (synchronized as needed)
+    // - `arst_e_core_o`:   E-core reset output (synchronized as needed)
     input  logic clk_en_e_core_i,
-    input  logic rst_e_core_ni,
+    input  logic arst_e_core_ni,
     output logic clk_e_core_o,
-    output logic rst_e_core_o,
+    output logic arst_e_core_o,
 
     // P CORE
     // P-core domain clock enable/reset and outputs
     input  logic clk_en_p_core_i,
-    input  logic rst_p_core_ni,
+    input  logic arst_p_core_ni,
     output logic clk_p_core_o,
-    output logic rst_p_core_o,
+    output logic arst_p_core_o,
 
     // CORE LINK
-    // Core-link (interconnect) domain signals
+    // Core-link (interconnect) domain signals `clk_src_cl_o` exposes the
+    // selected clock source for the core-link domain.
     input  logic clk_en_cl_i,
-    input  logic rst_cl_ni,
+    input  logic arst_cl_ni,
     output logic clk_cl_o,
-    output logic rst_cl_o,
+    output logic arst_cl_o,
+    output logic clk_src_cl_o,
 
     // SYSTEM LINK
-    // System-link domain signals. `clk_src_sl_o` exposes the
-    // selected clock source for the system-link domain.
+    // System-link domain signals.
     input  logic clk_en_sl_i,
-    input  logic rst_sl_ni,
+    input  logic arst_sl_ni,
     output logic clk_sl_o,
-    output logic rst_sl_o,
-    output logic clk_src_sl_o,
+    output logic arst_sl_o,
 
     // PERIPHERAL LINK
     // Peripheral-link domain clock/reset signals
     input  logic clk_en_pl_i,
-    input  logic rst_pl_ni,
+    input  logic arst_pl_ni,
     output logic clk_pl_o,
-    output logic rst_pl_o
+    output logic arst_pl_o
 );
 
 endmodule

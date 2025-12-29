@@ -83,7 +83,7 @@ all:
 	@$(foreach file, $(shell find ${FILELIST} -type f -name "*.f"),$(call COMPILE,${file}))
 	@echo -e "\033[1;33mELABORATING:\033[0m"
 	@echo -e " \033[0;33m*\033[0m ${TOP}\033[25G ${LOG}/xelab_${TOP}.log"
-	@cd ${BUILD} && ${XELAB} work.${TOP} --log ${LOG}/xelab_${TOP}.log ${EW_O}
+	@cd ${BUILD} && ${XELAB} work.${TOP} --timescale 1ns/1ps --log ${LOG}/xelab_${TOP}.log ${EW_O}
 	@echo -e "\033[1;33mSIMULATING:\033[0m"
 	@echo -e " \033[0;33m*\033[0m ${TOP}::${TEST} ${LOG}/xsim_${TOP}_${TEST}.log"
 	@cd ${BUILD} && ${XSIM} ${TOP} --log ${LOG}/xsim_${TOP}_${TEST}.log --runall ${EW_HL}
