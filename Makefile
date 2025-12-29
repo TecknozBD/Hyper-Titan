@@ -22,6 +22,7 @@ export SUBMODULE=${HYPER_TITAN}/submodule
 export AXI=${SUBMODULE}/axi
 export COMMON=${SUBMODULE}/common
 export COMMON_CELLS=${SUBMODULE}/common_cells
+export HARDWARE=${SUBMODULE}/hardware
 export SOC=${SUBMODULE}/SoC
 export CORE_DDR3_CONTROLLER=${SUBMODULE}/core_ddr3_controller
 export XILINX_IPS=${SUBMODULE}/xilinx
