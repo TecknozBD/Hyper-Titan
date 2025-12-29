@@ -50,8 +50,8 @@ Description : Controls the clock and reset for the core link.
 | ---- | -------- | ------ | ----------- | ------------------------------ |
 | 0    | CLK_EN   | RW     | 1           | Enable clock for core link     |
 | 1    | RST_N    | RW     | 1           | Active low reset for core link |
-| 3:2  | SRC_SEL  | RO     | -           | Clock source selection Read    |
-| 31:2 | Reserved | -      | -           | Reserved                       |
+| 2    | SRC_SEL  | RO     | -           | Clock source selection Read    |
+| 31:3 | Reserved | -      | -           | Reserved                       |
 
 ### SYS_LINK_CLK_RST
 
@@ -71,7 +71,7 @@ Description : Controls the clock and reset for the peripheral link.
 
 | Bit  | Name     | ACCESS | Reset Value | Description                          |
 | ---- | -------- | ------ | ----------- | ------------------------------------ |
-| 0    | CLK_EN   | RW     | 1           | Enable clock for peripheral link     |
+| 0    | CLK_EN   | RO     | 1           | Enable clock for peripheral link     |
 | 1    | RST_N    | RW     | 1           | Active low reset for peripheral link |
 | 31:2 | Reserved | -      | -           | Reserved                             |
 
