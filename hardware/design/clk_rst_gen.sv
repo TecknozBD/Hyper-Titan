@@ -12,6 +12,8 @@ module clk_rst_gen (
     input logic ref_clk_i,
     input logic glob_arst_ni,
 
+    output logic rtc_o,  // Real-time clock output (from reference clock)
+
     // PLL E CORE
     // Configuration and status for the E-core PLL
     // - `pll_ref_div_e_core_i`: reference divider for E-core PLL

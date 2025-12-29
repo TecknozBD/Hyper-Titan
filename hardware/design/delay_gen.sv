@@ -1,60 +1,52 @@
-// Simple delay generator: wait for CYCLES pulses of `rtc_i`, then
-// allow `en_o` to follow `en_i` (sampled on the gating clock).
-//
-// Notes:
-// - `arst_ni` is an active-low asynchronous reset.
-// - `rtc_i` is the reference/timebase clock used to increment the
-//   internal counter. After `CYCLES` pulses `done` becomes true.
-// - `en_o` is updated on the positive edge of `~clk_i` (equivalent to
-//   the negative edge of `clk_i`) and will be `en_i & done` when not
-//   in reset. This intentionally samples `en_i` on the falling edge of
-//   `clk_i` (see implementation below).
-
 module delay_gen #(
-    parameter int CYCLES = 10
+    parameter int RESET_CYCLES = 10,
+    parameter int CLOCK_CYCLES = 10
 ) (
-    // Active-low asynchronous reset
-    input  logic arst_ni,
-    // Reference/timebase clock used for counting delay cycles
-    input  logic rtc_i,
-    // Domain clock used to sample the output enable; sampled on
-    // the falling edge of `clk_i` (see always_ff below)
-    input  logic clk_i,
-    // Input enable that is passed through to `en_o` once the delay
-    // counter has reached `CYCLES`
-    input  logic en_i,
-    // Output enable asserted when `en_i` is high AND the delay is done
+    input logic arst_ni,
+    input logic rtc_i,
+    input logic clk_i,
+    input logic en_i,
+
+    output logic arst_no,
     output logic en_o
 );
 
-  // Small counter sized to hold values up to CYCLES
-  logic [$clog2(CYCLES+1)-1:0] counter;
-  // Pulse that goes true when counter reaches the target
-  logic done;
+  logic [$clog2(RESET_CYCLES+1)-1:0] reset_counter;
+  logic [$clog2(CLOCK_CYCLES+1)-1:0] clock_counter;
 
-  // done is asserted when counter equals the configured cycle count
-  assign done = (counter == CYCLES);
+  logic reset_done;
+  logic clock_done;
 
-  // Count `rtc_i` pulses. Reset is asynchronous (active-low).
+  assign reset_done = (reset_counter == RESET_CYCLES);
+  assign clock_done = (clock_counter == CLOCK_CYCLES);
+
   always_ff @(posedge rtc_i or negedge arst_ni) begin
     if (~arst_ni) begin
-      counter <= '0;
+      reset_counter <= '0;
     end else begin
-      if (~done) begin
-        counter <= counter + 1;
+      if (~reset_done) begin
+        reset_counter <= reset_counter + 1;
       end
     end
   end
 
-  // Drive `en_o` sampled on the falling edge of `clk_i`.
-  // Note: `@(posedge ~clk_i)` is equivalent to `@(negedge clk_i)` and
-  // is used here to make the sampling domain explicit in the source.
+  always_ff @(posedge rtc_i or negedge reset_done) begin
+    if (~reset_done) begin
+      clock_counter <= '0;
+    end else begin
+      if (~clock_done) begin
+        clock_counter <= clock_counter + 1;
+      end
+    end
+  end
+
+  assign arst_no = reset_done;
+
   always_ff @(posedge ~clk_i or negedge arst_ni) begin
     if (~arst_ni) begin
       en_o <= '0;
     end else begin
-      // Allow en_o only when the delay counter indicates completion
-      en_o <= en_i & done;
+      en_o <= en_i & clock_done;
     end
   end
 
