@@ -1332,8 +1332,7 @@ endfunction
             fd = $fopen(filename, "wb+");
             if (fd == 0)
             begin
-                $display("%m: at time %0t ERROR: failed to open %0s.", $time, filename);
-                $finish;
+                $warning("%m: at time %0t ERROR: failed to open %0s.", $time, filename);
             end
             else
             begin

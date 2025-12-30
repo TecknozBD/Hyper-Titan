@@ -7,7 +7,7 @@ ${XILINX_IPS}/IOBUF.v
 ${XILINX_IPS}/IDELAYE2.v
 ${XILINX_IPS}/IDELAYCTRL.v
 ${XILINX_IPS}/ISERDESE2.v
-${CORE_DDR3_CONTROLLER}/src_v/phy/xc7/ddr3_dfi_phy.v
+${HYPER_TITAN}/hardware/design/ddr3_dfi_phy.sv
 ${CORE_DDR3_CONTROLLER}/src_v/ddr3_dfi_seq.v
 ${CORE_DDR3_CONTROLLER}/src_v/ddr3_core.v
 ${HYPER_TITAN}/hardware/design/ddr3_axi_pmem.sv

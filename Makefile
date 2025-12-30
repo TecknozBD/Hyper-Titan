@@ -7,6 +7,20 @@ export SHELL=/bin/bash
 TOP     := hyper_titan_tb_cfg
 TEST    := default
 HART_ID := 0
+GUI     := 0
+
+####################################################################################################
+# Command Output Filtering
+####################################################################################################
+
+ifeq ($(GUI), 0)
+XSIM_ARGS := --runall
+else
+XSIM_ARGS := --gui
+endif
+
+EW_HL := | grep -E "WARNING:|ERROR:|" --color=auto
+EW_O := | grep -E "WARNING:|ERROR:" --color=auto || true
 
 ####################################################################################################
 # Directory
@@ -38,13 +52,6 @@ RISCV64_GCC     ?= riscv64-unknown-elf-gcc
 RISCV64_OBJCOPY ?= riscv64-unknown-elf-objcopy
 RISCV64_NM      ?= riscv64-unknown-elf-nm
 RISCV64_OBJDUMP ?= riscv64-unknown-elf-objdump
-
-####################################################################################################
-# Command Output Filtering
-####################################################################################################
-
-EW_HL := | grep -E "WARNING:|ERROR:|" --color=auto
-EW_O := | grep -E "WARNING:|ERROR:" --color=auto || true
 
 ####################################################################################################
 # Targets
@@ -84,10 +91,10 @@ all:
 	@$(foreach file, $(shell find ${FILELIST} -type f -name "*.f"),$(call COMPILE,${file}))
 	@echo -e "\033[1;33mELABORATING:\033[0m"
 	@echo -e " \033[0;33m*\033[0m ${TOP}\033[25G ${LOG}/xelab_${TOP}.log"
-	@cd ${BUILD} && ${XELAB} work.${TOP} --timescale 1ns/1ps --log ${LOG}/xelab_${TOP}.log ${EW_O}
+	@cd ${BUILD} && ${XELAB} work.${TOP} --timescale 1ns/1ps --debug wave --log ${LOG}/xelab_${TOP}.log ${EW_O}
 	@echo -e "\033[1;33mSIMULATING:\033[0m"
-	@echo -e " \033[0;33m*\033[0m ${TOP}::${TEST} ${LOG}/xsim_${TOP}_${TEST}.log"
-	@cd ${BUILD} && ${XSIM} ${TOP} --log ${LOG}/xsim_${TOP}_${TEST}.log --runall ${EW_HL}
+	@echo -e " \033[0;33m*\033[0m ${TOP}::${TEST}\033[25G ${LOG}/xsim_${TOP}_${TEST}.log"
+	@cd ${BUILD} && ${XSIM} ${TOP} --log ${LOG}/xsim_${TOP}_${TEST}.log ${XSIM_ARGS} ${EW_HL}
 
 .PHONY: test
 test:

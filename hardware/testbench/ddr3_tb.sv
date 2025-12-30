@@ -62,6 +62,13 @@ module ddr3_tb;
   wire        inport_rlast;
 
   ////////////////////////////////////////////////
+  // PHY CONFIG
+  ////////////////////////////////////////////////
+
+  wire        cfg_valid;
+  wire [31:0] cfg;
+
+  ////////////////////////////////////////////////
   // DFI
   ////////////////////////////////////////////////
 
@@ -177,6 +184,8 @@ module ddr3_tb;
       .clk_ddr90_i       (clk_ddr_dqs),
       .clk_ref_i         (clk_ref),
       .rst_i             (rst),
+      .cfg_valid_i       (cfg_valid),
+      .cfg_i             (cfg),
       .dfi_address_i     (dfi_address),
       .dfi_bank_i        (dfi_bank),
       .dfi_cas_n_i       (dfi_cas_n),
