@@ -1109,9 +1109,9 @@ endfunction
 
         if (!$value$plusargs("model_data+%s", tmp_model_dir))
         begin
-            tmp_model_dir = "/tmp";
+            tmp_model_dir = ".";
             $display(
-                "%m: at time %t WARNING: no +model_data option specified, using /tmp.",
+                "%m: at time %t WARNING: no +model_data option specified, using build.",
                 $time
             );
         end
@@ -1332,7 +1332,8 @@ endfunction
             fd = $fopen(filename, "wb+");
             if (fd == 0)
             begin
-                $warning("%m: at time %0t ERROR: failed to open %0s.", $time, filename);
+                $display("%m: at time %0t ERROR: failed to open %0s.", $time, filename);
+                $finish;
             end
             else
             begin

@@ -1,3 +1,6 @@
+`include "axi/typedef.svh"
+`include "simple_axi_m_driver.svh"
+
 module ddr3_tb;
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,94 +24,92 @@ module ddr3_tb;
   // verilog_format: on
 
   logic rst;
-  initial begin
-    #100ns;
-    rst <= 1'b0;
-    #100ns;
-    rst <= 1'b1;
-    #100ns;
-  end
 
   ////////////////////////////////////////////////
   // AXI
   ////////////////////////////////////////////////
 
-  wire        inport_awvalid;
-  wire [31:0] inport_awaddr;
-  wire [ 3:0] inport_awid;
-  wire [ 7:0] inport_awlen;
-  wire [ 1:0] inport_awburst;
-  wire        inport_wvalid;
-  wire [31:0] inport_wdata;
-  wire [ 3:0] inport_wstrb;
-  wire        inport_wlast;
-  wire        inport_bready;
-  wire        inport_arvalid;
-  wire [31:0] inport_araddr;
-  wire [ 3:0] inport_arid;
-  wire [ 7:0] inport_arlen;
-  wire [ 1:0] inport_arburst;
-  wire        inport_rready;
-  wire        inport_awready;
-  wire        inport_wready;
-  wire        inport_bvalid;
-  wire [ 1:0] inport_bresp;
-  wire [ 3:0] inport_bid;
-  wire        inport_arready;
-  wire        inport_rvalid;
-  wire [31:0] inport_rdata;
-  wire [ 1:0] inport_rresp;
-  wire [ 3:0] inport_rid;
-  wire        inport_rlast;
+  `AXI_TYPEDEF_ALL(axi, logic [31:0], logic [3:0], logic [31:0], logic [3:0], logic)
+
+  axi_req_t         axi_req;
+  axi_resp_t        axi_resp;
+
+  wire              inport_awvalid;
+  wire       [31:0] inport_awaddr;
+  wire       [ 3:0] inport_awid;
+  wire       [ 7:0] inport_awlen;
+  wire       [ 1:0] inport_awburst;
+  wire              inport_wvalid;
+  wire       [31:0] inport_wdata;
+  wire       [ 3:0] inport_wstrb;
+  wire              inport_wlast;
+  wire              inport_bready;
+  wire              inport_arvalid;
+  wire       [31:0] inport_araddr;
+  wire       [ 3:0] inport_arid;
+  wire       [ 7:0] inport_arlen;
+  wire       [ 1:0] inport_arburst;
+  wire              inport_rready;
+  wire              inport_awready;
+  wire              inport_wready;
+  wire              inport_bvalid;
+  wire       [ 1:0] inport_bresp;
+  wire       [ 3:0] inport_bid;
+  wire              inport_arready;
+  wire              inport_rvalid;
+  wire       [31:0] inport_rdata;
+  wire       [ 1:0] inport_rresp;
+  wire       [ 3:0] inport_rid;
+  wire              inport_rlast;
 
   ////////////////////////////////////////////////
   // PHY CONFIG
   ////////////////////////////////////////////////
 
-  wire        cfg_valid;
-  wire [31:0] cfg;
+  wire              cfg_valid;
+  wire       [31:0] cfg;
 
   ////////////////////////////////////////////////
   // DFI
   ////////////////////////////////////////////////
 
-  wire [14:0] dfi_address;
-  wire [ 2:0] dfi_bank;
-  wire        dfi_cas_n;
-  wire        dfi_cke;
-  wire        dfi_cs_n;
-  wire        dfi_odt;
-  wire        dfi_ras_n;
-  wire        dfi_reset_n;
-  wire        dfi_we_n;
-  wire [31:0] dfi_wrdata;
-  wire        dfi_wrdata_en;
-  wire [ 3:0] dfi_wrdata_mask;
-  wire        dfi_rddata_en;
-  wire [31:0] dfi_rddata;
-  wire        dfi_rddata_valid;
-  wire [ 1:0] dfi_rddata_dnv;
+  wire       [14:0] dfi_address;
+  wire       [ 2:0] dfi_bank;
+  wire              dfi_cas_n;
+  wire              dfi_cke;
+  wire              dfi_cs_n;
+  wire              dfi_odt;
+  wire              dfi_ras_n;
+  wire              dfi_reset_n;
+  wire              dfi_we_n;
+  wire       [31:0] dfi_wrdata;
+  wire              dfi_wrdata_en;
+  wire       [ 3:0] dfi_wrdata_mask;
+  wire              dfi_rddata_en;
+  wire       [31:0] dfi_rddata;
+  wire              dfi_rddata_valid;
+  wire       [ 1:0] dfi_rddata_dnv;
 
   ////////////////////////////////////////////////
   // DDR3
   ////////////////////////////////////////////////
 
-  wire        ddr3_reset_n_w;
-  wire        ddr3_ck_p_w;
-  wire        ddr3_ck_n_w;
-  wire        ddr3_cke_w;
-  wire        ddr3_cs_n_w;
-  wire        ddr3_ras_n_w;
-  wire        ddr3_cas_n_w;
-  wire        ddr3_we_n_w;
-  wire [ 1:0] ddr3_dm_w;
-  wire [ 2:0] ddr3_ba_w;
-  wire [13:0] ddr3_addr_w;
-  wire [15:0] ddr3_dq_w;
-  wire [ 1:0] ddr3_dqs_p_w;
-  wire [ 1:0] ddr3_dqs_n_w;
-  wire [ 1:0] ddr3_tdqs_n_w;
-  wire        ddr3_odt_w;
+  wire              ddr3_reset_n_w;
+  wire              ddr3_ck_p_w;
+  wire              ddr3_ck_n_w;
+  wire              ddr3_cke_w;
+  wire              ddr3_cs_n_w;
+  wire              ddr3_ras_n_w;
+  wire              ddr3_cas_n_w;
+  wire              ddr3_we_n_w;
+  wire       [ 1:0] ddr3_dm_w;
+  wire       [ 2:0] ddr3_ba_w;
+  wire       [13:0] ddr3_addr_w;
+  wire       [15:0] ddr3_dq_w;
+  wire       [ 1:0] ddr3_dqs_p_w;
+  wire       [ 1:0] ddr3_dqs_n_w;
+  wire       [ 1:0] ddr3_tdqs_n_w;
+  wire              ddr3_odt_w;
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
   // INSTANTIATIONS
@@ -243,13 +244,86 @@ module ddr3_tb;
   );
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
+  // COMBINATIONAL LOGIC
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+
+  always_comb begin
+    axi_resp          = '0;
+    axi_resp.aw_ready = inport_awready;
+    axi_resp.w_ready  = inport_wready;
+    axi_resp.b.id     = inport_bid;
+    axi_resp.b.resp   = inport_bresp;
+    axi_resp.b_valid  = inport_bvalid;
+    axi_resp.ar_ready = inport_arready;
+    axi_resp.r.id     = inport_rid;
+    axi_resp.r.data   = inport_rdata;
+    axi_resp.r.resp   = inport_rresp;
+    axi_resp.r.last   = inport_rlast;
+    axi_resp.r_valid  = inport_rvalid;
+  end
+
+  assign inport_awaddr  = axi_req.aw.addr;
+  assign inport_awid    = axi_req.aw.id;
+  assign inport_awlen   = axi_req.aw.len;
+  assign inport_awburst = axi_req.aw.burst;
+  assign inport_awvalid = axi_req.aw_valid;
+  assign inport_wdata   = axi_req.w.data;
+  assign inport_wstrb   = axi_req.w.strb;
+  assign inport_wlast   = axi_req.w.last;
+  assign inport_wvalid  = axi_req.w_valid;
+  assign inport_bready  = axi_req.b_ready;
+  assign inport_araddr  = axi_req.ar.addr;
+  assign inport_arid    = axi_req.ar.id;
+  assign inport_arlen   = axi_req.ar.len;
+  assign inport_arburst = axi_req.ar.burst;
+  assign inport_arvalid = axi_req.ar_valid;
+  assign inport_rready  = axi_req.r_ready;
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // MEMORY DRIVER
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // task automatic axi_read_8(addr, data, resp);
+  // task automatic axi_write_8(addr, data, resp);
+  // task automatic axi_read_16(addr, data, resp);
+  // task automatic axi_write_16(addr, data, resp);
+  // task automatic axi_read_32(addr, data, resp);
+  // task automatic axi_write_32(addr, data, resp);
+  // task automatic axi_read_64(addr, data, resp);
+  // task automatic axi_write_64(addr, data, resp);
+  `SIMPLE_AXI_M_DRIVER(axi, clk, ~rst, axi_req, axi_resp)
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
   // MAIN TESTBENCH LOGIC
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
   initial begin
+    logic [31:0] data_dummy;
+    logic [ 1:0] resp_dummy;
+
     $dumpfile("ddr3_tb.vcd");
     $dumpvars(0, ddr3_tb);
-    #10us;
+
+    // repeat (10) @(posedge clk);
+    rst <= 1'b0;
+    repeat (10) @(posedge clk);
+    axi_req <= '0;
+    rst <= 1'b1;
+    repeat (10) @(posedge clk);
+    rst <= 1'b0;
+
+    @(posedge clk);
+
+    repeat (2) begin
+      data_dummy = 32'hA5A5A5A5;
+      axi_write_32(128, data_dummy, resp_dummy);
+      data_dummy = 32'h00000000;
+      axi_read_32(128, data_dummy, resp_dummy);
+      $display("\033[1;32mREAD DATA: %h\033[0m", data_dummy);
+    end
+
+    repeat (10) @(posedge clk);
+
     $finish;
   end
 
