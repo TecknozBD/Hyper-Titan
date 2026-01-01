@@ -207,3 +207,5 @@ _Figure: System Link Module Diagram_
 | 0x0000_2000 - 0x0000_2FFF | Master Port 3      |
 | 0x0000_5000 - 0x0000_5FFF | Master Port 3      |
 | All Other Addresses       | Master Port 2      |
+
+Further details on axi_xbar can be found [here](https://github.com/pulp-platform/axi/blob/master/doc/axi_xbar.md).

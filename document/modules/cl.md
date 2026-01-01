@@ -197,3 +197,5 @@ The `core_link` module is responsible for facilitating communication between the
 | 0x0000_0000 - 0x0000_1FFF | Master Port 0      |
 | 0x0800_0000 - 0x080F_FFFF | Master Port 1      |
 | All Other Addresses       | Master Port 2      |
+
+Further details on axi_xbar can be found [here](https://github.com/pulp-platform/axi/blob/master/doc/axi_xbar.md).
