@@ -54,9 +54,9 @@ module sys_ctrl
     // ========================================================================
     // CORE_LINK_CLK_RST Register Outputs
     // ========================================================================
-    output logic       core_link_clk_en_o,  // Clock enable for core link
-    output logic       core_link_rst_no,    // Active-low reset for core link
-    input  logic [1:0] core_link_clk_src_i, // Clock source selection for core link
+    output logic core_link_clk_en_o,  // Clock enable for core link
+    output logic core_link_rst_no,    // Active-low reset for core link
+    input  logic core_link_clk_src_i, // Clock source selection for core link
 
     // ========================================================================
     // SYS_LINK_CLK_RST Register Outputs
@@ -253,7 +253,7 @@ module sys_ctrl
         REG_OFFSET_CORE_LINK_CLK_RST: begin
           // Read control register
           mem_rresp = 2'b00;  // OKAY
-          mem_rdata = {28'b0, core_link_clk_src_i, core_link_rst_no, core_link_clk_en_o};
+          mem_rdata = {29'b0, core_link_clk_src_i, core_link_rst_no, core_link_clk_en_o};
         end
 
         REG_OFFSET_SYS_LINK_CLK_RST: begin

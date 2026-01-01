@@ -19,6 +19,7 @@ module hyper_titan (
   logic        clk_sl;
   logic        clk_pl;
 
+  logic        clk_src_cl;
   logic        rtc;
 
   logic [ 3:0] pll_ref_div_e_core;
@@ -43,10 +44,13 @@ module hyper_titan (
   logic        sys_link_clk_en;
   logic        periph_link_clk_en;
 
+  logic [31:0] boot_addr_e_core;
+  logic [31:0] boot_addr_p_core;
+  logic [31:0] boot_hartid_e_core;
+  logic [31:0] boot_hartid_p_core;
+
 
   e_core_ss u_e_core_ss (
-      // input logic [31:0] boot_addr_i,
-      // input logic [31:0] hart_id_i,
       // output rvv_axi_req_t  m_axi_req_o,
       // input  rvv_axi_resp_t m_axi_resp_i,
       // input  rvv_axi_req_t  s_axi_req_i,
@@ -61,8 +65,8 @@ module hyper_titan (
       // output logic [3:0] io_debug_en
       .clk_i(clk_e_core),
       .arst_ni(arst_e_core_n),
-      .boot_addr_i(),
-      .hart_id_i(),
+      .boot_addr_i(boot_addr_e_core),
+      .hart_id_i(boot_hartid_e_core),
       .m_axi_req_o(),
       .m_axi_resp_i(),
       .s_axi_req_i(),
@@ -78,8 +82,6 @@ module hyper_titan (
   );
 
   p_core_ss u_p_core_ss (
-      // input logic [31:0] boot_addr_i,
-      // input logic [31:0] hart_id_i,
       // input logic [1:0] irq_i,
       // input logic       ipi_i,
       // input logic time_irq_i,
@@ -90,8 +92,8 @@ module hyper_titan (
       // output rs_s_axi_resp_t rs_s_axi_resp_o
       .clk_i(clk_p_core),
       .arst_ni(arst_p_core_n),
-      .boot_addr_i(),
-      .hart_id_i(),
+      .boot_addr_i(boot_addr_p_core),
+      .hart_id_i(boot_hartid_p_core),
       .irq_i(),
       .ipi_i(),
       .time_irq_i(),
@@ -205,37 +207,28 @@ module hyper_titan (
   sys_ctrl #(
       .req_t   (),
       .resp_t  (),
-      .MEM_BASE(),
-      .MEM_SIZE()
+      .MEM_BASE('h0000_2000),
+      .MEM_SIZE(12)
   ) u_sys_ctrl (
-      // input logic arst_ni,
-      // input logic clk_i,
-      // input  req_t  req_i,
-      // output resp_t resp_o,
-      // input  logic [1:0] core_link_clk_src_i,
-      // output logic [31:0] boot_addr_e_core_o,
-      // output logic [31:0] boot_addr_p_core_o,
-      // output logic [31:0] boot_hartid_e_core_o,
-      // output logic [31:0] boot_hartid_p_core_o,
-      .arst_ni               (),
-      .clk_i                 (),
-      .req_i                 (),
-      .resp_o                (),
+      .arst_ni               (arst_sl_n),
+      .clk_i                 (clk_sl),
+      .req_i                 (), // TODO
+      .resp_o                (), // TODO
       .e_core_clk_en_o       (e_core_clk_en),
       .e_core_rst_no         (e_core_rst_n),
       .p_core_clk_en_o       (p_core_clk_en),
       .p_core_rst_no         (p_core_rst_n),
       .core_link_clk_en_o    (core_link_clk_en),
       .core_link_rst_no      (core_link_rst_n),
-      .core_link_clk_src_i   (),
+      .core_link_clk_src_i   (clk_src_cl),
       .sys_link_clk_en_o     (sys_link_clk_en),
       .sys_link_rst_no       (sys_link_rst_n),
       .periph_link_clk_en_o  (periph_link_clk_en),
       .periph_link_rst_no    (periph_link_rst_n),
-      .boot_addr_e_core_o    (),
-      .boot_addr_p_core_o    (),
-      .boot_hartid_e_core_o  (),
-      .boot_hartid_p_core_o  (),
+      .boot_addr_e_core_o    (boot_addr_e_core),
+      .boot_addr_p_core_o    (boot_addr_p_core),
+      .boot_hartid_e_core_o  (boot_hartid_e_core),
+      .boot_hartid_p_core_o  (boot_hartid_p_core),
       .pll_ref_div_e_core_o  (pll_ref_div_e_core),
       .pll_fb_div_e_core_o   (pll_fb_div_e_core),
       .pll_locked_e_core_i   (pll_locked_e_core),
@@ -262,25 +255,25 @@ module hyper_titan (
       .pll_locked_sl_o     (pll_locked_sys_link),
       .clk_en_e_core_i     (e_core_clk_en),
       .arst_e_core_ni      (e_core_rst_n),
-      .clk_e_core_o        (),
-      .arst_e_core_no      (),
+      .clk_e_core_o        (clk_e_core),
+      .arst_e_core_no      (arst_e_core_n),
       .clk_en_p_core_i     (p_core_clk_en),
       .arst_p_core_ni      (p_core_rst_n),
-      .clk_p_core_o        (),
-      .arst_p_core_no      (),
+      .clk_p_core_o        (clk_p_core),
+      .arst_p_core_no      (arst_p_core_n),
       .clk_en_cl_i         (core_link_clk_en),
       .arst_cl_ni          (core_link_rst_n),
-      .clk_cl_o            (),
-      .arst_cl_no          (),
-      .clk_src_cl_o        (),
+      .clk_cl_o            (clk_cl),
+      .arst_cl_no          (arst_cl_n),
+      .clk_src_cl_o        (clk_src_cl),
       .clk_en_sl_i         (sys_link_clk_en),
       .arst_sl_ni          (sys_link_rst_n),
-      .clk_sl_o            (),
-      .arst_sl_no          (),
+      .clk_sl_o            (clk_sl),
+      .arst_sl_no          (arst_sl_n),
       .clk_en_pl_i         (periph_link_clk_en),
       .arst_pl_ni          (periph_link_rst_n),
-      .clk_pl_o            (),
-      .arst_pl_no          ()
+      .clk_pl_o            (clk_pl),
+      .arst_pl_no          (arst_pl_n)
   );
 
   axi_converter #(
