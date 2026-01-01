@@ -294,4 +294,20 @@ package hyper_titan_pkg;
       NoAddrRules: NUM_RS_RULES
   };
 
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // RE-ALIAS
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+
+  typedef ec_cl_s_req_t = RvvAxiPkg::rvv_axi_req_t;
+  typedef ec_cl_s_resp_t = RvvAxiPkg::rvv_axi_resp_t;
+
+  typedef cl_ec_m_req_t = RvvAxiPkg::rvv_axi_req_t;
+  typedef cl_ec_m_resp_t = RvvAxiPkg::rvv_axi_resp_t;
+
+  typedef pc_cl_s_req_t = rs_m_axi_req_t;
+  typedef pc_cl_s_resp_t = rs_m_axi_resp_t;
+
+  typedef cl_pc_m_req_t = rs_s_axi_req_t;
+  typedef cl_pc_m_resp_t = rs_s_axi_resp_t;
+
 endpackage
