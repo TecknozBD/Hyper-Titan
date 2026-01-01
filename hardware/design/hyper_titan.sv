@@ -1,27 +1,65 @@
-module hyper_titan (
-    input logic ref_clk_i,
-    input logic glob_arst_ni
-);
-
+// Hyper Titan top-level wrapper: wires cores, memory, and peripherals together.
+module hyper_titan
   import axi_pkg::xbar_rule_32_t;
   import hyper_titan_pkg::*;
   import RvvAxiPkg::*;
+(
+    // Global reference clock and async reset
+    input logic ref_clk_i,
+    input logic glob_arst_ni,
 
+    // APB system control/config interface
+    input  logic      apb_clk_i,
+    input  logic      apb_arst_ni,
+    input  apb_req_t  apb_req_i,
+    output apb_resp_t apb_resp_o,
+
+    // SPI flash interface
+    output logic       spi_cs_no,
+    output logic       spi_sck_o,
+    inout  wire  [3:0] spi_sd_io,
+
+    // UART console
+    output logic uart_tx_o,
+    input  logic uart_rx_i,
+
+    // DDR3 PHY interface
+    output logic        ddr3_ck_p_o,
+    output logic        ddr3_ck_n_o,
+    output logic        ddr3_cke_o,
+    output logic        ddr3_reset_n_o,
+    output logic        ddr3_ras_n_o,
+    output logic        ddr3_cas_n_o,
+    output logic        ddr3_we_n_o,
+    output logic        ddr3_cs_n_o,
+    output logic [ 2:0] ddr3_ba_o,
+    output logic [13:0] ddr3_addr_o,
+    output logic        ddr3_odt_o,
+    output logic [ 1:0] ddr3_dm_o,
+    inout  wire  [ 1:0] ddr3_dqs_p_io,
+    inout  wire  [ 1:0] ddr3_dqs_n_io,
+    inout  wire  [15:0] ddr3_dq_io
+);
+
+  // Async resets per clock domain (driven by clk_rst_gen)
   logic                    arst_e_core_n;
   logic                    arst_p_core_n;
   logic                    arst_cl_n;
   logic                    arst_sl_n;
   logic                    arst_pl_n;
 
+  // Clock nets per domain
   logic                    clk_e_core;
   logic                    clk_p_core;
   logic                    clk_cl;
   logic                    clk_sl;
   logic                    clk_pl;
 
+  // Additional clocking sources
   logic                    clk_src_cl;
   logic                    rtc;
 
+  // PLL configuration and status for each domain
   logic             [ 3:0] pll_ref_div_e_core;
   logic             [11:0] pll_fb_div_e_core;
   logic                    pll_locked_e_core;
@@ -32,6 +70,7 @@ module hyper_titan (
   logic             [11:0] pll_fb_div_sys_link;
   logic                    pll_locked_sys_link;
 
+  // Resets and clock enables commanded by system controller
   logic                    e_core_rst_n;
   logic                    p_core_rst_n;
   logic                    core_link_rst_n;
@@ -44,19 +83,25 @@ module hyper_titan (
   logic                    sys_link_clk_en;
   logic                    periph_link_clk_en;
 
+  // Boot strap info per core
   logic             [31:0] boot_addr_e_core;
   logic             [31:0] boot_addr_p_core;
   logic             [31:0] boot_hartid_e_core;
   logic             [31:0] boot_hartid_p_core;
 
+  // Core link: E-core master to CL slave; CL master back to E-core slave
   ec_cl_s_req_t            ec_cl_s_req;
   ec_cl_s_resp_t           ec_cl_s_resp;
   cl_ec_d_req_t            cl_ec_d_req;
   cl_ec_d_resp_t           cl_ec_d_resp;
+
+  // Core link: P-core master to CL slave; CL master back to P-core slave
   pc_cl_s_req_t            pc_cl_s_req;
   pc_cl_s_resp_t           pc_cl_s_resp;
   cl_pc_d_req_t            cl_pc_d_req;
   cl_pc_d_resp_t           cl_pc_d_resp;
+
+  // Duplicated naming for converter instances (src/dst views)
   ec_cl_d_req_t            ec_cl_d_req;
   ec_cl_d_resp_t           ec_cl_d_resp;
   cl_ec_s_req_t            cl_ec_s_req;
@@ -65,6 +110,8 @@ module hyper_titan (
   pc_cl_d_resp_t           pc_cl_d_resp;
   cl_pc_s_req_t            cl_pc_s_req;
   cl_pc_s_resp_t           cl_pc_s_resp;
+
+  // System link between core link and system interconnect
   cl_sl_s_req_t            cl_sl_s_req;
   cl_sl_s_resp_t           cl_sl_s_resp;
   sl_cl_d_req_t            sl_cl_d_req;
@@ -73,18 +120,26 @@ module hyper_titan (
   cl_sl_d_resp_t           cl_sl_d_resp;
   sl_cl_s_req_t            sl_cl_s_req;
   sl_cl_s_resp_t           sl_cl_s_resp;
+
+  // ROM/RAM attachment on system link
   sl_rom_req_t             sl_rom_req;
   sl_rom_resp_t            sl_rom_resp;
   sl_ram_req_t             sl_ram_req;
   sl_ram_resp_t            sl_ram_resp;
+
+  // APB bridge into system link
   ap_sl_req_t              ap_sl_req;
   ap_sl_resp_t             ap_sl_resp;
+
+  // Peripheral link (AXI-Lite) attachment from system link
   sl_pl_s_req_t            sl_pl_s_req;
   sl_pl_s_resp_t           sl_pl_s_resp;
   sl_pl_d_req_t            sl_pl_d_req;
   sl_pl_d_resp_t           sl_pl_d_resp;
   sl_pl_axil_req_t         sl_pl_axil_req;
   sl_pl_axil_resp_t        sl_pl_axil_resp;
+
+  // Peripheral devices hanging off AXI-Lite link
   pl_sc_req_t              pl_sc_req;
   pl_sc_resp_t             pl_sc_resp;
   pl_sh_req_t              pl_sh_req;
@@ -96,6 +151,7 @@ module hyper_titan (
   pl_pli_req_t             pl_pli_req;
   pl_pli_resp_t            pl_pli_resp;
 
+  // E-core subsystem connected to core link (CL)
   e_core_ss u_e_core_ss (
       .clk_i       (clk_e_core),
       .arst_ni     (arst_e_core_n),
@@ -115,6 +171,7 @@ module hyper_titan (
       .io_debug_en ()                     // TODO
   );
 
+  // P-core subsystem connected to core link (CL)
   p_core_ss u_p_core_ss (
       .clk_i          (clk_p_core),
       .arst_ni        (arst_p_core_n),
@@ -130,6 +187,7 @@ module hyper_titan (
       .rs_s_axi_resp_o(cl_pc_d_resp)
   );
 
+  // Core link AXI crossbar: arbitrates core masters toward shared slaves
   axi_xbar #(
       .Cfg          (),  // TODO
       .ATOPs        (),  // TODO
@@ -161,6 +219,7 @@ module hyper_titan (
       .default_mst_port_i   ()                                             // TODO
   );
 
+  // System link AXI crossbar: bridges core link and system memories/PL
   axi_xbar #(
       .Cfg          (),  // TODO
       .ATOPs        (),  // TODO
@@ -192,6 +251,7 @@ module hyper_titan (
       .default_mst_port_i   ()                                                         // TODO
   );
 
+  // Peripheral link AXI-Lite crossbar for low-speed peripherals
   axi_lite_xbar #(
       .Cfg       (),  // TODO
       .aw_chan_t (),  // TODO
@@ -223,6 +283,7 @@ module hyper_titan (
 
   // TODO: IO SS
 
+  // System controller: manages clocking, resets, and boot configuration
   sys_ctrl #(
       .req_t   (),
       .resp_t  (),
@@ -259,6 +320,7 @@ module hyper_titan (
       .pll_locked_sys_link_i (pll_locked_sys_link)
   );
 
+  // Clock/reset generator: derives all domains and exposes PLL status
   clk_rst_gen u_clk_rst_gen (
       .ref_clk_i           (ref_clk_i),
       .glob_arst_ni        (glob_arst_ni),
@@ -295,6 +357,7 @@ module hyper_titan (
       .arst_pl_no          (arst_pl_n)
   );
 
+  // CDC: E-core master side into core link
   axi_converter #(
       .src_req_t (ec_cl_s_req_t),
       .src_resp_t(ec_cl_s_resp_t),
@@ -312,6 +375,7 @@ module hyper_titan (
       .dst_resp_i(ec_cl_d_resp)
   );
 
+  // CDC: core link master back into E-core
   axi_converter #(
       .src_req_t (cl_ec_s_req_t),
       .src_resp_t(cl_ec_s_resp_t),
@@ -329,6 +393,7 @@ module hyper_titan (
       .dst_resp_i(cl_ec_d_resp)
   );
 
+  // CDC: P-core master side into core link
   axi_converter #(
       .src_req_t (pc_cl_s_req_t),
       .src_resp_t(pc_cl_s_resp_t),
@@ -346,6 +411,7 @@ module hyper_titan (
       .dst_resp_i(pc_cl_d_resp)
   );
 
+  // CDC: core link master back into P-core
   axi_converter #(
       .src_req_t (cl_pc_s_req_t),
       .src_resp_t(cl_pc_s_resp_t),
@@ -363,6 +429,7 @@ module hyper_titan (
       .dst_resp_i(cl_pc_d_resp)
   );
 
+  // CDC: core link into system link
   axi_converter #(
       .src_req_t (cl_sl_s_req_t),
       .src_resp_t(cl_sl_s_resp_t),
@@ -380,6 +447,7 @@ module hyper_titan (
       .dst_resp_i(cl_sl_d_resp)
   );
 
+  // CDC: system link back into core link
   axi_converter #(
       .src_req_t (sl_cl_s_req_t),
       .src_resp_t(sl_cl_s_resp_t),
@@ -397,6 +465,7 @@ module hyper_titan (
       .dst_resp_i(sl_cl_d_resp)
   );
 
+  // CDC: system link into peripheral link (AXI-Lite)
   axi_converter #(
       .src_req_t (sl_pl_s_req_t),
       .src_resp_t(sl_pl_s_resp_t),

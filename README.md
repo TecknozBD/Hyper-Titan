@@ -116,7 +116,7 @@ This project utilizes several third-party components, including:
 ```mermaid
 %%{init: {"pie": {"sort": false}} }%%
 pie title IP Sources
-  "Tecknoz" : 14271
+  "Tecknoz" : 10585
   "google-coral" : 59000
   "lowRISC" : 22000
   "pulp-platform" : 36000
