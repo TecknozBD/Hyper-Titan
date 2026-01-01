@@ -7,193 +7,212 @@ module hyper_titan (
   import hyper_titan_pkg::*;
   import RvvAxiPkg::*;
 
-  logic        arst_e_core_n;
-  logic        arst_p_core_n;
-  logic        arst_cl_n;
-  logic        arst_sl_n;
-  logic        arst_pl_n;
+  logic                    arst_e_core_n;
+  logic                    arst_p_core_n;
+  logic                    arst_cl_n;
+  logic                    arst_sl_n;
+  logic                    arst_pl_n;
 
-  logic        clk_e_core;
-  logic        clk_p_core;
-  logic        clk_cl;
-  logic        clk_sl;
-  logic        clk_pl;
+  logic                    clk_e_core;
+  logic                    clk_p_core;
+  logic                    clk_cl;
+  logic                    clk_sl;
+  logic                    clk_pl;
 
-  logic        clk_src_cl;
-  logic        rtc;
+  logic                    clk_src_cl;
+  logic                    rtc;
 
-  logic [ 3:0] pll_ref_div_e_core;
-  logic [11:0] pll_fb_div_e_core;
-  logic        pll_locked_e_core;
-  logic [ 3:0] pll_ref_div_p_core;
-  logic [11:0] pll_fb_div_p_core;
-  logic        pll_locked_p_core;
-  logic [ 3:0] pll_ref_div_sys_link;
-  logic [11:0] pll_fb_div_sys_link;
-  logic        pll_locked_sys_link;
+  logic             [ 3:0] pll_ref_div_e_core;
+  logic             [11:0] pll_fb_div_e_core;
+  logic                    pll_locked_e_core;
+  logic             [ 3:0] pll_ref_div_p_core;
+  logic             [11:0] pll_fb_div_p_core;
+  logic                    pll_locked_p_core;
+  logic             [ 3:0] pll_ref_div_sys_link;
+  logic             [11:0] pll_fb_div_sys_link;
+  logic                    pll_locked_sys_link;
 
-  logic        e_core_rst_n;
-  logic        p_core_rst_n;
-  logic        core_link_rst_n;
-  logic        sys_link_rst_n;
-  logic        periph_link_rst_n;
+  logic                    e_core_rst_n;
+  logic                    p_core_rst_n;
+  logic                    core_link_rst_n;
+  logic                    sys_link_rst_n;
+  logic                    periph_link_rst_n;
 
-  logic        e_core_clk_en;
-  logic        p_core_clk_en;
-  logic        core_link_clk_en;
-  logic        sys_link_clk_en;
-  logic        periph_link_clk_en;
+  logic                    e_core_clk_en;
+  logic                    p_core_clk_en;
+  logic                    core_link_clk_en;
+  logic                    sys_link_clk_en;
+  logic                    periph_link_clk_en;
 
-  logic [31:0] boot_addr_e_core;
-  logic [31:0] boot_addr_p_core;
-  logic [31:0] boot_hartid_e_core;
-  logic [31:0] boot_hartid_p_core;
+  logic             [31:0] boot_addr_e_core;
+  logic             [31:0] boot_addr_p_core;
+  logic             [31:0] boot_hartid_e_core;
+  logic             [31:0] boot_hartid_p_core;
 
+  ec_cl_s_req_t            ec_cl_s_req;
+  ec_cl_s_resp_t           ec_cl_s_resp;
+  cl_ec_d_req_t            cl_ec_d_req;
+  cl_ec_d_resp_t           cl_ec_d_resp;
+  pc_cl_s_req_t            pc_cl_s_req;
+  pc_cl_s_resp_t           pc_cl_s_resp;
+  cl_pc_d_req_t            cl_pc_d_req;
+  cl_pc_d_resp_t           cl_pc_d_resp;
+  ec_cl_d_req_t            ec_cl_d_req;
+  ec_cl_d_resp_t           ec_cl_d_resp;
+  cl_ec_s_req_t            cl_ec_s_req;
+  cl_ec_s_resp_t           cl_ec_s_resp;
+  pc_cl_d_req_t            pc_cl_d_req;
+  pc_cl_d_resp_t           pc_cl_d_resp;
+  cl_pc_s_req_t            cl_pc_s_req;
+  cl_pc_s_resp_t           cl_pc_s_resp;
+  cl_sl_s_req_t            cl_sl_s_req;
+  cl_sl_s_resp_t           cl_sl_s_resp;
+  sl_cl_d_req_t            sl_cl_d_req;
+  sl_cl_d_resp_t           sl_cl_d_resp;
+  cl_sl_d_req_t            cl_sl_d_req;
+  cl_sl_d_resp_t           cl_sl_d_resp;
+  sl_cl_s_req_t            sl_cl_s_req;
+  sl_cl_s_resp_t           sl_cl_s_resp;
+  sl_rom_req_t             sl_rom_req;
+  sl_rom_resp_t            sl_rom_resp;
+  sl_ram_req_t             sl_ram_req;
+  sl_ram_resp_t            sl_ram_resp;
+  ap_sl_req_t              ap_sl_req;
+  ap_sl_resp_t             ap_sl_resp;
+  sl_pl_s_req_t            sl_pl_s_req;
+  sl_pl_s_resp_t           sl_pl_s_resp;
+  sl_pl_d_req_t            sl_pl_d_req;
+  sl_pl_d_resp_t           sl_pl_d_resp;
+  sl_pl_axil_req_t         sl_pl_axil_req;
+  sl_pl_axil_resp_t        sl_pl_axil_resp;
+  pl_sc_req_t              pl_sc_req;
+  pl_sc_resp_t             pl_sc_resp;
+  pl_sh_req_t              pl_sh_req;
+  pl_sh_resp_t             pl_sh_resp;
+  pl_ur_req_t              pl_ur_req;
+  pl_ur_resp_t             pl_ur_resp;
+  pl_cli_req_t             pl_cli_req;
+  pl_cli_resp_t            pl_cli_resp;
+  pl_pli_req_t             pl_pli_req;
+  pl_pli_resp_t            pl_pli_resp;
 
   e_core_ss u_e_core_ss (
-      // output rvv_axi_req_t  m_axi_req_o,
-      // input  rvv_axi_resp_t m_axi_resp_i,
-      // input  rvv_axi_req_t  s_axi_req_i,
-      // output rvv_axi_resp_t s_axi_resp_o,
-      // output io_debug_out_t io_debug_out,
-      // output slog_debug_t   slog_debug,
-      // input  logic       io_irq,
-      // input  logic       io_te,
-      // output logic       io_halted,
-      // output logic       io_fault,
-      // output logic       io_wfi,
-      // output logic [3:0] io_debug_en
-      .clk_i(clk_e_core),
-      .arst_ni(arst_e_core_n),
-      .boot_addr_i(boot_addr_e_core),
-      .hart_id_i(boot_hartid_e_core),
-      .m_axi_req_o(),
-      .m_axi_resp_i(),
-      .s_axi_req_i(),
-      .s_axi_resp_o(),
-      .io_debug_out(),
-      .slog_debug(),
-      .io_irq(),
-      .io_te(),
-      .io_halted(),
-      .io_fault(),
-      .io_wfi(),
-      .io_debug_en()
+      .clk_i       (clk_e_core),
+      .arst_ni     (arst_e_core_n),
+      .boot_addr_i (boot_addr_e_core),
+      .hart_id_i   (boot_hartid_e_core),
+      .m_axi_req_o (ec_cl_s_req),
+      .m_axi_resp_i(ec_cl_s_resp),
+      .s_axi_req_i (cl_ec_d_req),
+      .s_axi_resp_o(cl_ec_d_resp),
+      .io_debug_out(),                    // TODO
+      .slog_debug  (),                    // TODO
+      .io_irq      (),                    // TODO
+      .io_te       (),                    // TODO
+      .io_halted   (),                    // TODO
+      .io_fault    (),                    // TODO
+      .io_wfi      (),                    // TODO
+      .io_debug_en ()                     // TODO
   );
 
   p_core_ss u_p_core_ss (
-      // input logic [1:0] irq_i,
-      // input logic       ipi_i,
-      // input logic time_irq_i,
-      // input logic debug_req_i,
-      // output rs_m_axi_req_t  rs_m_axi_req_o,
-      // input  rs_m_axi_resp_t rs_m_axi_resp_i,
-      // input  rs_s_axi_req_t  rs_s_axi_req_i,
-      // output rs_s_axi_resp_t rs_s_axi_resp_o
-      .clk_i(clk_p_core),
-      .arst_ni(arst_p_core_n),
-      .boot_addr_i(boot_addr_p_core),
-      .hart_id_i(boot_hartid_p_core),
-      .irq_i(),
-      .ipi_i(),
-      .time_irq_i(),
-      .debug_req_i(),
-      .rs_m_axi_req_o(),
-      .rs_m_axi_resp_i(),
-      .rs_s_axi_req_i(),
-      .rs_s_axi_resp_o()
+      .clk_i          (clk_p_core),
+      .arst_ni        (arst_p_core_n),
+      .boot_addr_i    (boot_addr_p_core),
+      .hart_id_i      (boot_hartid_p_core),
+      .irq_i          (),                    // TODO
+      .ipi_i          (),                    // TODO
+      .time_irq_i     (),                    // TODO
+      .debug_req_i    (),                    // TODO
+      .rs_m_axi_req_o (pc_cl_s_req),
+      .rs_m_axi_resp_i(pc_cl_s_resp),
+      .rs_s_axi_req_i (cl_pc_d_req),
+      .rs_s_axi_resp_o(cl_pc_d_resp)
   );
 
   axi_xbar #(
-      .Cfg          (),
-      .ATOPs        (),
-      .Connectivity (),
-      .slv_aw_chan_t(),
-      .mst_aw_chan_t(),
-      .w_chan_t     (),
-      .slv_b_chan_t (),
-      .mst_b_chan_t (),
-      .slv_ar_chan_t(),
-      .mst_ar_chan_t(),
-      .slv_r_chan_t (),
-      .mst_r_chan_t (),
-      .slv_req_t    (),
-      .slv_resp_t   (),
-      .mst_req_t    (),
-      .mst_resp_t   (),
-      .rule_t       ()
+      .Cfg          (),  // TODO
+      .ATOPs        (),  // TODO
+      .Connectivity (),  // TODO
+      .slv_aw_chan_t(),  // TODO
+      .mst_aw_chan_t(),  // TODO
+      .w_chan_t     (),  // TODO
+      .slv_b_chan_t (),  // TODO
+      .mst_b_chan_t (),  // TODO
+      .slv_ar_chan_t(),  // TODO
+      .mst_ar_chan_t(),  // TODO
+      .slv_r_chan_t (),  // TODO
+      .mst_r_chan_t (),  // TODO
+      .slv_req_t    (),  // TODO
+      .slv_resp_t   (),  // TODO
+      .mst_req_t    (),  // TODO
+      .mst_resp_t   (),  // TODO
+      .rule_t       ()   // TODO
   ) u_core_link (
       .clk_i                (clk_cl),
       .rst_ni               (arst_cl_n),
       .test_i               ('0),
-      .slv_ports_req_i      (),
-      .slv_ports_resp_o     (),
-      .mst_ports_req_o      (),
-      .mst_ports_resp_i     (),
-      .addr_map_i           (),
-      .en_default_mst_port_i(),
-      .default_mst_port_i   ()
+      .slv_ports_req_i      ({sl_cl_d_req, pc_cl_d_req, ec_cl_d_req}),
+      .slv_ports_resp_o     ({sl_cl_d_resp, pc_cl_d_resp, ec_cl_d_resp}),
+      .mst_ports_req_o      ({cl_sl_s_req, cl_pc_s_req, cl_ec_s_req}),
+      .mst_ports_resp_i     ({cl_sl_s_resp, cl_pc_s_resp, cl_ec_s_resp}),
+      .addr_map_i           (),                                            // TODO
+      .en_default_mst_port_i(),                                            // TODO
+      .default_mst_port_i   ()                                             // TODO
   );
 
   axi_xbar #(
-      .Cfg          (),
-      .ATOPs        (),
-      .Connectivity (),
-      .slv_aw_chan_t(),
-      .mst_aw_chan_t(),
-      .w_chan_t     (),
-      .slv_b_chan_t (),
-      .mst_b_chan_t (),
-      .slv_ar_chan_t(),
-      .mst_ar_chan_t(),
-      .slv_r_chan_t (),
-      .mst_r_chan_t (),
-      .slv_req_t    (),
-      .slv_resp_t   (),
-      .mst_req_t    (),
-      .mst_resp_t   (),
-      .rule_t       ()
+      .Cfg          (),  // TODO
+      .ATOPs        (),  // TODO
+      .Connectivity (),  // TODO
+      .slv_aw_chan_t(),  // TODO
+      .mst_aw_chan_t(),  // TODO
+      .w_chan_t     (),  // TODO
+      .slv_b_chan_t (),  // TODO
+      .mst_b_chan_t (),  // TODO
+      .slv_ar_chan_t(),  // TODO
+      .mst_ar_chan_t(),  // TODO
+      .slv_r_chan_t (),  // TODO
+      .mst_r_chan_t (),  // TODO
+      .slv_req_t    (),  // TODO
+      .slv_resp_t   (),  // TODO
+      .mst_req_t    (),  // TODO
+      .mst_resp_t   (),  // TODO
+      .rule_t       ()   // TODO
   ) u_system_link (
       .clk_i                (clk_sl),
       .rst_ni               (arst_sl_n),
       .test_i               ('0),
-      .slv_ports_req_i      (),
-      .slv_ports_resp_o     (),
-      .mst_ports_req_o      (),
-      .mst_ports_resp_i     (),
-      .addr_map_i           (),
-      .en_default_mst_port_i(),
-      .default_mst_port_i   ()
+      .slv_ports_req_i      ({ap_sl_req, cl_sl_d_req}),
+      .slv_ports_resp_o     ({ap_sl_resp, cl_sl_d_resp}),
+      .mst_ports_req_o      ({sl_pl_s_req, sl_ram_req, sl_rom_req, cl_sl_d_req}),
+      .mst_ports_resp_i     ({sl_pl_s_resp, sl_ram_resp, sl_rom_resp, cl_sl_d_resp}),
+      .addr_map_i           (),                                                        // TODO
+      .en_default_mst_port_i(),                                                        // TODO
+      .default_mst_port_i   ()                                                         // TODO
   );
 
   axi_lite_xbar #(
-      .Cfg       (),
-      .aw_chan_t (),
-      .w_chan_t  (),
-      .b_chan_t  (),
-      .ar_chan_t (),
-      .r_chan_t  (),
-      .axi_req_t (),
-      .axi_resp_t(),
-      .rule_t    ()
+      .Cfg       (),  // TODO
+      .aw_chan_t (),  // TODO
+      .w_chan_t  (),  // TODO
+      .b_chan_t  (),  // TODO
+      .ar_chan_t (),  // TODO
+      .r_chan_t  (),  // TODO
+      .axi_req_t (),  // TODO
+      .axi_resp_t(),  // TODO
+      .rule_t    ()   // TODO
   ) u_peripheral_link (
-      // input  axi_req_t  [Cfg.NoSlvPorts-1:0]              slv_ports_req_i,
-      // output axi_resp_t [Cfg.NoSlvPorts-1:0]              slv_ports_resp_o,
-      // output axi_req_t  [Cfg.NoMstPorts-1:0]              mst_ports_req_o,
-      // input  axi_resp_t [Cfg.NoMstPorts-1:0]              mst_ports_resp_i,
-      // input  rule_t [Cfg.NoAddrRules-1:0]                 addr_map_i,
-      // input  logic  [Cfg.NoSlvPorts-1:0]                  en_default_mst_port_i,
-      // input  logic  [Cfg.NoSlvPorts-1:0][MstIdxWidth-1:0] default_mst_port_i
       .clk_i(clk_pl),
       .rst_ni(arst_pl_n),
       .test_i('0),
-      .slv_ports_req_i(),
-      .slv_ports_resp_o(),
-      .mst_ports_req_o(),
-      .mst_ports_resp_i(),
-      .addr_map_i(),
-      .en_default_mst_port_i(),
-      .default_mst_port_i()
+      .slv_ports_req_i(sl_pl_axil_req),
+      .slv_ports_resp_o(sl_pl_axil_resp),
+      .mst_ports_req_o({pl_pli_req, pl_cli_req, pl_ur_req, pl_sh_req, pl_sc_req}),
+      .mst_ports_resp_i({pl_pli_resp, pl_cli_resp, pl_ur_resp, pl_sh_resp, pl_sc_resp}),
+      .addr_map_i(),  // TODO
+      .en_default_mst_port_i(),  // TODO
+      .default_mst_port_i()  // TODO
   );
 
   // TODO: MEM SS
@@ -212,8 +231,8 @@ module hyper_titan (
   ) u_sys_ctrl (
       .arst_ni               (arst_sl_n),
       .clk_i                 (clk_sl),
-      .req_i                 (), // TODO
-      .resp_o                (), // TODO
+      .req_i                 (),                      // TODO
+      .resp_o                (),                      // TODO
       .e_core_clk_en_o       (e_core_clk_en),
       .e_core_rst_no         (e_core_rst_n),
       .p_core_clk_en_o       (p_core_clk_en),
@@ -277,122 +296,122 @@ module hyper_titan (
   );
 
   axi_converter #(
-      .src_req_t (),
-      .src_resp_t(),
-      .dst_req_t (),
-      .dst_resp_t(),
-      .enable_cdc(),
-      .faster_src()
+      .src_req_t (ec_cl_s_req_t),
+      .src_resp_t(ec_cl_s_resp_t),
+      .dst_req_t (ec_cl_d_req_t),
+      .dst_resp_t(ec_cl_d_resp_t),
+      .enable_cdc('d1),
+      .faster_src('d0)
   ) u___e_core_ss___cl (
-      .arst_ni   (),
-      .src_clk_i (),
-      .src_req_i (),
-      .src_resp_o(),
-      .dst_clk_i (),
-      .dst_req_o (),
-      .dst_resp_i()
+      .arst_ni   (arst_cl_n),
+      .src_clk_i (clk_e_core),
+      .src_req_i (ec_cl_s_req),
+      .src_resp_o(ec_cl_s_resp),
+      .dst_clk_i (clk_cl),
+      .dst_req_o (ec_cl_d_req),
+      .dst_resp_i(ec_cl_d_resp)
   );
 
   axi_converter #(
-      .src_req_t (),
-      .src_resp_t(),
-      .dst_req_t (),
-      .dst_resp_t(),
-      .enable_cdc(),
-      .faster_src()
+      .src_req_t (cl_ec_s_req_t),
+      .src_resp_t(cl_ec_s_resp_t),
+      .dst_req_t (cl_ec_d_req_t),
+      .dst_resp_t(cl_ec_d_resp_t),
+      .enable_cdc('d1),
+      .faster_src('d1)
   ) u___cl___e_core_ss (
-      .arst_ni   (),
-      .src_clk_i (),
-      .src_req_i (),
-      .src_resp_o(),
-      .dst_clk_i (),
-      .dst_req_o (),
-      .dst_resp_i()
+      .arst_ni   (arst_cl_n),
+      .src_clk_i (clk_cl),
+      .src_req_i (cl_ec_s_req),
+      .src_resp_o(cl_ec_s_resp),
+      .dst_clk_i (clk_e_core),
+      .dst_req_o (cl_ec_d_req),
+      .dst_resp_i(cl_ec_d_resp)
   );
 
   axi_converter #(
-      .src_req_t (),
-      .src_resp_t(),
-      .dst_req_t (),
-      .dst_resp_t(),
-      .enable_cdc(),
-      .faster_src()
+      .src_req_t (pc_cl_s_req_t),
+      .src_resp_t(pc_cl_s_resp_t),
+      .dst_req_t (pc_cl_d_req_t),
+      .dst_resp_t(pc_cl_d_resp_t),
+      .enable_cdc('d1),
+      .faster_src('d0)
   ) u___p_core_ss___cl (
-      .arst_ni   (),
-      .src_clk_i (),
-      .src_req_i (),
-      .src_resp_o(),
-      .dst_clk_i (),
-      .dst_req_o (),
-      .dst_resp_i()
+      .arst_ni   (arst_cl_n),
+      .src_clk_i (clk_p_core),
+      .src_req_i (pc_cl_s_req),
+      .src_resp_o(pc_cl_s_resp),
+      .dst_clk_i (clk_cl),
+      .dst_req_o (pc_cl_d_req),
+      .dst_resp_i(pc_cl_d_resp)
   );
 
   axi_converter #(
-      .src_req_t (),
-      .src_resp_t(),
-      .dst_req_t (),
-      .dst_resp_t(),
-      .enable_cdc(),
-      .faster_src()
+      .src_req_t (cl_pc_s_req_t),
+      .src_resp_t(cl_pc_s_resp_t),
+      .dst_req_t (cl_pc_d_req_t),
+      .dst_resp_t(cl_pc_d_resp_t),
+      .enable_cdc('d1),
+      .faster_src('d1)
   ) u___cl___p_core_ss (
-      .arst_ni   (),
-      .src_clk_i (),
-      .src_req_i (),
-      .src_resp_o(),
-      .dst_clk_i (),
-      .dst_req_o (),
-      .dst_resp_i()
+      .arst_ni   (arst_cl_n),
+      .src_clk_i (clk_cl),
+      .src_req_i (cl_pc_s_req),
+      .src_resp_o(cl_pc_s_resp),
+      .dst_clk_i (clk_p_core),
+      .dst_req_o (cl_pc_d_req),
+      .dst_resp_i(cl_pc_d_resp)
   );
 
   axi_converter #(
-      .src_req_t (),
-      .src_resp_t(),
-      .dst_req_t (),
-      .dst_resp_t(),
-      .enable_cdc(),
-      .faster_src()
-  ) u___cl___pl (
-      .arst_ni   (),
-      .src_clk_i (),
-      .src_req_i (),
-      .src_resp_o(),
-      .dst_clk_i (),
-      .dst_req_o (),
-      .dst_resp_i()
+      .src_req_t (cl_sl_s_req_t),
+      .src_resp_t(cl_sl_s_resp_t),
+      .dst_req_t (cl_sl_d_req_t),
+      .dst_resp_t(cl_sl_d_resp_t),
+      .enable_cdc('d1),
+      .faster_src('d1)
+  ) u___cl___sl (
+      .arst_ni   (arst_cl_n),
+      .src_clk_i (clk_cl),
+      .src_req_i (cl_sl_s_req),
+      .src_resp_o(cl_sl_s_resp),
+      .dst_clk_i (clk_sl),
+      .dst_req_o (cl_sl_d_req),
+      .dst_resp_i(cl_sl_d_resp)
   );
 
   axi_converter #(
-      .src_req_t (),
-      .src_resp_t(),
-      .dst_req_t (),
-      .dst_resp_t(),
-      .enable_cdc(),
-      .faster_src()
-  ) u___pl___cl (
-      .arst_ni   (),
-      .src_clk_i (),
-      .src_req_i (),
-      .src_resp_o(),
-      .dst_clk_i (),
-      .dst_req_o (),
-      .dst_resp_i()
+      .src_req_t (sl_cl_s_req_t),
+      .src_resp_t(sl_cl_s_resp_t),
+      .dst_req_t (sl_cl_d_req_t),
+      .dst_resp_t(sl_cl_d_resp_t),
+      .enable_cdc('d1),
+      .faster_src('d0)
+  ) u___sl___cl (
+      .arst_ni   (arst_cl_n),
+      .src_clk_i (clk_sl),
+      .src_req_i (sl_cl_s_req),
+      .src_resp_o(sl_cl_s_resp),
+      .dst_clk_i (clk_cl),
+      .dst_req_o (sl_cl_d_req),
+      .dst_resp_i(sl_cl_d_resp)
   );
 
   axi_converter #(
-      .src_req_t (),
-      .src_resp_t(),
-      .dst_req_t (),
-      .dst_resp_t(),
-      .enable_cdc(),
-      .faster_src()
+      .src_req_t (sl_pl_s_req_t),
+      .src_resp_t(sl_pl_s_resp_t),
+      .dst_req_t (sl_pl_d_req_t),
+      .dst_resp_t(sl_pl_d_resp_t),
+      .enable_cdc('d1),
+      .faster_src('d1)
   ) u___sl___pl (
-      .arst_ni   (),
-      .src_clk_i (),
-      .src_req_i (),
-      .src_resp_o(),
-      .dst_clk_i (),
-      .dst_req_o (),
-      .dst_resp_i()
+      .arst_ni   (arst_sl_n),
+      .src_clk_i (clk_sl),
+      .src_req_i (sl_pl_s_req),
+      .src_resp_o(sl_pl_s_resp),
+      .dst_clk_i (clk_pl),
+      .dst_req_o (sl_pl_d_req),
+      .dst_resp_i(sl_pl_d_resp)
   );
 
 endmodule
