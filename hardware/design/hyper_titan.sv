@@ -89,6 +89,10 @@ module hyper_titan
   logic             [31:0] boot_hartid_e_core;
   logic             [31:0] boot_hartid_p_core;
 
+  // AXI-Lite interface to System Link
+  axil_req_t               axil_req;
+  axil_resp_t              axil_resp;
+
   // Core link: E-core master to CL slave; CL master back to E-core slave
   ec_cl_s_req_t            ec_cl_s_req;
   ec_cl_s_resp_t           ec_cl_s_resp;
@@ -189,23 +193,23 @@ module hyper_titan
 
   // Core link AXI crossbar: arbitrates core masters toward shared slaves
   axi_xbar #(
-      .Cfg          (),  // TODO
-      .ATOPs        (),  // TODO
-      .Connectivity (),  // TODO
-      .slv_aw_chan_t(),  // TODO
-      .mst_aw_chan_t(),  // TODO
-      .w_chan_t     (),  // TODO
-      .slv_b_chan_t (),  // TODO
-      .mst_b_chan_t (),  // TODO
-      .slv_ar_chan_t(),  // TODO
-      .mst_ar_chan_t(),  // TODO
-      .slv_r_chan_t (),  // TODO
-      .mst_r_chan_t (),  // TODO
-      .slv_req_t    (),  // TODO
-      .slv_resp_t   (),  // TODO
-      .mst_req_t    (),  // TODO
-      .mst_resp_t   (),  // TODO
-      .rule_t       ()   // TODO
+      .Cfg          (cl_link_cfg),
+      .ATOPs        ('0),
+      .Connectivity ('1),
+      .slv_aw_chan_t(cl_s_axi_aw_chan_t),
+      .mst_aw_chan_t(cl_m_axi_aw_chan_t),
+      .w_chan_t     (cl_m_axi_w_chan_t),
+      .slv_b_chan_t (cl_s_axi_b_chan_t),
+      .mst_b_chan_t (cl_m_axi_b_chan_t),
+      .slv_ar_chan_t(cl_s_axi_ar_chan_t),
+      .mst_ar_chan_t(cl_m_axi_ar_chan_t),
+      .slv_r_chan_t (cl_s_axi_r_chan_t),
+      .mst_r_chan_t (cl_m_axi_r_chan_t),
+      .slv_req_t    (cl_s_axi_req_t),
+      .slv_resp_t   (cl_s_axi_resp_t),
+      .mst_req_t    (cl_m_axi_req_t),
+      .mst_resp_t   (cl_m_axi_resp_t),
+      .rule_t       (xbar_rule_32_t)
   ) u_core_link (
       .clk_i                (clk_cl),
       .rst_ni               (arst_cl_n),
@@ -214,30 +218,30 @@ module hyper_titan
       .slv_ports_resp_o     ({sl_cl_d_resp, pc_cl_d_resp, ec_cl_d_resp}),
       .mst_ports_req_o      ({cl_sl_s_req, cl_pc_s_req, cl_ec_s_req}),
       .mst_ports_resp_i     ({cl_sl_s_resp, cl_pc_s_resp, cl_ec_s_resp}),
-      .addr_map_i           (),                                            // TODO
-      .en_default_mst_port_i(),                                            // TODO
-      .default_mst_port_i   ()                                             // TODO
+      .addr_map_i           (cl_rules),
+      .en_default_mst_port_i('1),
+      .default_mst_port_i   ('b101010)
   );
 
   // System link AXI crossbar: bridges core link and system memories/PL
   axi_xbar #(
-      .Cfg          (),  // TODO
-      .ATOPs        (),  // TODO
-      .Connectivity (),  // TODO
-      .slv_aw_chan_t(),  // TODO
-      .mst_aw_chan_t(),  // TODO
-      .w_chan_t     (),  // TODO
-      .slv_b_chan_t (),  // TODO
-      .mst_b_chan_t (),  // TODO
-      .slv_ar_chan_t(),  // TODO
-      .mst_ar_chan_t(),  // TODO
-      .slv_r_chan_t (),  // TODO
-      .mst_r_chan_t (),  // TODO
-      .slv_req_t    (),  // TODO
-      .slv_resp_t   (),  // TODO
-      .mst_req_t    (),  // TODO
-      .mst_resp_t   (),  // TODO
-      .rule_t       ()   // TODO
+      .Cfg          (sl_link_cfg),
+      .ATOPs        ('0),
+      .Connectivity ('1),
+      .slv_aw_chan_t(sl_s_axi_aw_chan_t),
+      .mst_aw_chan_t(sl_m_axi_aw_chan_t),
+      .w_chan_t     (sl_m_axi_w_chan_t),
+      .slv_b_chan_t (sl_s_axi_b_chan_t),
+      .mst_b_chan_t (sl_m_axi_b_chan_t),
+      .slv_ar_chan_t(sl_s_axi_ar_chan_t),
+      .mst_ar_chan_t(sl_m_axi_ar_chan_t),
+      .slv_r_chan_t (sl_s_axi_r_chan_t),
+      .mst_r_chan_t (sl_m_axi_r_chan_t),
+      .slv_req_t    (sl_s_axi_req_t),
+      .slv_resp_t   (sl_s_axi_resp_t),
+      .mst_req_t    (sl_m_axi_req_t),
+      .mst_resp_t   (sl_m_axi_resp_t),
+      .rule_t       (xbar_rule_32_t)
   ) u_system_link (
       .clk_i                (clk_sl),
       .rst_ni               (arst_sl_n),
@@ -246,22 +250,22 @@ module hyper_titan
       .slv_ports_resp_o     ({ap_sl_resp, cl_sl_d_resp}),
       .mst_ports_req_o      ({sl_pl_s_req, sl_ram_req, sl_rom_req, cl_sl_d_req}),
       .mst_ports_resp_i     ({sl_pl_s_resp, sl_ram_resp, sl_rom_resp, cl_sl_d_resp}),
-      .addr_map_i           (),                                                        // TODO
-      .en_default_mst_port_i(),                                                        // TODO
-      .default_mst_port_i   ()                                                         // TODO
+      .addr_map_i           (sl_rules),
+      .en_default_mst_port_i('1),
+      .default_mst_port_i   ('b1010)
   );
 
   // Peripheral link AXI-Lite crossbar for low-speed peripherals
   axi_lite_xbar #(
-      .Cfg       (),  // TODO
-      .aw_chan_t (),  // TODO
-      .w_chan_t  (),  // TODO
-      .b_chan_t  (),  // TODO
-      .ar_chan_t (),  // TODO
-      .r_chan_t  (),  // TODO
-      .axi_req_t (),  // TODO
-      .axi_resp_t(),  // TODO
-      .rule_t    ()   // TODO
+      .Cfg       (pl_link_cfg),
+      .aw_chan_t (pl_s_axil_aw_chan_t),
+      .w_chan_t  (pl_s_axil_w_chan_t),
+      .b_chan_t  (pl_s_axil_b_chan_t),
+      .ar_chan_t (pl_s_axil_ar_chan_t),
+      .r_chan_t  (pl_s_axil_r_chan_t),
+      .axi_req_t (pl_s_axil_req_t),
+      .axi_resp_t(pl_s_axil_resp_t),
+      .rule_t    (xbar_rule_32_t)
   ) u_peripheral_link (
       .clk_i(clk_pl),
       .rst_ni(arst_pl_n),
@@ -270,16 +274,86 @@ module hyper_titan
       .slv_ports_resp_o(sl_pl_axil_resp),
       .mst_ports_req_o({pl_pli_req, pl_cli_req, pl_ur_req, pl_sh_req, pl_sc_req}),
       .mst_ports_resp_i({pl_pli_resp, pl_cli_resp, pl_ur_resp, pl_sh_resp, pl_sc_resp}),
-      .addr_map_i(),  // TODO
-      .en_default_mst_port_i(),  // TODO
-      .default_mst_port_i()  // TODO
+      .addr_map_i(pl_rules),
+      .en_default_mst_port_i('1),
+      .default_mst_port_i('b1)
   );
 
   // TODO: MEM SS
 
-  // TODO: APB Bridge
+  always_comb begin
+    ap_sl_req = '0;
+    axil_resp = '0;
+    ap_sl_req.aw.addr = axil_req.aw.addr;
+    ap_sl_req.aw.size = 2;
+    ap_sl_req.aw.burst = 1;
+    ap_sl_req.aw.prot = axil_req.aw.prot;
+    ap_sl_req.aw_valid = axil_req.aw_valid;
+    axil_req.aw_ready = ap_sl_req.aw_ready;
+    ap_sl_req.w.data = axil_req.w.data;
+    ap_sl_req.w.strb = axil_req.w.strb;
+    ap_sl_req.w_valid = axil_req.w_valid;
+    axil_req.w_ready = ap_sl_req.w_ready;
+    axil_resp.b.resp = ap_sl_req.b.resp;
+    axil_resp.b_valid = ap_sl_req.b_valid;
+    ap_sl_req.b_ready = axil_resp.b_ready;
+    ap_sl_req.ar.addr = axil_req.ar.addr;
+    ap_sl_req.ar.size = 2;
+    ap_sl_req.ar.burst = 1;
+    ap_sl_req.ar.prot = axil_req.ar.prot;
+    ap_sl_req.ar_valid = axil_req.ar_valid;
+    axil_req.ar_ready = ap_sl_req.ar_ready;
+    axil_resp.r.data = ap_sl_req.r.data;
+    axil_resp.r.resp = ap_sl_req.r.resp;
+    axil_resp.r_valid = ap_sl_req.r_valid;
+    ap_sl_req.r_ready = axil_resp.r_ready;
+  end
 
-  // TODO: AXI to AXIL
+  apb_2_axil #(
+      .ADDR_WIDTH(32),
+      .DATA_WIDTH(32),
+      .apb_req_t (apb_req_t),
+      .apb_resp_t(apb_resp_t),
+      .aw_chan_t (axil_aw_chan_t),
+      .w_chan_t  (axil_w_chan_t),
+      .b_chan_t  (axil_b_chan_t),
+      .ar_chan_t (axil_ar_chan_t),
+      .r_chan_t  (axil_r_chan_t),
+      .axi_req_t (axil_req_t),
+      .axi_resp_t(axil_resp_t)
+  ) u_apb_2_axil (
+      .apb_clk_i  (apb_clk_i),
+      .apb_arst_ni(apb_arst_ni),
+      .apb_req_i  (apb_req_i),
+      .apb_resp_o (apb_resp_o),
+      .axi_clk_i  (clk_sl),
+      .axi_arst_ni(arst_sl_n),
+      .axi_req_o  (axil_req),
+      .axi_resp_i (axil_resp)
+  );
+
+  axi_to_axi_lite #(
+      .AxiAddrWidth   (32),
+      .AxiDataWidth   (32),
+      .AxiIdWidth     (4),
+      .AxiUserWidth   (8),
+      .AxiMaxWriteTxns(2),
+      .AxiMaxReadTxns (2),
+      .FullBW         ('0),
+      .FallThrough    ('0),
+      .full_req_t     (sl_pl_d_req_t),
+      .full_resp_t    (sl_pl_d_resp_t),
+      .lite_req_t     (sl_pl_axil_req_t),
+      .lite_resp_t    (sl_pl_axil_resp_t)
+  ) u_axi_to_axi_lite (
+      .clk_i(clk_pl),
+      .rst_ni(arst_pl_n),
+      .test_i('0),
+      .slv_req_i(sl_pl_d_req),
+      .slv_resp_o(sl_pl_d_resp),
+      .mst_req_o(sl_pl_axil_req),
+      .mst_resp_i(sl_pl_axil_resp)
+  );
 
   // TODO: IO SS
 
@@ -292,8 +366,8 @@ module hyper_titan
   ) u_sys_ctrl (
       .arst_ni               (arst_sl_n),
       .clk_i                 (clk_sl),
-      .req_i                 (),                      // TODO
-      .resp_o                (),                      // TODO
+      .req_i                 (pl_sc_req),
+      .resp_o                (pl_sc_resp),
       .e_core_clk_en_o       (e_core_clk_en),
       .e_core_rst_no         (e_core_rst_n),
       .p_core_clk_en_o       (p_core_clk_en),

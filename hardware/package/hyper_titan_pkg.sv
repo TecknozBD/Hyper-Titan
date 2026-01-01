@@ -102,7 +102,8 @@ package hyper_titan_pkg;
   // APB Bridge Localparams
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
-  `APB_TYPEDEF_ALL(apb, logic [GLOBAL_AW-1:0], logic [31:0], logic [3:0])
+  `APB_TYPEDEF_ALL(apb, logic [31:0], logic [31:0], logic [3:0])
+  `AXI_LITE_TYPEDEF_ALL(axil, logic [31:0], logic [31:0], logic [3:0])
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
   // CORE LINK Localparams
@@ -178,7 +179,7 @@ package hyper_titan_pkg;
                    logic [SL_MP_DW/8-1:0], logic [SL_MP_UW-1:0])
 
   localparam int NUM_SL_RULES = 11;
-  localparam xbar_rule_32_t [NUM_SL_RULES-1:0] cl_rules = '{
+  localparam xbar_rule_32_t [NUM_SL_RULES-1:0] sl_rules = '{
       '{idx: 0, start_addr: DMA_START, end_addr: DMA_END},
       '{idx: 0, start_addr: DTCM_E_CORE_START, end_addr: DTCM_E_CORE_END},
       '{idx: 0, start_addr: ITCM_E_CORE_START, end_addr: ITCM_E_CORE_END},
@@ -229,7 +230,7 @@ package hyper_titan_pkg;
                         logic [PL_MP_DW/8-1:0])
 
   localparam int NUM_PL_RULES = 4;
-  localparam xbar_rule_32_t [NUM_PL_RULES-1:0] cl_rules = '{
+  localparam xbar_rule_32_t [NUM_PL_RULES-1:0] pl_rules = '{
       '{idx: 0, start_addr: SYS_CTRL_START, end_addr: SYS_CTRL_END},
       '{idx: 2, start_addr: UART_START, end_addr: UART_END},
       '{idx: 3, start_addr: CLINT_START, end_addr: CLINT_END},
