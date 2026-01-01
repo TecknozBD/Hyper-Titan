@@ -15,6 +15,7 @@ The Hyper-Titan SoC is composed of several key subsystems, each designed to hand
 - [Peripheral Link](#peripheral-link)
 - [Memory Subsystem](#memory-subsystem)
 - [IO Subsystem](#io-subsystem)
+- [System Control](#system-control)
 - [Clock Reset Generator](#clock-reset-generator)
 - [APB Bridge](#apb-bridge)
 - [AXI to AXI Lite Bridge](#axi-to-axi-lite-bridge)
@@ -122,12 +123,12 @@ The Memory Subsystem includes an on-chip ROM and outbound AXI4 master interfaces
 
 ### IO Subsystem
 
-The IO Subsystem provides interfaces for low-speed peripherals such as UART and SPI. It also houses system components such as the CLINT, PLIC, and System Control CSR. The basic specifications are as follows:
+The IO Subsystem provides interfaces for low-speed peripherals such as UART and SPI. It also houses system components such as the CLINT, PLIC. The basic specifications are as follows:
 
 - **Clock:** clk_pl (100 MHz)
 - **Reset:** arst_n_pl
 - **Interface Type:** AXI4 Lite
-- **Number of Slave Ports:** 5
+- **Number of Slave Ports:** 4
 
 #### [IO Subsystem Detailed](modules/io_ss.md)
 
@@ -142,6 +143,15 @@ The APB Bridge module grants access to the system bus. It allows an external APB
 - **Number of Slave Ports:** 1 (AXI4)
 
 #### [APB Bridge Detailed](modules/apb_bridge.md)
+
+### System Control
+
+The System Control module manages system-level functions and configurations, including clock management, reset control, and power management. It ensures the proper operation of the SoC by coordinating various subsystems. The basic specifications are as follows:
+
+- **Clock:** clk_sl (100 MHz)
+- **Reset:** arst_n_pl
+
+#### [System Control Detailed](modules/sys_ctrl.md)
 
 ### Clock Reset Generator
 
