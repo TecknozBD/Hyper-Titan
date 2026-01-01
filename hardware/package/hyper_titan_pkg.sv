@@ -301,13 +301,70 @@ package hyper_titan_pkg;
   typedef ec_cl_s_req_t = RvvAxiPkg::rvv_axi_req_t;
   typedef ec_cl_s_resp_t = RvvAxiPkg::rvv_axi_resp_t;
 
-  typedef cl_ec_m_req_t = RvvAxiPkg::rvv_axi_req_t;
-  typedef cl_ec_m_resp_t = RvvAxiPkg::rvv_axi_resp_t;
+  typedef cl_ec_d_req_t = RvvAxiPkg::rvv_axi_req_t;
+  typedef cl_ec_d_resp_t = RvvAxiPkg::rvv_axi_resp_t;
 
   typedef pc_cl_s_req_t = rs_m_axi_req_t;
   typedef pc_cl_s_resp_t = rs_m_axi_resp_t;
 
-  typedef cl_pc_m_req_t = rs_s_axi_req_t;
-  typedef cl_pc_m_resp_t = rs_s_axi_resp_t;
+  typedef cl_pc_d_req_t = rs_s_axi_req_t;
+  typedef cl_pc_d_resp_t = rs_s_axi_resp_t;
+
+  typedef ec_cl_d_req_t = cl_s_axi_req_t;
+  typedef ec_cl_d_resp_t = cl_s_axi_resp_t;
+
+  typedef cl_ec_s_req_t = cl_m_axi_req_t;
+  typedef cl_ec_s_resp_t = cl_m_axi_resp_t;
+
+  typedef pc_cl_d_req_t = cl_s_axi_req_t;
+  typedef pc_cl_d_resp_t = cl_s_axi_resp_t;
+
+  typedef cl_pc_s_req_t = cl_m_axi_req_t;
+  typedef cl_pc_s_resp_t = cl_m_axi_resp_t;
+
+  typedef cl_sl_s_req_t = cl_m_axi_req_t;
+  typedef cl_sl_s_resp_t = cl_m_axi_resp_t;
+
+  typedef sl_cl_d_req_t = cl_s_axi_req_t;
+  typedef sl_cl_d_resp_t = cl_s_axi_resp_t;
+
+  typedef cl_sl_d_req_t = sl_s_axi_req_t;
+  typedef cl_sl_d_resp_t = sl_s_axi_resp_t;
+
+  typedef sl_cl_s_req_t = sl_m_axi_req_t;
+  typedef sl_cl_s_resp_t = sl_m_axi_resp_t;
+
+  typedef sl_rom_req_t = sl_m_axi_req_t;
+  typedef sl_rom_resp_t = sl_m_axi_resp_t;
+
+  typedef sl_ram_req_t = sl_m_axi_req_t;
+  typedef sl_ram_resp_t = sl_m_axi_resp_t;
+
+  typedef ap_sl_req_t = sl_s_axi_req_t;
+  typedef ap_sl_resp_t = sl_s_axi_resp_t;
+
+  typedef sl_pl_s_req_t = sl_m_axi_req_t;
+  typedef sl_pl_s_resp_t = sl_m_axi_resp_t;
+
+  typedef sl_pl_d_req_t = sl_m_axi_req_t;
+  typedef sl_pl_d_resp_t = sl_m_axi_resp_t;
+
+  typedef sl_pl_axil_req_t = pl_s_axil_req_t;
+  typedef sl_pl_axil_resp_t = pl_s_axil_resp_t;
+
+  typedef pl_sc_req_t = pl_m_axil_req_t;
+  typedef pl_sc_resp_t = pl_m_axil_resp_t;
+
+  typedef pl_sh_req_t = pl_m_axil_req_t;
+  typedef pl_sh_resp_t = pl_m_axil_resp_t;
+
+  typedef pl_ur_req_t = pl_m_axil_req_t;
+  typedef pl_ur_resp_t = pl_m_axil_resp_t;
+
+  typedef pl_cli_req_t = pl_m_axil_req_t;
+  typedef pl_cli_resp_t = pl_m_axil_resp_t;
+
+  typedef pl_pli_req_t = pl_m_axil_req_t;
+  typedef pl_pli_resp_t = pl_m_axil_resp_t;
 
 endpackage
