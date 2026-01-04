@@ -8,6 +8,8 @@ Hyper-Titan is designed as a “middle ground” SoC: more capable than typical 
 
 ## Features
 
+The key features of Hyper-Titan include:
+
 - **Big-LITTLE dual-core RISC-V**: Partition workloads between the RV64G Performance core and RV32IMF Efficiency core.
 - **Low-latency TCM**: Fast shared memory for tight control loops and inter-core data exchange.
 - **DMA-assisted transfers**: Move data between peripherals and memory with reduced CPU involvement.
