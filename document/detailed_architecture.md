@@ -139,7 +139,7 @@ The Peripheral Link module manages communication between the core subsystems and
 - **Reset:** arst_n_pl
 - **Interface Type:** AXI4
 - **Number of Slave Ports:** 1
-- **Number of Master Ports:** 5
+- **Number of Master Ports:** 4
 
 #### [Peripheral Link Detailed](modules/pl.md)
 

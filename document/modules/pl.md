@@ -6,7 +6,7 @@ The `peripheral_link` module is an AXI4-Lite crossbar that connects the system c
 
 _Figure: Peripheral Link Module Diagram_
 
-**1 Slave Interface and 5 Master Interfaces**
+**1 Slave Interface and 4 Master Interfaces**
 
 ## Ports
 
@@ -16,8 +16,8 @@ _Figure: Peripheral Link Module Diagram_
 | arst_ni   | Input     | 1                    | Active low Peripheral Link reset                  |
 | slv_req_i | Input     | [1] pl_s_axil_req_t  | Slave request signal from connected modules       |
 | slv_rsp_o | Output    | [1] pl_s_axil_resp_t | Slave response signal to connected modules        |
-| mst_req_o | Output    | [5] pl_m_axil_req_t  | Master request signal to connected peripherals    |
-| mst_rsp_i | Input     | [5] pl_m_axil_resp_t | Master response signal from connected peripherals |
+| mst_req_o | Output    | [4] pl_m_axil_req_t  | Master request signal to connected peripherals    |
+| mst_rsp_i | Input     | [4] pl_m_axil_resp_t | Master response signal from connected peripherals |
 
 ## Struct Definitions
 
