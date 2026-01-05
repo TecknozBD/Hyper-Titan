@@ -4,6 +4,8 @@ The `p_core_ss` module implements the Performance Core Subsystem, which includes
 
 ![p_core_ss](../svg/modules/p_core_ss.svg)
 
+_Figure: Performance Core Subsystem_
+
 ## Ports
 
 | Name            | Width           | Direction | Description                    |

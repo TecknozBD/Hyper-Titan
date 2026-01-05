@@ -4,6 +4,8 @@ The `e_core_ss` module implements the Efficiency Core Subsystem, which includes 
 
 ![e_core_ss](../svg/modules/e_core_ss.svg)
 
+_Figure: Efficiency Core Subsystem_
+
 ## Ports
 
 | Name          | Width          | Direction | Description                    |
