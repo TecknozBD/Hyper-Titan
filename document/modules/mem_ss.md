@@ -16,6 +16,8 @@ _Figure 1: Memory Subsystem Block Diagram_
 | sl_m_axi_req_t  | rom_req_t  | Input     | Slave AXI request Struct for ROM  |
 | sl_m_axi_resp_t | rom_resp_t | Output    | Slave AXI response Struct for ROM |
 
+## Struct Definitions
+
 ### sl_m_axi_req_t
 
 | Field Name | Width              | Description           |
