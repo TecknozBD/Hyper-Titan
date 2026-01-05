@@ -23,65 +23,7 @@ The Hyper-Titan SoC is composed of several key subsystems, each designed to hand
 
 These components are interconnected through advanced AXI-based links, enabling seamless data flow and efficient resource sharing across the SoC. This modular design allows for scalability and optimized performance tailored to specific application needs.
 
-## Ports
-
-The Hyper-Titan SoC features a variety of ports to facilitate communication with external components and systems. Below is a summary of the primary ports available on the SoC:
-
-| Port Name      | Type   | Direction | Description                                        |
-| -------------- | ------ | --------- | -------------------------------------------------- |
-| ref_clk_i      | Input  | Input     | Global reference clock                             |
-| glob_arst_ni   | Input  | Input     | Global asynchronous reset (active low)             |
-| apb_clk_i      | Input  | Input     | APB system control clock                           |
-| apb_arst_ni    | Input  | Input     | APB system control asynchronous reset (active low) |
-| apb_req_i      | Input  | Input     | APB request interface                              |
-| apb_resp_o     | Output | Output    | APB response interface                             |
-| spi_cs_no      | Output | Output    | SPI flash chip select (active low)                 |
-| spi_sck_o      | Output | Output    | SPI flash serial clock                             |
-| spi_sd_io      | Inout  | Inout     | SPI flash serial data (4-bit)                      |
-| uart_tx_o      | Output | Output    | UART console transmit                              |
-| uart_rx_i      | Input  | Input     | UART console receive                               |
-| ddr3_ck_p_o    | Output | Output    | DDR3 PHY clock positive                            |
-| ddr3_ck_n_o    | Output | Output    | DDR3 PHY clock negative                            |
-| ddr3_cke_o     | Output | Output    | DDR3 PHY clock enable                              |
-| ddr3_reset_n_o | Output | Output    | DDR3 PHY reset (active low)                        |
-| ddr3_ras_n_o   | Output | Output    | DDR3 PHY row address strobe (active low)           |
-| ddr3_cas_n_o   | Output | Output    | DDR3 PHY column address strobe (active low)        |
-| ddr3_we_n_o    | Output | Output    | DDR3 PHY write enable (active low)                 |
-| ddr3_cs_n_o    | Output | Output    | DDR3 PHY chip select (active low)                  |
-| ddr3_ba_o      | Output | Output    | DDR3 PHY bank address (3-bit)                      |
-| ddr3_addr_o    | Output | Output    | DDR3 PHY address (14-bit)                          |
-| ddr3_odt_o     | Output | Output    | DDR3 PHY on-die termination                        |
-| ddr3_dm_o      | Output | Output    | DDR3 PHY data mask (2-bit)                         |
-| ddr3_dqs_p_io  | Inout  | Inout     | DDR3 PHY data strobe positive (2-bit)              |
-| ddr3_dqs_n_io  | Inout  | Inout     | DDR3 PHY data strobe negative (2-bit)              |
-| ddr3_dq_io     | Inout  | Inout     | DDR3 PHY data (16-bit)                             |
-
-## Hyper-Titan Address Map
-
-The Hyper-Titan Address Map outlines the memory layout of the SoC, assigning unique address ranges to each component. This mapping is crucial for enabling efficient communication between software and hardware, preventing address conflicts, and facilitating proper resource allocation across the system.
-
-| Device                       | Base Address    | Ending Address  |
-| ---------------------------- | --------------- | --------------- |
-| ITCM_E_CORE                  | 0x0000_0000     | 0x0000_1FFF     |
-| [SYS_CTRL](maps/sys_ctrl.md) | 0x0000_2000     | 0x0000_2FFF     |
-| [CLINT](maps/clint.md)       | 0x0000_3000     | 0x0000_3FFF     |
-| [PLIC](maps/plic.md)         | 0x0000_4000     | 0x0000_4FFF     |
-| [UART](maps/uart.md)         | 0x0000_5000     | 0x0000_5FFF     |
-| [SPI_CSR](maps/spi_csr.md)   | 0x0000_6000     | 0x0000_6FFF     |
-| **RESERVED**                 | **0x0000_7000** | **0x0000_EFFF** |
-| [DMA](maps/dma.md)           | 0x0000_F000     | 0x0000_FFFF     |
-| DTCM_E_CORE                  | 0x0001_0000     | 0x0001_7FFF     |
-| **RESERVED**                 | **0x0001_8000** | **0x0002_FFFF** |
-| **CSR RESERVED**             | **0x0003_0000** | **0x07FF_FFFF** |
-| DTCM_P_CORE                  | 0x0800_0000     | 0x080F_FFFF     |
-| **RESERVED**                 | **0x0810_0000** | **0x08FF_FFFF** |
-| BOOT_ROM                     | 0x0900_0000     | 0x0900_FFFF     |
-| **RESERVED**                 | **0x0901_0000** | **0x0FFF_FFFF** |
-| SPI_MEM                      | 0x1000_0000     | 0x1FFF_FFFF     |
-| **RESERVED**                 | **0x2000_0000** | **0x7FFF_FFFF** |
-| RAM                          | 0x8000_0000     | 0xFFFF_FFFF     |
-
-## Components Description
+## Subsystems
 
 This section provides a brief, system-level summary of each major subsystem shown in the architecture diagram. For implementation details and signal-level interfaces, follow the corresponding detailed module links.
 
@@ -216,3 +158,61 @@ The AXI Converter module translates between different AXI4 protocols, enabling c
 - **Number of Slave Ports:** 1
 
 #### [AXI Converter Detailed](modules/axi_converter.md)
+
+## Ports
+
+The Hyper-Titan SoC features a variety of ports to facilitate communication with external components and systems. Below is a summary of the primary ports available on the SoC:
+
+| Port Name      | Type   | Direction | Description                                        |
+| -------------- | ------ | --------- | -------------------------------------------------- |
+| ref_clk_i      | Input  | Input     | Global reference clock                             |
+| glob_arst_ni   | Input  | Input     | Global asynchronous reset (active low)             |
+| apb_clk_i      | Input  | Input     | APB system control clock                           |
+| apb_arst_ni    | Input  | Input     | APB system control asynchronous reset (active low) |
+| apb_req_i      | Input  | Input     | APB request interface                              |
+| apb_resp_o     | Output | Output    | APB response interface                             |
+| spi_cs_no      | Output | Output    | SPI flash chip select (active low)                 |
+| spi_sck_o      | Output | Output    | SPI flash serial clock                             |
+| spi_sd_io      | Inout  | Inout     | SPI flash serial data (4-bit)                      |
+| uart_tx_o      | Output | Output    | UART console transmit                              |
+| uart_rx_i      | Input  | Input     | UART console receive                               |
+| ddr3_ck_p_o    | Output | Output    | DDR3 PHY clock positive                            |
+| ddr3_ck_n_o    | Output | Output    | DDR3 PHY clock negative                            |
+| ddr3_cke_o     | Output | Output    | DDR3 PHY clock enable                              |
+| ddr3_reset_n_o | Output | Output    | DDR3 PHY reset (active low)                        |
+| ddr3_ras_n_o   | Output | Output    | DDR3 PHY row address strobe (active low)           |
+| ddr3_cas_n_o   | Output | Output    | DDR3 PHY column address strobe (active low)        |
+| ddr3_we_n_o    | Output | Output    | DDR3 PHY write enable (active low)                 |
+| ddr3_cs_n_o    | Output | Output    | DDR3 PHY chip select (active low)                  |
+| ddr3_ba_o      | Output | Output    | DDR3 PHY bank address (3-bit)                      |
+| ddr3_addr_o    | Output | Output    | DDR3 PHY address (14-bit)                          |
+| ddr3_odt_o     | Output | Output    | DDR3 PHY on-die termination                        |
+| ddr3_dm_o      | Output | Output    | DDR3 PHY data mask (2-bit)                         |
+| ddr3_dqs_p_io  | Inout  | Inout     | DDR3 PHY data strobe positive (2-bit)              |
+| ddr3_dqs_n_io  | Inout  | Inout     | DDR3 PHY data strobe negative (2-bit)              |
+| ddr3_dq_io     | Inout  | Inout     | DDR3 PHY data (16-bit)                             |
+
+## Hyper-Titan Address Map
+
+The Hyper-Titan Address Map outlines the memory layout of the SoC, assigning unique address ranges to each component. This mapping is crucial for enabling efficient communication between software and hardware, preventing address conflicts, and facilitating proper resource allocation across the system.
+
+| Device                       | Base Address    | Ending Address  |
+| ---------------------------- | --------------- | --------------- |
+| ITCM_E_CORE                  | 0x0000_0000     | 0x0000_1FFF     |
+| [SYS_CTRL](maps/sys_ctrl.md) | 0x0000_2000     | 0x0000_2FFF     |
+| [CLINT](maps/clint.md)       | 0x0000_3000     | 0x0000_3FFF     |
+| [PLIC](maps/plic.md)         | 0x0000_4000     | 0x0000_4FFF     |
+| [UART](maps/uart.md)         | 0x0000_5000     | 0x0000_5FFF     |
+| [SPI_CSR](maps/spi_csr.md)   | 0x0000_6000     | 0x0000_6FFF     |
+| **RESERVED**                 | **0x0000_7000** | **0x0000_EFFF** |
+| [DMA](maps/dma.md)           | 0x0000_F000     | 0x0000_FFFF     |
+| DTCM_E_CORE                  | 0x0001_0000     | 0x0001_7FFF     |
+| **RESERVED**                 | **0x0001_8000** | **0x0002_FFFF** |
+| **CSR RESERVED**             | **0x0003_0000** | **0x07FF_FFFF** |
+| DTCM_P_CORE                  | 0x0800_0000     | 0x080F_FFFF     |
+| **RESERVED**                 | **0x0810_0000** | **0x08FF_FFFF** |
+| BOOT_ROM                     | 0x0900_0000     | 0x0900_FFFF     |
+| **RESERVED**                 | **0x0901_0000** | **0x0FFF_FFFF** |
+| SPI_MEM                      | 0x1000_0000     | 0x1FFF_FFFF     |
+| **RESERVED**                 | **0x2000_0000** | **0x7FFF_FFFF** |
+| RAM                          | 0x8000_0000     | 0xFFFF_FFFF     |

@@ -47,18 +47,18 @@ _**Figure:** Hyper-Titan SoC Architecture_
 
 ### Key Components
 
-- _Efficiency Core:_ RV32IMF core designed for low power consumption.
-- _Performance Core:_ RV64G core optimized for high performance.
-- _TCM Memory:_ Shared memories accessible by both cores for fast data exchange.
-- _DMA Controller:_ Manages data transfers between different blocks.
-- _Internal ROM:_ Read only memory for boot code and firmware.
-- _External RAM:_ Connections for external DDR3 memory.
-- _APB Bridge:_ Facilitates external access to the system bus.
-- _System Controller:_ Manages system-level functions and configurations.
-- _Clock & Reset Generator:_ Provides clock signals and reset functionality.
-- _SPI Host:_ Serial Peripheral Interface for high-speed communication with external devices.
-- _UART:_ Universal Asynchronous Receiver-Transmitter for serial communication.
-- _CLINT:_ Core Local Interruptor for handling interrupts.
-- _PLIC:_ Platform-Level Interrupt Controller for managing external interrupts.
+- **Efficiency Core:** RV32IMF core designed for low power consumption.
+- **Performance Core:** RV64G core optimized for high performance.
+- **TCM Memory:** Shared memories accessible by both cores for fast data exchange.
+- **DMA Controller:** Manages data transfers between different blocks.
+- **Internal ROM:** Read only memory for boot code and firmware.
+- **External RAM:** Connections for external DDR3 memory.
+- **APB Bridge:** Facilitates external access to the system bus.
+- **System Controller:** Manages system-level functions and configurations.
+- **Clock & Reset Generator:** Provides clock signals and reset functionality.
+- **SPI Host:** Serial Peripheral Interface for high-speed communication with external devices.
+- **UART:** Universal Asynchronous Receiver-Transmitter for serial communication.
+- **CLINT:** Core Local Interruptor for handling interrupts.
+- **PLIC:** Platform-Level Interrupt Controller for managing external interrupts.
 
 #### [Detailed Architecture](detailed_architecture.md)
