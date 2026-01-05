@@ -4,6 +4,8 @@ The `peripheral_link` module is an AXI4-Lite crossbar that connects the system c
 
 ![Peripheral Link](../svg/modules/pl.svg)
 
+_Figure: Peripheral Link Module Diagram_
+
 **1 Slave Interface and 5 Master Interfaces**
 
 ## Ports

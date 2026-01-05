@@ -4,6 +4,8 @@ The `core_link` module is responsible for facilitating communication between the
 
 ![Core Link](../svg/modules/cl.svg)
 
+_Figure: Core Link Module Diagram_
+
 **3 Slave Interfaces and 3 Master Interfaces**
 
 ## Ports
