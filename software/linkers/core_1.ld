@@ -19,14 +19,16 @@ SECTIONS
 
   .tohost_section 0x00002FF8 (NOLOAD) :
   {
+    . = ALIGN(4);
     tohost = .;
-    QUAD(0);
+    WORD(0);
   } > PERIPHERALS : data
 
   .fromhost_section 0x00002FFC (NOLOAD) :
   {
+    . = ALIGN(4);
     fromhost = .;
-    QUAD(0);
+    WORD(0);
   } > PERIPHERALS : data
 
   . = ORIGIN(RAM);
