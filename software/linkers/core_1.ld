@@ -11,22 +11,20 @@ PHDRS
 MEMORY
 {
   RAM (rwx) : ORIGIN = 0x40000000 + RAM_PER_CORE, LENGTH = RAM_PER_CORE
-  PERIPHERALS (rwx) : ORIGIN = 0x20000000, LENGTH = 0x6000
+  PERIPHERALS (rwx) : ORIGIN = 0x00000000, LENGTH = 0x10000
 }
 
 SECTIONS
 {
 
-  .tohost_section 0x20000004 (NOLOAD) :
+  .tohost_section 0x00002FF8 (NOLOAD) :
   {
-    . = ALIGN(4);
     tohost = .;
     QUAD(0);
   } > PERIPHERALS : data
 
-  .fromhost_section 0x2000000C (NOLOAD) :
+  .fromhost_section 0x00002FFC (NOLOAD) :
   {
-    . = ALIGN(4);
     fromhost = .;
     QUAD(0);
   } > PERIPHERALS : data

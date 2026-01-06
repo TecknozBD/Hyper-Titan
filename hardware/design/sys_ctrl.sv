@@ -20,6 +20,10 @@ module sys_ctrl
   import hyper_titan_pkg::REG_OFFSET_PLL_CFG_E_CORE;
   import hyper_titan_pkg::REG_OFFSET_PLL_CFG_P_CORE;
   import hyper_titan_pkg::REG_OFFSET_PLL_CFG_SYS_LINK;
+  import hyper_titan_pkg::REG_OFFSET_GPR_0;
+  import hyper_titan_pkg::REG_OFFSET_GPR_1;
+  import hyper_titan_pkg::REG_OFFSET_GPR_2;
+  import hyper_titan_pkg::REG_OFFSET_GPR_3;
 #(
     parameter type         req_t    = logic,
     parameter type         resp_t   = logic,
@@ -114,6 +118,15 @@ module sys_ctrl
 
   localparam int ADDR_WIDTH = $bits(req_i.aw.addr);
   localparam int DATA_WIDTH = $bits(req_i.w.data);
+
+  // ========================================================================
+  // Internal registers
+  // ========================================================================
+
+  logic [            31:0] gpr_0;
+  logic [            31:0] gpr_1;
+  logic [            31:0] gpr_2;
+  logic [            31:0] gpr_3;
 
   // ========================================================================
   // Memory Write Interface
@@ -221,6 +234,26 @@ module sys_ctrl
           mem_wresp = 2'b00;  // OKAY
         end
 
+        REG_OFFSET_GPR_0: begin
+          // General Purpose Register 0: Always writable
+          mem_wresp = 2'b00;  // OKAY
+        end
+
+        REG_OFFSET_GPR_1: begin
+          // General Purpose Register 1: Always writable
+          mem_wresp = 2'b00;  // OKAY
+        end
+
+        REG_OFFSET_GPR_2: begin
+          // General Purpose Register 2: Always writable
+          mem_wresp = 2'b00;  // OKAY
+        end
+
+        REG_OFFSET_GPR_3: begin
+          // General Purpose Register 3: Always writable
+          mem_wresp = 2'b00;  // OKAY
+        end
+
         default: begin
           // Unmapped address space
           mem_wresp = 2'b10;  // SLVERR
@@ -310,6 +343,30 @@ module sys_ctrl
           mem_rdata = {15'b0, pll_locked_sys_link_i, pll_fb_div_sys_link_o, pll_ref_div_sys_link_o};
         end
 
+        REG_OFFSET_GPR_0: begin
+          // Read General Purpose Register 0
+          mem_rresp = 2'b00;  // OKAY
+          mem_rdata = gpr_0;
+        end
+
+        REG_OFFSET_GPR_1: begin
+          // Read General Purpose Register 1
+          mem_rresp = 2'b00;  // OKAY
+          mem_rdata = gpr_1;
+        end
+
+        REG_OFFSET_GPR_2: begin
+          // Read General Purpose Register 2
+          mem_rresp = 2'b00;  // OKAY
+          mem_rdata = gpr_2;
+        end
+
+        REG_OFFSET_GPR_3: begin
+          // Read General Purpose Register 3
+          mem_rresp = 2'b00;  // OKAY
+          mem_rdata = gpr_3;
+        end
+
         default: begin
         end
 
@@ -343,6 +400,10 @@ module sys_ctrl
       pll_fb_div_p_core_o    <= '0;
       pll_ref_div_sys_link_o <= '0;
       pll_fb_div_sys_link_o  <= '0;
+      gpr_0                  <= '0;
+      gpr_1                  <= '0;
+      gpr_2                  <= '0;
+      gpr_3                  <= '0;
     end else begin
       // Update registers on successful write (OKAY response)
       if (mem_wresp == 2'b00) begin
@@ -402,9 +463,24 @@ module sys_ctrl
             pll_ref_div_sys_link_o <= mem_wdata[3:0];
             pll_fb_div_sys_link_o  <= mem_wdata[15:4];
           end
+
+          REG_OFFSET_GPR_0: begin
+            gpr_0 <= mem_wdata;
+          end
+
+          REG_OFFSET_GPR_1: begin
+            gpr_1 <= mem_wdata;
+          end
+
+          REG_OFFSET_GPR_2: begin
+            gpr_2 <= mem_wdata;
+          end
+
+          REG_OFFSET_GPR_3: begin
+            gpr_3 <= mem_wdata;
+          end
         endcase
       end
     end
   end
-
 endmodule

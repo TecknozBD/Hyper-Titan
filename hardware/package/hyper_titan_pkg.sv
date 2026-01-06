@@ -66,6 +66,10 @@ package hyper_titan_pkg;
   localparam int REG_OFFSET_PLL_CFG_E_CORE      = 'h0C0;
   localparam int REG_OFFSET_PLL_CFG_P_CORE      = 'h0C4;
   localparam int REG_OFFSET_PLL_CFG_SYS_LINK    = 'h0CC;
+  localparam int REG_OFFSET_GPR_0               = 'hFF0;
+  localparam int REG_OFFSET_GPR_1               = 'hFF4;
+  localparam int REG_OFFSET_GPR_2               = 'hFF8;
+  localparam int REG_OFFSET_GPR_3               = 'hFFC;
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////
   // UART REGISTERS OFFSETS
