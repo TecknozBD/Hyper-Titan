@@ -21,14 +21,12 @@ SECTIONS
   {
     . = ALIGN(4);
     tohost = .;
-    WORD(0);
   } > PERIPHERALS : data
 
   .fromhost_section 0x00002FFC (NOLOAD) :
   {
     . = ALIGN(4);
     fromhost = .;
-    WORD(0);
   } > PERIPHERALS : data
 
   . = ORIGIN(RAM);
