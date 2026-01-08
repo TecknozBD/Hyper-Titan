@@ -272,11 +272,11 @@ module hyper_titan
       .test_i('0),
       .slv_ports_req_i(sl_pl_axil_req),
       .slv_ports_resp_o(sl_pl_axil_resp),
-      .mst_ports_req_o({pl_pli_req, pl_cli_req, pl_ur_req, pl_sh_req, pl_sc_req}),
-      .mst_ports_resp_i({pl_pli_resp, pl_cli_resp, pl_ur_resp, pl_sh_resp, pl_sc_resp}),
+      .mst_ports_req_o({pl_sh_req, pl_ur_req, pl_pli_req, pl_cli_req, pl_sc_req}),
+      .mst_ports_resp_i({pl_sh_resp, pl_ur_resp, pl_pli_resp, pl_cli_resp, pl_sc_resp}),
       .addr_map_i(pl_rules),
       .en_default_mst_port_i('1),
-      .default_mst_port_i('b1)
+      .default_mst_port_i('b100)
   );
 
   // TODO: MEM SS

@@ -236,9 +236,9 @@ package hyper_titan_pkg;
   localparam int NUM_PL_RULES = 4;
   localparam xbar_rule_32_t [NUM_PL_RULES-1:0] pl_rules = '{
       '{idx: 0, start_addr: SYS_CTRL_START, end_addr: SYS_CTRL_END},
-      '{idx: 2, start_addr: UART_START, end_addr: UART_END},
-      '{idx: 3, start_addr: CLINT_START, end_addr: CLINT_END},
-      '{idx: 4, start_addr: PLIC_START, end_addr: PLIC_END}
+      '{idx: 1, start_addr: CLINT_START, end_addr: CLINT_END},
+      '{idx: 2, start_addr: PLIC_START, end_addr: PLIC_END},
+      '{idx: 3, start_addr: UART_START, end_addr: UART_END}
   };
   // DEFAULT 1
 
@@ -308,73 +308,73 @@ package hyper_titan_pkg;
   // RE-ALIAS
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
-  typedef ec_cl_s_req_t = RvvAxiPkg::rvv_axi_req_t;
-  typedef ec_cl_s_resp_t = RvvAxiPkg::rvv_axi_resp_t;
+  typedef RvvAxiPkg::rvv_axi ec_cl_s_req_t;
+  typedef RvvAxiPkg::rvv_axi ec_cl_s_resp_t;
 
-  typedef cl_ec_d_req_t = RvvAxiPkg::rvv_axi_req_t;
-  typedef cl_ec_d_resp_t = RvvAxiPkg::rvv_axi_resp_t;
+  typedef RvvAxiPkg::rvv_axi cl_ec_d_req_t;
+  typedef RvvAxiPkg::rvv_axi cl_ec_d_resp_t;
 
-  typedef pc_cl_s_req_t = rs_m_axi_req_t;
-  typedef pc_cl_s_resp_t = rs_m_axi_resp_t;
+  typedef rs_m_axi_req_t pc_cl_s_req_t;
+  typedef rs_m_axi_resp_t pc_cl_s_resp_t;
 
-  typedef cl_pc_d_req_t = rs_s_axi_req_t;
-  typedef cl_pc_d_resp_t = rs_s_axi_resp_t;
+  typedef rs_s_axi_req_t cl_pc_d_req_t;
+  typedef rs_s_axi_resp_t cl_pc_d_resp_t;
 
-  typedef ec_cl_d_req_t = cl_s_axi_req_t;
-  typedef ec_cl_d_resp_t = cl_s_axi_resp_t;
+  typedef cl_s_axi_req_t ec_cl_d_req_t;
+  typedef cl_s_axi_resp_t ec_cl_d_resp_t;
 
-  typedef cl_ec_s_req_t = cl_m_axi_req_t;
-  typedef cl_ec_s_resp_t = cl_m_axi_resp_t;
+  typedef cl_m_axi_req_t cl_ec_s_req_t;
+  typedef cl_m_axi_resp_t cl_ec_s_resp_t;
 
-  typedef pc_cl_d_req_t = cl_s_axi_req_t;
-  typedef pc_cl_d_resp_t = cl_s_axi_resp_t;
+  typedef cl_s_axi_req_t pc_cl_d_req_t;
+  typedef cl_s_axi_resp_t pc_cl_d_resp_t;
 
-  typedef cl_pc_s_req_t = cl_m_axi_req_t;
-  typedef cl_pc_s_resp_t = cl_m_axi_resp_t;
+  typedef cl_m_axi_req_t cl_pc_s_req_t;
+  typedef cl_m_axi_resp_t cl_pc_s_resp_t;
 
-  typedef cl_sl_s_req_t = cl_m_axi_req_t;
-  typedef cl_sl_s_resp_t = cl_m_axi_resp_t;
+  typedef cl_m_axi_req_t cl_sl_s_req_t;
+  typedef cl_m_axi_resp_t cl_sl_s_resp_t;
 
-  typedef sl_cl_d_req_t = cl_s_axi_req_t;
-  typedef sl_cl_d_resp_t = cl_s_axi_resp_t;
+  typedef cl_s_axi_req_t sl_cl_d_req_t;
+  typedef cl_s_axi_resp_t sl_cl_d_resp_t;
 
-  typedef cl_sl_d_req_t = sl_s_axi_req_t;
-  typedef cl_sl_d_resp_t = sl_s_axi_resp_t;
+  typedef sl_s_axi_req_t cl_sl_d_req_t;
+  typedef sl_s_axi_resp_t cl_sl_d_resp_t;
 
-  typedef sl_cl_s_req_t = sl_m_axi_req_t;
-  typedef sl_cl_s_resp_t = sl_m_axi_resp_t;
+  typedef sl_m_axi_req_t sl_cl_s_req_t;
+  typedef sl_m_axi_resp_t sl_cl_s_resp_t;
 
-  typedef sl_rom_req_t = sl_m_axi_req_t;
-  typedef sl_rom_resp_t = sl_m_axi_resp_t;
+  typedef sl_m_axi_req_t sl_rom_req_t;
+  typedef sl_m_axi_resp_t sl_rom_resp_t;
 
-  typedef sl_ram_req_t = sl_m_axi_req_t;
-  typedef sl_ram_resp_t = sl_m_axi_resp_t;
+  typedef sl_m_axi_req_t sl_ram_req_t;
+  typedef sl_m_axi_resp_t sl_ram_resp_t;
 
-  typedef ap_sl_req_t = sl_s_axi_req_t;
-  typedef ap_sl_resp_t = sl_s_axi_resp_t;
+  typedef sl_s_axi_req_t ap_sl_req_t;
+  typedef sl_s_axi_resp_t ap_sl_resp_t;
 
-  typedef sl_pl_s_req_t = sl_m_axi_req_t;
-  typedef sl_pl_s_resp_t = sl_m_axi_resp_t;
+  typedef sl_m_axi_req_t sl_pl_s_req_t;
+  typedef sl_m_axi_resp_t sl_pl_s_resp_t;
 
-  typedef sl_pl_d_req_t = sl_m_axi_req_t;
-  typedef sl_pl_d_resp_t = sl_m_axi_resp_t;
+  typedef sl_m_axi_req_t sl_pl_d_req_t;
+  typedef sl_m_axi_resp_t sl_pl_d_resp_t;
 
-  typedef sl_pl_axil_req_t = pl_s_axil_req_t;
-  typedef sl_pl_axil_resp_t = pl_s_axil_resp_t;
+  typedef pl_s_axil_req_t sl_pl_axil_req_t;
+  typedef pl_s_axil_resp_t sl_pl_axil_resp_t;
 
-  typedef pl_sc_req_t = pl_m_axil_req_t;
-  typedef pl_sc_resp_t = pl_m_axil_resp_t;
+  typedef pl_m_axil_req_t pl_sc_req_t;
+  typedef pl_m_axil_resp_t pl_sc_resp_t;
 
-  typedef pl_sh_req_t = pl_m_axil_req_t;
-  typedef pl_sh_resp_t = pl_m_axil_resp_t;
+  typedef pl_m_axil_req_t pl_sh_req_t;
+  typedef pl_m_axil_resp_t pl_sh_resp_t;
 
-  typedef pl_ur_req_t = pl_m_axil_req_t;
-  typedef pl_ur_resp_t = pl_m_axil_resp_t;
+  typedef pl_m_axil_req_t pl_ur_req_t;
+  typedef pl_m_axil_resp_t pl_ur_resp_t;
 
-  typedef pl_cli_req_t = pl_m_axil_req_t;
-  typedef pl_cli_resp_t = pl_m_axil_resp_t;
+  typedef pl_m_axil_req_t pl_cli_req_t;
+  typedef pl_m_axil_resp_t pl_cli_resp_t;
 
-  typedef pl_pli_req_t = pl_m_axil_req_t;
-  typedef pl_pli_resp_t = pl_m_axil_resp_t;
+  typedef pl_m_axil_req_t pl_pli_req_t;
+  typedef pl_m_axil_resp_t pl_pli_resp_t;
 
 endpackage
