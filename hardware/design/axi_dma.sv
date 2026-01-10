@@ -1,3 +1,34 @@
+// ============================================================================
+// Title        : AXI4 DMA Controller
+// File         : axi_dma.sv
+// Author       : Amit Sikder
+// Team         : Design Verification / SoC
+// Description  :
+//   This module implements a simple AXI4-compliant Direct Memory Access (DMA)
+//   controller with a CSR-based programming interface.
+//
+//   The DMA supports memory-to-memory transfers using AXI INCR bursts and
+//   provides software-visible status, interrupt, and error reporting.
+//
+// Key Features :
+//   - AXI4 master interface with 32-bit data width
+//   - INCR burst transfers only
+//   - Maximum burst length of 16 beats (AXI LEN = 15)
+//   - Single outstanding read burst and write burst
+//   - AXI-Lite–like CSR slave interface for configuration and control
+//   - Programmable transfer size and 64-bit source/destination addressing
+//   - Remaining-byte counter for in-flight transfers
+//   - Level-triggered interrupt on transfer completion or error
+//   - Software-clearable interrupt and error status
+//
+// Notes :
+//   - Sideband (stride / scheme) logic is currently not implemented
+//   - Error handling is basic (RRESP/BRESP only)
+//   - This design is intended for simplicity and verification clarity
+//
+// ============================================================================ 
+
+
 module axi_dma #(
     parameter type mp_aw_chan_t = logic,
     parameter type mp_w_chan_t  = logic,
