@@ -4,7 +4,7 @@ export SHELL=/bin/bash
 # General
 ####################################################################################################
 
-TOP     := hyper_titan_tb_cfg
+TOP     := hyper_titan_tb
 TEST    := default
 HART_ID := 0
 GUI     := 0
@@ -33,6 +33,7 @@ LOG      := ${HYPER_TITAN}/log
 FILELIST := ${HYPER_TITAN}/hardware/filelist
 
 export SUBMODULE=${HYPER_TITAN}/submodule
+export APB=${SUBMODULE}/apb
 export AXI=${SUBMODULE}/axi
 export COMMON=${SUBMODULE}/common
 export COMMON_CELLS=${SUBMODULE}/common_cells

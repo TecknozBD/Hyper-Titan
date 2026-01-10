@@ -16,3 +16,6 @@
 [submodule "submodule/hardware"]
 	path = submodule/hardware
 	url = https://github.com/squared-studio/hardware.git
+[submodule "submodule/apb"]
+	path = submodule/apb
+	url = https://github.com/pulp-platform/apb.git
