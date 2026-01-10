@@ -56,10 +56,10 @@ module p_core_ss
   // Local arrays of typed AXI request/response channels used to
   // connect the three master/slave ports of the local crossbar.
   // Index 0: core/DTCM, 1: DMA, 2: external system connection.
-  rs_m_axi_req_t  xbar_mp_req [3];
-  rs_m_axi_resp_t xbar_mp_resp[3];
-  rs_s_axi_req_t  xbar_sp_req [3];
-  rs_s_axi_resp_t xbar_sp_resp[3];
+  rs_m_axi_req_t  [2:0] xbar_mp_req;
+  rs_m_axi_resp_t [2:0] xbar_mp_resp;
+  rs_s_axi_req_t  [2:0] xbar_sp_req;
+  rs_s_axi_resp_t [2:0] xbar_sp_resp;
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
   // INSTANTIATIONS
