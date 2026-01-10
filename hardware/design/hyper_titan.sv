@@ -359,8 +359,8 @@ module hyper_titan
 
   // System controller: manages clocking, resets, and boot configuration
   sys_ctrl #(
-      .req_t   (),
-      .resp_t  (),
+      .req_t   (pl_sc_req_t),
+      .resp_t  (pl_sc_resp_t),
       .MEM_BASE('h0000_2000),
       .MEM_SIZE(12)
   ) u_sys_ctrl (
