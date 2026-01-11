@@ -37,6 +37,13 @@ module hyper_titan_tb_top;
   hyper_titan u_dut (.*);
 
   initial begin
+    $timeformat(-12, 2, "ps", 20);
+    fork
+      forever begin
+        $display("%0t", $realtime);
+        #1ps;
+      end
+    join_none
     $display("Test running...");
     #10ns;
     $finish;

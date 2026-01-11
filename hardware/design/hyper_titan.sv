@@ -362,7 +362,7 @@ module hyper_titan
       .req_t   (pl_sc_req_t),
       .resp_t  (pl_sc_resp_t),
       .MEM_BASE('h0000_2000),
-      .MEM_SIZE(12)
+      .MEM_SIZE(32)
   ) u_sys_ctrl (
       .arst_ni               (arst_sl_n),
       .clk_i                 (clk_sl),

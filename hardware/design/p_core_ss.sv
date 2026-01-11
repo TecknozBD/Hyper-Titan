@@ -74,8 +74,8 @@ module p_core_ss
   ) u_core (
       .clk_i(clk_i),
       .rst_ni(arst_ni),
-      .boot_addr_i({'h0, boot_addr_i}),
-      .hart_id_i({'h0, hart_id_i}),
+      .boot_addr_i({32'h0, boot_addr_i}),
+      .hart_id_i({32'h0, hart_id_i}),
       .irq_i(irq_i),
       .ipi_i(ipi_i),
       .time_irq_i(time_irq_i),
