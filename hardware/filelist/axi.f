@@ -1,9 +1,5 @@
--sv
--d XSIM
--d VERILATOR
-
--i ${AXI}/include
--i ${COMMON_CELLS}/include
++incdir+${AXI}/include
++incdir+${COMMON_CELLS}/include
 
 ${AXI}/src/axi_pkg.sv
 ${COMMON_CELLS}/src/cf_math_pkg.sv
@@ -60,7 +56,7 @@ ${AXI}/src/axi_zero_mem.sv
 ${AXI}/src/axi_interleaved_xbar.sv
 ${AXI}/src/axi_iw_converter.sv
 ${AXI}/src/axi_lite_xbar.sv
-${AXI}/src/axi_xbar_unmuxed.sv
+${HYPER_TITAN}/hardware/design/axi_xbar_unmuxed.sv
 ${AXI}/src/axi_to_mem_banked.sv
 ${AXI}/src/axi_to_mem_interleaved.sv
 ${AXI}/src/axi_to_mem_split.sv

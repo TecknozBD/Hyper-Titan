@@ -19,8 +19,10 @@ else
 XSIM_ARGS := --gui
 endif
 
-EW_HL := | grep -E "WARNING:|ERROR:|" --color=auto
-EW_O := | grep -E "WARNING:|ERROR:" --color=auto || true
+EW_HL := | grep -E "Warning-|Error-|" --color=auto
+EW_O := | grep -E "Warning-|Error-" --color=auto || true
+
+VCS_FLAGS := -full64 -sverilog -nc
 
 ####################################################################################################
 # Directory
@@ -46,8 +48,8 @@ export XILINX_IPS=${SUBMODULE}/xilinx
 # Tools
 ####################################################################################################
 
-XVLOG           ?= xvlog
-XELAB           ?= xelab
+VLOGAN          ?= vlogan
+VCS             ?= vcs
 XSIM            ?= xsim
 RISCV64_GCC     ?= riscv64-unknown-elf-gcc
 RISCV64_OBJCOPY ?= riscv64-unknown-elf-objcopy
@@ -78,24 +80,29 @@ clean_full:
 
 define COMPILE
 	$(eval BASENAME=$(shell basename $1 .f))
-	echo -e " \033[0;33m*\033[0m ${BASENAME}\033[25G ${LOG}/xvlog_${BASENAME}.log"
-	cd ${BUILD} && ${XVLOG} -f ${FILELIST}/${BASENAME}.f --log ${LOG}/xvlog_${BASENAME}.log ${EW_O}
+	echo -e " \033[0;33m*\033[0m ${BASENAME}\033[25G ${LOG}/vlogan_${BASENAME}.log"
+	cd ${BUILD} && ${VLOGAN} ${VCS_FLAGS} -f ${FILELIST}/${BASENAME}.f -l ${LOG}/vlogan_${BASENAME}.log ${EW_O}
 endef
 
 .PHONY: all
 all:
+	@echo -e "\033[1;33mSETTING ENVIRONMENT:\033[0m"
 	@git submodule update --init --depth 1
 	@make -s clean_full
 	@make -s ${BUILD}
 	@make -s ${LOG}
+	@echo "WORK > DEFAULT"                   > ${BUILD}/synopsys_sim.setup
+	@echo "DEFAULT : worklib"               >> ${BUILD}/synopsys_sim.setup
+	@echo "ariane : ariane"                 >> ${BUILD}/synopsys_sim.setup
+	@echo "rvvcoreminiaxi : rvvcoreminiaxi" >> ${BUILD}/synopsys_sim.setup
 	@echo -e "\033[1;33mCOMPILING:\033[0m"
 	@$(foreach file, $(shell find ${FILELIST} -type f -name "*.f"),$(call COMPILE,${file}))
 	@echo -e "\033[1;33mELABORATING:\033[0m"
 	@echo -e " \033[0;33m*\033[0m ${TOP}\033[25G ${LOG}/xelab_${TOP}.log"
-	@cd ${BUILD} && ${XELAB} work.${TOP} --timescale 1ns/1ps --debug wave --log ${LOG}/xelab_${TOP}.log ${EW_O}
-	@echo -e "\033[1;33mSIMULATING:\033[0m"
-	@echo -e " \033[0;33m*\033[0m ${TOP}::${TEST}\033[25G ${LOG}/xsim_${TOP}_${TEST}.log"
-	@cd ${BUILD} && ${XSIM} ${TOP} --log ${LOG}/xsim_${TOP}_${TEST}.log ${XSIM_ARGS} ${EW_HL}
+	@cd ${BUILD} && ${VCS} -licqueue ${VCS_FLAGS} -top ${TOP} -partcomp -timescale=1ns/1ps -l ${LOG}/vcs_${TOP}.log ${EW_O}
+# 	@echo -e "\033[1;33mSIMULATING:\033[0m"
+# 	@echo -e " \033[0;33m*\033[0m ${TOP}::${TEST}\033[25G ${LOG}/xsim_${TOP}_${TEST}.log"
+# 	@cd ${BUILD} && ${XSIM} ${TOP} --log ${LOG}/xsim_${TOP}_${TEST}.log ${XSIM_ARGS} ${EW_HL}
 
 .PHONY: test
 test:

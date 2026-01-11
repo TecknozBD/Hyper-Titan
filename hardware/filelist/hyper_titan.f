@@ -1,7 +1,5 @@
--sv
-
--i ${APB}/include
--i ${AXI}/include
++incdir+${APB}/include
++incdir+${AXI}/include
 
 ${APB}/src/apb_pkg.sv
 ${AXI}/src/axi_pkg.sv

@@ -1,6 +1,4 @@
--sv
-
--i ${SOC}/include
++incdir+${SOC}/include
 
 ${AXI}/src/axi_pkg.sv
 ${SOC}/package/ariane_axi_pkg.sv

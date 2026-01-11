@@ -1,8 +1,6 @@
--sv
-
--i ${SOC}/include/vip
--i ${APB}/include
--i ${AXI}/include
++incdir+${SOC}/include/vip
++incdir+${APB}/include
++incdir+${AXI}/include
 
 ${APB}/src/apb_pkg.sv
 ${AXI}/src/axi_pkg.sv
