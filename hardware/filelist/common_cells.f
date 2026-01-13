@@ -1,8 +1,4 @@
--sv
--d XSIM
--d VERILATOR
-
--i ${COMMON_CELLS}/include
++incdir+${COMMON_CELLS}/include
 
 ${COMMON_CELLS}/src/cb_filter_pkg.sv
 ${COMMON_CELLS}/src/cf_math_pkg.sv

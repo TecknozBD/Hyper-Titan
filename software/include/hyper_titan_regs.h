@@ -25,6 +25,10 @@
 #define REG_PLL_CFG_E_CORE      *(volatile int*)(SYS_CTRL_BASE+0x0C0)
 #define REG_PLL_CFG_P_CORE      *(volatile int*)(SYS_CTRL_BASE+0x0C4)
 #define REG_PLL_CFG_SYS_LINK    *(volatile int*)(SYS_CTRL_BASE+0x0CC)
+#define REG_GPR_0               *(volatile int*)(SYS_CTRL_BASE+0xFF0)
+#define REG_GPR_1               *(volatile int*)(SYS_CTRL_BASE+0xFF4)
+#define REG_GPR_2               *(volatile int*)(SYS_CTRL_BASE+0xFF8)
+#define REG_GPR_3               *(volatile int*)(SYS_CTRL_BASE+0xFFC)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // UART REGISTERS

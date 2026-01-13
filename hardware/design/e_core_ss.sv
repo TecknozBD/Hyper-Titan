@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // File Name   : RvvCoreWrapper.sv
-// Module Name : RvvCoreMiniAxi_wrapper
+// Module Name : e_core_ss
 // Project     : RVV Core Mini (AXI-Based)
 // Author      : Amit Sikder
 // Organization: Technoz
@@ -25,7 +25,7 @@
 //   - rvvcoreminiaxi.sv
 //------------------------------------------------------------------------------
 
-module RvvCoreMiniAxi_wrapper
+module e_core_ss
   import RvvAxiPkg::rvv_axi_aw_chan_t;
   import RvvAxiPkg::rvv_axi_w_chan_t;
   import RvvAxiPkg::rvv_axi_b_chan_t;
@@ -36,22 +36,27 @@ module RvvCoreMiniAxi_wrapper
   import RvvAxiPkg::io_debug_out_t;
   import RvvAxiPkg::slog_debug_t;
 (
-    input logic io_aclk,
-    input logic io_aresetn,
+    // Clock and reset signals
+    input logic clk_i,
+    input logic arst_ni,
 
+    // Boot address and hart ID
+    input logic [31:0] boot_addr_i,
+    input logic [31:0] hart_id_i,
+
+    // AXI Master interface (to memory)
     output rvv_axi_req_t  m_axi_req_o,
     input  rvv_axi_resp_t m_axi_resp_i,
 
+    // AXI Slave interface (from system)
     input  rvv_axi_req_t  s_axi_req_i,
     output rvv_axi_resp_t s_axi_resp_o,
 
-
+    // Debug output structures
     output io_debug_out_t io_debug_out,
-    output slog_debug_t slog_debug,
+    output slog_debug_t   slog_debug,
 
-    // --------------------------
-    // OTHER SIGNALS
-    // --------------------------
+    // Other control signals
     input  logic       io_irq,
     input  logic       io_te,
     output logic       io_halted,
@@ -63,9 +68,9 @@ module RvvCoreMiniAxi_wrapper
   import RvvAxiPkg::*;
 
   // SLOG debug (from DUT)
-  logic         dbg_slog_valid;
-  logic [  4:0] dbg_slog_addr;
-  logic [ 31:0] dbg_slog_data;
+  logic        dbg_slog_valid;
+  logic [ 4:0] dbg_slog_addr;
+  logic [31:0] dbg_slog_data;
 
   assign slog_debug.valid = dbg_slog_valid;
   assign slog_debug.addr  = dbg_slog_addr;
@@ -175,127 +180,127 @@ module RvvCoreMiniAxi_wrapper
   // CORE INSTANTIATION (FULLY CONNECTED)
   // ---------------------------------------------------------
   rvvcoreminiaxi u_core (
-      .io_aclk   (io_aclk),
-      .io_aresetn(io_aresetn),
+      .io_aclk   (clk_i),
+      .io_aresetn(arst_ni),
 
       //-------------------------------------------
       // SLAVE AW
       //-------------------------------------------
-      .io_axi_slave_write_addr_ready        (s_axi_resp_o.aw_ready),
-      .io_axi_slave_write_addr_valid        (s_axi_req_i.aw_valid),
-      .io_axi_slave_write_addr_bits_addr    (s_axi_req_i.aw.addr),
-      .io_axi_slave_write_addr_bits_prot    (s_axi_req_i.aw.prot),
-      .io_axi_slave_write_addr_bits_id      (s_axi_req_i.aw.id),
-      .io_axi_slave_write_addr_bits_len     (s_axi_req_i.aw.len),
-      .io_axi_slave_write_addr_bits_size    (s_axi_req_i.aw.size),
-      .io_axi_slave_write_addr_bits_burst   (s_axi_req_i.aw.burst),
-      .io_axi_slave_write_addr_bits_lock    (s_axi_req_i.aw.lock),
-      .io_axi_slave_write_addr_bits_cache   (s_axi_req_i.aw.cache),
-      .io_axi_slave_write_addr_bits_qos     (s_axi_req_i.aw.qos),
-      .io_axi_slave_write_addr_bits_region  (s_axi_req_i.aw.region),
+      .io_axi_slave_write_addr_ready      (s_axi_resp_o.aw_ready),
+      .io_axi_slave_write_addr_valid      (s_axi_req_i.aw_valid),
+      .io_axi_slave_write_addr_bits_addr  (s_axi_req_i.aw.addr),
+      .io_axi_slave_write_addr_bits_prot  (s_axi_req_i.aw.prot),
+      .io_axi_slave_write_addr_bits_id    (s_axi_req_i.aw.id),
+      .io_axi_slave_write_addr_bits_len   (s_axi_req_i.aw.len),
+      .io_axi_slave_write_addr_bits_size  (s_axi_req_i.aw.size),
+      .io_axi_slave_write_addr_bits_burst (s_axi_req_i.aw.burst),
+      .io_axi_slave_write_addr_bits_lock  (s_axi_req_i.aw.lock),
+      .io_axi_slave_write_addr_bits_cache (s_axi_req_i.aw.cache),
+      .io_axi_slave_write_addr_bits_qos   (s_axi_req_i.aw.qos),
+      .io_axi_slave_write_addr_bits_region(s_axi_req_i.aw.region),
 
       //-------------------------------------------
       // SLAVE W
       //-------------------------------------------
-      .io_axi_slave_write_data_ready        (s_axi_resp_o.w_ready),
-      .io_axi_slave_write_data_valid        (s_axi_req_i.w_valid),
-      .io_axi_slave_write_data_bits_data    (s_axi_req_i.w.data),
-      .io_axi_slave_write_data_bits_last    (s_axi_req_i.w.last),
-      .io_axi_slave_write_data_bits_strb    (s_axi_req_i.w.strb),
+      .io_axi_slave_write_data_ready    (s_axi_resp_o.w_ready),
+      .io_axi_slave_write_data_valid    (s_axi_req_i.w_valid),
+      .io_axi_slave_write_data_bits_data(s_axi_req_i.w.data),
+      .io_axi_slave_write_data_bits_last(s_axi_req_i.w.last),
+      .io_axi_slave_write_data_bits_strb(s_axi_req_i.w.strb),
 
       //-------------------------------------------
       // SLAVE B
       //-------------------------------------------
-      .io_axi_slave_write_resp_ready        (s_axi_req_i.b_ready),
-      .io_axi_slave_write_resp_valid        (s_axi_resp_o.b_valid),
-      .io_axi_slave_write_resp_bits_id      (s_axi_resp_o.b.id),
-      .io_axi_slave_write_resp_bits_resp    (s_axi_resp_o.b.resp),
+      .io_axi_slave_write_resp_ready    (s_axi_req_i.b_ready),
+      .io_axi_slave_write_resp_valid    (s_axi_resp_o.b_valid),
+      .io_axi_slave_write_resp_bits_id  (s_axi_resp_o.b.id),
+      .io_axi_slave_write_resp_bits_resp(s_axi_resp_o.b.resp),
 
       //-------------------------------------------
       // SLAVE AR
       //-------------------------------------------
-      .io_axi_slave_read_addr_ready         (s_axi_resp_o.ar_ready),
-      .io_axi_slave_read_addr_valid         (s_axi_req_i.ar_valid),
-      .io_axi_slave_read_addr_bits_addr     (s_axi_req_i.ar.addr),
-      .io_axi_slave_read_addr_bits_prot     (s_axi_req_i.ar.prot),
-      .io_axi_slave_read_addr_bits_id       (s_axi_req_i.ar.id),
-      .io_axi_slave_read_addr_bits_len      (s_axi_req_i.ar.len),
-      .io_axi_slave_read_addr_bits_size     (s_axi_req_i.ar.size),
-      .io_axi_slave_read_addr_bits_burst    (s_axi_req_i.ar.burst),
-      .io_axi_slave_read_addr_bits_lock     (s_axi_req_i.ar.lock),
-      .io_axi_slave_read_addr_bits_cache    (s_axi_req_i.ar.cache),
-      .io_axi_slave_read_addr_bits_qos      (s_axi_req_i.ar.qos),
-      .io_axi_slave_read_addr_bits_region   (s_axi_req_i.ar.region),
+      .io_axi_slave_read_addr_ready      (s_axi_resp_o.ar_ready),
+      .io_axi_slave_read_addr_valid      (s_axi_req_i.ar_valid),
+      .io_axi_slave_read_addr_bits_addr  (s_axi_req_i.ar.addr),
+      .io_axi_slave_read_addr_bits_prot  (s_axi_req_i.ar.prot),
+      .io_axi_slave_read_addr_bits_id    (s_axi_req_i.ar.id),
+      .io_axi_slave_read_addr_bits_len   (s_axi_req_i.ar.len),
+      .io_axi_slave_read_addr_bits_size  (s_axi_req_i.ar.size),
+      .io_axi_slave_read_addr_bits_burst (s_axi_req_i.ar.burst),
+      .io_axi_slave_read_addr_bits_lock  (s_axi_req_i.ar.lock),
+      .io_axi_slave_read_addr_bits_cache (s_axi_req_i.ar.cache),
+      .io_axi_slave_read_addr_bits_qos   (s_axi_req_i.ar.qos),
+      .io_axi_slave_read_addr_bits_region(s_axi_req_i.ar.region),
 
       //-------------------------------------------
       // SLAVE R
       //-------------------------------------------
-      .io_axi_slave_read_data_ready         (s_axi_req_i.r_ready),
-      .io_axi_slave_read_data_valid         (s_axi_resp_o.r_valid),
-      .io_axi_slave_read_data_bits_data     (s_axi_resp_o.r.data),
-      .io_axi_slave_read_data_bits_id       (s_axi_resp_o.r.id),
-      .io_axi_slave_read_data_bits_resp     (s_axi_resp_o.r.resp),
-      .io_axi_slave_read_data_bits_last     (s_axi_resp_o.r.last),
+      .io_axi_slave_read_data_ready    (s_axi_req_i.r_ready),
+      .io_axi_slave_read_data_valid    (s_axi_resp_o.r_valid),
+      .io_axi_slave_read_data_bits_data(s_axi_resp_o.r.data),
+      .io_axi_slave_read_data_bits_id  (s_axi_resp_o.r.id),
+      .io_axi_slave_read_data_bits_resp(s_axi_resp_o.r.resp),
+      .io_axi_slave_read_data_bits_last(s_axi_resp_o.r.last),
 
 
       //-------------------------------------------
       // MASTER AW
       //-------------------------------------------
-      .io_axi_master_write_addr_ready       (m_axi_resp_i.aw_ready),
-      .io_axi_master_write_addr_valid       (m_axi_req_o.aw_valid),
-      .io_axi_master_write_addr_bits_addr   (m_axi_req_o.aw.addr),
-      .io_axi_master_write_addr_bits_prot   (m_axi_req_o.aw.prot),
-      .io_axi_master_write_addr_bits_id     (m_axi_req_o.aw.id),
-      .io_axi_master_write_addr_bits_len    (m_axi_req_o.aw.len),
-      .io_axi_master_write_addr_bits_size   (m_axi_req_o.aw.size),
-      .io_axi_master_write_addr_bits_burst  (m_axi_req_o.aw.burst),
-      .io_axi_master_write_addr_bits_lock   (m_axi_req_o.aw.lock),
-      .io_axi_master_write_addr_bits_cache  (m_axi_req_o.aw.cache),
-      .io_axi_master_write_addr_bits_qos    (m_axi_req_o.aw.qos),
-      .io_axi_master_write_addr_bits_region (m_axi_req_o.aw.region),
+      .io_axi_master_write_addr_ready      (m_axi_resp_i.aw_ready),
+      .io_axi_master_write_addr_valid      (m_axi_req_o.aw_valid),
+      .io_axi_master_write_addr_bits_addr  (m_axi_req_o.aw.addr),
+      .io_axi_master_write_addr_bits_prot  (m_axi_req_o.aw.prot),
+      .io_axi_master_write_addr_bits_id    (m_axi_req_o.aw.id),
+      .io_axi_master_write_addr_bits_len   (m_axi_req_o.aw.len),
+      .io_axi_master_write_addr_bits_size  (m_axi_req_o.aw.size),
+      .io_axi_master_write_addr_bits_burst (m_axi_req_o.aw.burst),
+      .io_axi_master_write_addr_bits_lock  (m_axi_req_o.aw.lock),
+      .io_axi_master_write_addr_bits_cache (m_axi_req_o.aw.cache),
+      .io_axi_master_write_addr_bits_qos   (m_axi_req_o.aw.qos),
+      .io_axi_master_write_addr_bits_region(m_axi_req_o.aw.region),
 
       //-------------------------------------------
       // MASTER W
       //-------------------------------------------
-      .io_axi_master_write_data_ready       (m_axi_resp_i.w_ready),
-      .io_axi_master_write_data_valid       (m_axi_req_o.w_valid),
-      .io_axi_master_write_data_bits_data   (m_axi_req_o.w.data),
-      .io_axi_master_write_data_bits_last   (m_axi_req_o.w.last),
-      .io_axi_master_write_data_bits_strb   (m_axi_req_o.w.strb),
+      .io_axi_master_write_data_ready    (m_axi_resp_i.w_ready),
+      .io_axi_master_write_data_valid    (m_axi_req_o.w_valid),
+      .io_axi_master_write_data_bits_data(m_axi_req_o.w.data),
+      .io_axi_master_write_data_bits_last(m_axi_req_o.w.last),
+      .io_axi_master_write_data_bits_strb(m_axi_req_o.w.strb),
 
       //-------------------------------------------
       // MASTER B
       //-------------------------------------------
-      .io_axi_master_write_resp_ready       (m_axi_req_o.b_ready),
-      .io_axi_master_write_resp_valid       (m_axi_resp_i.b_valid),
-      .io_axi_master_write_resp_bits_id     (m_axi_resp_i.b.id),
-      .io_axi_master_write_resp_bits_resp   (m_axi_resp_i.b.resp),
+      .io_axi_master_write_resp_ready    (m_axi_req_o.b_ready),
+      .io_axi_master_write_resp_valid    (m_axi_resp_i.b_valid),
+      .io_axi_master_write_resp_bits_id  (m_axi_resp_i.b.id),
+      .io_axi_master_write_resp_bits_resp(m_axi_resp_i.b.resp),
 
       //-------------------------------------------
       // MASTER AR
       //-------------------------------------------
-      .io_axi_master_read_addr_ready        (m_axi_resp_i.ar_ready),
-      .io_axi_master_read_addr_valid        (m_axi_req_o.ar_valid),
-      .io_axi_master_read_addr_bits_addr    (m_axi_req_o.ar.addr),
-      .io_axi_master_read_addr_bits_prot    (m_axi_req_o.ar.prot),
-      .io_axi_master_read_addr_bits_id      (m_axi_req_o.ar.id),
-      .io_axi_master_read_addr_bits_len     (m_axi_req_o.ar.len),
-      .io_axi_master_read_addr_bits_size    (m_axi_req_o.ar.size),
-      .io_axi_master_read_addr_bits_burst   (m_axi_req_o.ar.burst),
-      .io_axi_master_read_addr_bits_lock    (m_axi_req_o.ar.lock),
-      .io_axi_master_read_addr_bits_cache   (m_axi_req_o.ar.cache),
-      .io_axi_master_read_addr_bits_qos     (m_axi_req_o.ar.qos),
-      .io_axi_master_read_addr_bits_region  (m_axi_req_o.ar.region),
+      .io_axi_master_read_addr_ready      (m_axi_resp_i.ar_ready),
+      .io_axi_master_read_addr_valid      (m_axi_req_o.ar_valid),
+      .io_axi_master_read_addr_bits_addr  (m_axi_req_o.ar.addr),
+      .io_axi_master_read_addr_bits_prot  (m_axi_req_o.ar.prot),
+      .io_axi_master_read_addr_bits_id    (m_axi_req_o.ar.id),
+      .io_axi_master_read_addr_bits_len   (m_axi_req_o.ar.len),
+      .io_axi_master_read_addr_bits_size  (m_axi_req_o.ar.size),
+      .io_axi_master_read_addr_bits_burst (m_axi_req_o.ar.burst),
+      .io_axi_master_read_addr_bits_lock  (m_axi_req_o.ar.lock),
+      .io_axi_master_read_addr_bits_cache (m_axi_req_o.ar.cache),
+      .io_axi_master_read_addr_bits_qos   (m_axi_req_o.ar.qos),
+      .io_axi_master_read_addr_bits_region(m_axi_req_o.ar.region),
 
       //-------------------------------------------
       // MASTER R
       //-------------------------------------------
-      .io_axi_master_read_data_ready        (m_axi_req_o.r_ready),
-      .io_axi_master_read_data_valid        (m_axi_resp_i.r_valid),
-      .io_axi_master_read_data_bits_data    (m_axi_resp_i.r.data),
-      .io_axi_master_read_data_bits_id      (m_axi_resp_i.r.id),
-      .io_axi_master_read_data_bits_resp    (m_axi_resp_i.r.resp),
-      .io_axi_master_read_data_bits_last    (m_axi_resp_i.r.last),
+      .io_axi_master_read_data_ready    (m_axi_req_o.r_ready),
+      .io_axi_master_read_data_valid    (m_axi_resp_i.r_valid),
+      .io_axi_master_read_data_bits_data(m_axi_resp_i.r.data),
+      .io_axi_master_read_data_bits_id  (m_axi_resp_i.r.id),
+      .io_axi_master_read_data_bits_resp(m_axi_resp_i.r.resp),
+      .io_axi_master_read_data_bits_last(m_axi_resp_i.r.last),
 
       // ------------------------------
       // Other status/debug signals
@@ -418,5 +423,12 @@ module RvvCoreMiniAxi_wrapper
       .io_debug_float_writeData_1_bits_addr(dbg_float_writeData_1_bits_addr),
       .io_debug_float_writeData_1_bits_data(dbg_float_writeData_1_bits_data)
   );
+
+  initial begin
+    // TODO FIXME: Remove this initial block force
+    force u_core.core.clock = clk_i;
+    force u_core.core.reset = arst_ni;
+    force u_core.core.io_csr_in_value_0 = {32'h0, boot_addr_i};
+  end
 
 endmodule

@@ -16,6 +16,10 @@
 | PLL_CFG_E_CORE      | 0x0C0  | Efficiency Core PLL Configuration    |
 | PLL_CFG_P_CORE      | 0x0C4  | Performance Core PLL Configuration   |
 | PLL_CFG_SYS_LINK    | 0x0CC  | System Link PLL Configuration        |
+| GPR_0               | 0xFF0  | General Purpose Register 0           |
+| GPR_1               | 0xFF4  | General Purpose Register 1           |
+| GPR_2               | 0xFF8  | General Purpose Register 2           |
+| GPR_3               | 0xFFC  | General Purpose Register 3           |
 
 ## Register Descriptions
 
@@ -50,8 +54,8 @@ Description : Controls the clock and reset for the core link.
 | ---- | -------- | ------ | ----------- | ------------------------------ |
 | 0    | CLK_EN   | RW     | 1           | Enable clock for core link     |
 | 1    | RST_N    | RW     | 1           | Active low reset for core link |
-| 3:2  | SRC_SEL  | RO     | -           | Clock source selection Read    |
-| 31:2 | Reserved | -      | -           | Reserved                       |
+| 2    | SRC_SEL  | RO     | -           | Clock source selection Read    |
+| 31:3 | Reserved | -      | -           | Reserved                       |
 
 ### SYS_LINK_CLK_RST
 
@@ -71,7 +75,7 @@ Description : Controls the clock and reset for the peripheral link.
 
 | Bit  | Name     | ACCESS | Reset Value | Description                          |
 | ---- | -------- | ------ | ----------- | ------------------------------------ |
-| 0    | CLK_EN   | RW     | 1           | Enable clock for peripheral link     |
+| 0    | CLK_EN   | RO     | 1           | Enable clock for peripheral link     |
 | 1    | RST_N    | RW     | 1           | Active low reset for peripheral link |
 | 31:2 | Reserved | -      | -           | Reserved                             |
 
@@ -146,3 +150,12 @@ Description : Configuration register for the system link PLL.
 | 15:4  | FB_DIV   | RW     | 0           | Feedback                |
 | 16    | LOCKED   | RO     | -           | PLL lock status         |
 | 31:17 | Reserved | -      | -           | Reserved                |
+
+### General Purpose Registers (GPRs)
+
+Offsets: 0xFF0, 0xFF4, 0xFF8, 0xFFC
+Description : Four general purpose registers for miscellaneous use.
+
+| Bit  | Name | ACCESS | Reset Value | Description                |
+| ---- | ---- | ------ | ----------- | -------------------------- |
+| 31:0 | DATA | RW     | 0           | General purpose data field |

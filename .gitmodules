@@ -10,3 +10,12 @@
 [submodule "submodule/common"]
 	path = submodule/common
 	url = https://github.com/squared-studio/common.git
+[submodule "submodule/core_ddr3_controller"]
+	path = submodule/core_ddr3_controller
+	url = https://github.com/ultraembedded/core_ddr3_controller
+[submodule "submodule/hardware"]
+	path = submodule/hardware
+	url = https://github.com/squared-studio/hardware.git
+[submodule "submodule/apb"]
+	path = submodule/apb
+	url = https://github.com/pulp-platform/apb.git

@@ -1,0 +1,125 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*] Thu Jan 01 17:17:21 2026
+[*]
+[dumpfile] "D:\Users\Foez\Tecknoz\Hyper-Titan\build\ddr3_tb.vcd"
+[dumpfile_mtime] "Thu Jan 01 17:17:07 2026"
+[dumpfile_size] 21291519
+[savefile] "D:\Users\Foez\Tecknoz\Hyper-Titan\wave.gtkw"
+[timestart] 0
+[size] 1920 1009
+[pos] -1 -1
+*-17.348631 595000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] ddr3_tb.
+[sst_width] 268
+[signals_width] 190
+[sst_expanded] 1
+[sst_vpaned_height] 297
+@22
+ddr3_tb.ddr3_addr_w[13:0]
+@28
+ddr3_tb.ddr3_ba_w[2:0]
+ddr3_tb.ddr3_cas_n_w
+ddr3_tb.ddr3_ck_n_w
+ddr3_tb.ddr3_ck_p_w
+ddr3_tb.ddr3_cke_w
+ddr3_tb.ddr3_cs_n_w
+ddr3_tb.ddr3_dm_w[1:0]
+@22
+ddr3_tb.ddr3_dq_w[15:0]
+@28
+ddr3_tb.ddr3_dqs_n_w[1:0]
+ddr3_tb.ddr3_dqs_p_w[1:0]
+ddr3_tb.ddr3_odt_w
+ddr3_tb.ddr3_ras_n_w
+ddr3_tb.ddr3_reset_n_w
+ddr3_tb.ddr3_tdqs_n_w[1:0]
+ddr3_tb.ddr3_we_n_w
+@200
+-
+@28
+ddr3_tb.clk
+ddr3_tb.clk_ddr
+ddr3_tb.clk_ddr_dqs
+ddr3_tb.clk_ref
+ddr3_tb.rst
+@200
+-
+@22
+ddr3_tb.dfi_address[14:0]
+@28
+ddr3_tb.dfi_bank[2:0]
+ddr3_tb.dfi_cas_n
+ddr3_tb.dfi_cke
+ddr3_tb.dfi_cs_n
+ddr3_tb.dfi_odt
+ddr3_tb.dfi_ras_n
+@22
+ddr3_tb.dfi_rddata[31:0]
+@28
+ddr3_tb.dfi_rddata_dnv[1:0]
+ddr3_tb.dfi_rddata_en
+ddr3_tb.dfi_rddata_valid
+ddr3_tb.dfi_reset_n
+ddr3_tb.dfi_we_n
+@22
+ddr3_tb.dfi_wrdata[31:0]
+@28
+ddr3_tb.dfi_wrdata_en
+@22
+ddr3_tb.dfi_wrdata_mask[3:0]
+@200
+-
+@28
+ddr3_tb.rst
+ddr3_tb.clk
+@200
+-
+@22
+ddr3_tb.inport_awid[3:0]
+ddr3_tb.inport_awaddr[31:0]
+ddr3_tb.inport_awlen[7:0]
+@28
+ddr3_tb.inport_awburst[1:0]
+ddr3_tb.inport_awvalid
+ddr3_tb.inport_awready
+@200
+-
+@22
+ddr3_tb.inport_wdata[31:0]
+ddr3_tb.inport_wstrb[3:0]
+@28
+ddr3_tb.inport_wlast
+ddr3_tb.inport_wvalid
+ddr3_tb.inport_wready
+@200
+-
+@22
+ddr3_tb.inport_bid[3:0]
+@28
+ddr3_tb.inport_bresp[1:0]
+ddr3_tb.inport_bvalid
+ddr3_tb.inport_bready
+@200
+-
+@22
+ddr3_tb.inport_arid[3:0]
+ddr3_tb.inport_araddr[31:0]
+ddr3_tb.inport_arlen[7:0]
+@28
+ddr3_tb.inport_arburst[1:0]
+ddr3_tb.inport_arvalid
+ddr3_tb.inport_arready
+@200
+-
+@22
+ddr3_tb.inport_rid[3:0]
+ddr3_tb.inport_rdata[31:0]
+@28
+ddr3_tb.inport_rresp[1:0]
+ddr3_tb.inport_rlast
+ddr3_tb.inport_rvalid
+@29
+ddr3_tb.inport_rready
+[pattern_trace] 1
+[pattern_trace] 0

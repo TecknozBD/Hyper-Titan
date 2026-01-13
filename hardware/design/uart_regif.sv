@@ -8,17 +8,16 @@
 // ============================================================================
 
 module uart_regif
-  import uart_pkg::REG_CTRL_ADDR;
-  import uart_pkg::REG_CFG_ADDR;
-  import uart_pkg::REG_CLK_DIV_ADDR;
-  import uart_pkg::REG_TX_FIFO_STAT_ADDR;
-  import uart_pkg::REG_RX_FIFO_STAT_ADDR;
-  import uart_pkg::REG_TX_FIFO_DATA_ADDR;
-  import uart_pkg::REG_RX_FIFO_DATA_ADDR;
-  import uart_pkg::REG_RX_FIFO_PEEK_ADDR;
-  import uart_pkg::REG_ACCESS_ID_REQ_ADDR;
-  import uart_pkg::REG_ACCESS_ID_GNT_ADDR;
-  import uart_pkg::REG_ACCESS_ID_GNT_PEEK_ADDR;
+  import hyper_titan_pkg::REG_OFFSET_UART_CTRL;
+  import hyper_titan_pkg::REG_OFFSET_UART_REQ_ID_PUSH;
+  import hyper_titan_pkg::REG_OFFSET_UART_GNT_ID_PEEK;
+  import hyper_titan_pkg::REG_OFFSET_UART_GNT_ID_POP;
+  import hyper_titan_pkg::REG_OFFSET_UART_CFG;
+  import hyper_titan_pkg::REG_OFFSET_UART_TX_DATA;
+  import hyper_titan_pkg::REG_OFFSET_UART_RX_DATA;
+  import hyper_titan_pkg::REG_OFFSET_UART_RX_DATA_PEEK;
+  import hyper_titan_pkg::REG_OFFSET_UART_TX_FIFO_COUNT;
+  import hyper_titan_pkg::REG_OFFSET_UART_RX_FIFO_COUNT;
 #(
     localparam int ADDR_WIDTH = 6,  // Address bus width (supports up to 64 byte address space)
     localparam int DATA_WIDTH = 32  // Data bus width
@@ -47,122 +46,125 @@ module uart_regif
     output logic [           1:0] mem_rresp_o,  // Read response (00: OKAY, 10: SLVERR)
 
     // ========================================================================
-    // Control Register (0x00) Outputs
+    // Control Register (0x000) Outputs 
     // ========================================================================
-    output logic ctrl_clk_en_o,    // Clock enable for UART
-    output logic tx_fifo_flush_o,  // Flush TX FIFO (self-clearing)
-    output logic rx_fifo_flush_o,  // Flush RX FIFO (self-clearing)
+    output logic       UART_CTRL_TX_EN,            // TX_EN (RW)
+    output logic       UART_CTRL_TX_FIFO_FLUSH,    // TX_FIFO_FLUSH (RW)
+    output logic       UART_CTRL_TX_IRQ_EMPTY,     // TX_IRQ_EMPTY (RW)
+    output logic       UART_CTRL_TX_IRQ_NEAR_FULL, // TX_IRQ_NEAR_FULL (RW)
+    output logic       UART_CTRL_TX_IRQ_FULL,      // TX_IRQ_FULL (RW)
+    output logic       UART_CTRL_RX_EN,            // RX_EN (RW)
+    output logic       UART_CTRL_RX_FIFO_FLUSH,    // RX_FIFO_FLUSH (RW)
+    output logic       UART_CTRL_RX_IRQ_EMPTY,     // RX_IRQ_EMPTY (RW)
+    output logic       UART_CTRL_RX_IRQ_NEAR_FULL, // RX_IRQ_NEAR_FULL (RW)
+    output logic       UART_CTRL_RX_IRQ_FULL,      // RX_IRQ_FULL (RW)
 
     // ========================================================================
-    // Configuration Register (0x04) Outputs
+    // Configuration Register (0x010) Outputs 
     // ========================================================================
-    output logic cfg_parity_en_o,         // Enable parity checking
-    output logic cfg_parity_type_o,       // Parity type (0: Even, 1: Odd)
-    output logic cfg_stop_bits_o,         // Stop bits (0: 1 bit, 1: 2 bits)
-    output logic cfg_rx_parity_err_en_o,  // RX interrupt enable
-    output logic cfg_rx_valid_en_o,       // RX interrupt enable
-    output logic cfg_rx_near_full_en_o,   // RX interrupt enable
-    output logic cfg_rx_full_en_o,        // RX interrupt enable
-    output logic cfg_tx_near_full_en_o,   // RX interrupt enable
-    output logic cfg_tx_full_en_o,        // RX interrupt enable
+    output logic [19:0] UART_CFG_CLK_DIVIDER,  // CLK_DIVIDER (RW)
+    output logic        UART_CFG_PARITY_EN,    // PARITY_EN (RW)
+    output logic        UART_CFG_PARITY_TYPE,  // PARITY_TYPE (RW)
 
     // ========================================================================
-    // Clock Divisor Register (0x08) Output
+    // TX Data Register (0x014) Interface 
     // ========================================================================
-    output logic [DATA_WIDTH-1:0] clk_div_o,  // Clock divisor for baud rate generation
+    output logic [7:0] UART_TX_DATA_DATA,        // DATA (RW)
+    output logic       UART_TX_DATA_VALID,       // Handshake: Data valid
+    input  logic       UART_TX_DATA_READY,       // Handshake: TX FIFO ready
 
     // ========================================================================
-    // TX FIFO Status Register (0x0C) Input
+    // RX Data Register (0x018) Interface 
     // ========================================================================
-    input logic [DATA_WIDTH-1:0] tx_fifo_count_i,  // Current TX FIFO occupancy
+    input  logic [7:0] UART_RX_DATA_DATA,        // DATA (RO)
+    input  logic       UART_RX_DATA_VALID,       // Handshake: RX FIFO has data
+    output logic       UART_RX_DATA_READY,       // Handshake: Ready to read (pop)
 
     // ========================================================================
-    // RX FIFO Status Register (0x10) Input
+    // RX Data Peek Register (0x01C) Interface 
     // ========================================================================
-    input logic [DATA_WIDTH-1:0] rx_fifo_count_i,  // Current RX FIFO occupancy
+    input logic [7:0] UART_RX_DATA_PEEK_DATA,  // Bits 7:0: DATA (RO)
 
     // ========================================================================
-    // TX FIFO Data Register (0x14) Interface
+    // TX FIFO Count Register (0x020) Input 
     // ========================================================================
-    output logic [7:0] tx_fifo_data_o,        // Data to be transmitted
-    output logic       tx_fifo_data_valid_o,  // Data valid signal
-    input  logic       tx_fifo_data_ready_i,  // FIFO ready to accept data
+    input logic [7:0] UART_TX_FIFO_COUNT,  // Bits 7:0: FIFO_COUNT (RO)
 
     // ========================================================================
-    // RX FIFO Data Register (0x18) Interface
+    // RX FIFO Count Register (0x024) Input 
     // ========================================================================
-    input  logic [7:0] rx_fifo_data_i,        // Received data from FIFO
-    input  logic       rx_fifo_data_valid_i,  // Data valid from FIFO
-    output logic       rx_fifo_data_ready_o,  // Ready to read data (pop from FIFO)
+    input logic [7:0] UART_RX_FIFO_COUNT,  // Bits 7:0: FIFO_COUNT (RO)
 
     // ========================================================================
-    // Access ID Request Register (0x20) Interface
+    // Request ID Register (0x004) Interface 
     // ========================================================================
-    output logic [7:0] access_id_req_o,        // Access ID request value
-    output logic       access_id_req_valid_o,  // Request valid (write strobe)
-    input  logic       access_id_req_ready_i,  // Request ready (FIFO has space)
+    output logic [31:0] UART_REQ_ID_ID,        // Bits 31:0: ID (RW)
+    output logic        UART_REQ_ID_VALID,     // Handshake: Request ID valid
+    input  logic        UART_REQ_ID_READY,     // Handshake: Request ID FIFO ready
 
     // ========================================================================
-    // Access ID Grant Register (0x24) Interface
+    // Grant Peek Register (0x008) Interface 
     // ========================================================================
-    input  logic [7:0] access_id_gnt_i,        // Access ID grant value from UART
-    input  logic       access_id_gnt_valid_i,  // Grant valid (data available)
-    output logic       access_id_gnt_ready_o   // Grant ready (pop from FIFO)
+    input logic [31:0] UART_GNT_PEEK_ID,  // Bits 31:0: ID (RO)
 
+    // ========================================================================
+    // Grant Pop Register (0x00C) Interface 
+    // ========================================================================
+    input  logic [31:0] UART_GNT_POP_ID,        // Bits 31:0: ID (RW) - value from FIFO
+    input  logic        UART_GNT_POP_VALID,     // Handshake: Grant pop data valid
+    output logic        UART_GNT_POP_READY      // Handshake: Ready to pop grant
 );
 
   // ==========================================================================
   // Write Logic (Combinational)
   // ==========================================================================
-  // Handles write operations to writable registers. Returns OKAY response
-  // when write is successful, SLVERR otherwise. Some writes are conditional
-  // based on FIFO state or readiness.
-  // ==========================================================================
   always_comb begin : write_logic
-    mem_wresp_o = 2'b10;  // Default: SLVERR (slave error)
-    tx_fifo_data_o = mem_wdata_i[7:0];
-    tx_fifo_data_valid_o = 1'b0;
-    access_id_req_o = mem_wdata_i[7:0];
-    access_id_req_valid_o = 1'b0;
+    // Default values
+    mem_wresp_o = 2'b10;  // Default: SLVERR
+    UART_TX_DATA_DATA = 8'b0;
+    UART_TX_DATA_VALID = 1'b0;
+    UART_REQ_ID_ID = 32'b0;
+    UART_REQ_ID_VALID = 1'b0;
+    UART_GNT_POP_READY = 1'b0;
 
     if (mem_we_i) begin
       case (mem_waddr_i)
 
-        REG_CTRL_ADDR: begin
+        REG_OFFSET_UART_CTRL: begin
           // Control register: Always writable
           mem_wresp_o = 2'b00;  // OKAY
         end
 
-        REG_CFG_ADDR: begin
+        REG_OFFSET_UART_CFG: begin
           // Configuration register: Only writable when both FIFOs are empty
-          // This prevents changing UART parameters mid-transaction
-          if (tx_fifo_count_i == 0 && rx_fifo_count_i == 0) begin
+          if (UART_TX_FIFO_COUNT == 0 && UART_RX_FIFO_COUNT == 0) begin
             mem_wresp_o = 2'b00;  // OKAY
           end
         end
 
-        REG_CLK_DIV_ADDR: begin
-          // Clock divisor register: Only writable when both FIFOs are empty
-          // This prevents baud rate changes during active communication
-          if (tx_fifo_count_i == 0 && rx_fifo_count_i == 0) begin
-            mem_wresp_o = 2'b00;  // OKAY
-          end
-        end
-
-        REG_TX_FIFO_DATA_ADDR: begin
+        REG_OFFSET_UART_TX_DATA: begin
           // TX FIFO data register: Only writable when FIFO has space
-          if (tx_fifo_data_ready_i) begin
+          if (UART_TX_DATA_READY) begin
             mem_wresp_o = 2'b00;  // OKAY
-            tx_fifo_data_valid_o = 1'b1;  // Assert valid to push data
+            UART_TX_DATA_DATA = mem_wdata_i[7:0];  // Only bits 7:0 used
+            UART_TX_DATA_VALID = 1'b1;  // Assert valid to push data
           end
         end
 
-        REG_ACCESS_ID_REQ_ADDR: begin
-          // Access ID request register: write enqueues an access-id request
-          // to the UART-side handler when the downstream interface is ready.
-          if (access_id_req_ready_i) begin
-            mem_wresp_o = 2'b00;
-            access_id_req_valid_o = 1'b1;
+        REG_OFFSET_UART_REQ_ID_PUSH: begin
+          // Request ID register: write enqueues an ID request
+          if (UART_REQ_ID_READY) begin
+            mem_wresp_o = 2'b00;  // OKAY
+            UART_REQ_ID_VALID = 1'b1;
+            UART_REQ_ID_ID = mem_wdata_i;
+          end
+        end
+
+        REG_OFFSET_UART_GNT_ID_POP: begin
+          // Grant Pop register: write to pop the granted ID
+          if (UART_GNT_POP_VALID) begin
+            mem_wresp_o = 2'b00;  // OKAY
+            UART_GNT_POP_READY = 1'b1;  // Pop the FIFO
           end
         end
 
@@ -173,95 +175,97 @@ module uart_regif
   // ==========================================================================
   // Read Logic (Combinational)
   // ==========================================================================
-  // Handles read operations from readable registers. Returns OKAY response
-  // when read is successful, SLVERR otherwise. Some reads are conditional
-  // based on FIFO data availability.
-  // ==========================================================================
   always_comb begin : read_logic
-    mem_rresp_o = 2'b10;  // Default: SLVERR (slave error)
-    rx_fifo_data_ready_o = 1'b0;
-    access_id_gnt_ready_o = 1'b0;
+    mem_rresp_o = 2'b10;  // Default: SLVERR
+    UART_RX_DATA_READY = 1'b0;
     mem_rdata_o = '0;
+
     if (mem_re_i) begin
       case (mem_raddr_i)
 
-        REG_CTRL_ADDR: begin
+        REG_OFFSET_UART_CTRL: begin
           // Read control register
           mem_rresp_o = 2'b00;  // OKAY
-          mem_rdata_o = {'0, rx_fifo_flush_o, tx_fifo_flush_o, ctrl_clk_en_o};
-        end
-
-
-
-        REG_CFG_ADDR: begin
-          // Read configuration register
-          mem_rresp_o = 2'b00;  // OKAY
           mem_rdata_o = {
-            '0,
-            cfg_tx_full_en_o,
-            cfg_tx_near_full_en_o,
-            cfg_rx_full_en_o,
-            cfg_rx_near_full_en_o,
-            cfg_rx_valid_en_o,
-            cfg_rx_parity_err_en_o,
-            cfg_stop_bits_o,
-            cfg_parity_type_o,
-            cfg_parity_en_o
+            22'b0,
+            UART_CTRL_RX_IRQ_FULL,
+            UART_CTRL_RX_IRQ_NEAR_FULL,
+            UART_CTRL_RX_IRQ_EMPTY,
+            UART_CTRL_RX_FIFO_FLUSH,
+            UART_CTRL_RX_EN,
+            UART_CTRL_TX_IRQ_FULL,
+            UART_CTRL_TX_IRQ_NEAR_FULL,
+            UART_CTRL_TX_IRQ_EMPTY,
+            UART_CTRL_TX_FIFO_FLUSH,
+            UART_CTRL_TX_EN
           };
         end
 
-        REG_CLK_DIV_ADDR: begin
-          // Read clock divisor register
+        REG_OFFSET_UART_REQ_ID_PUSH: begin
+          // Read request ID register
           mem_rresp_o = 2'b00;  // OKAY
-          mem_rdata_o = {'0, clk_div_o};
+          mem_rdata_o = UART_REQ_ID_ID;
         end
 
-        REG_TX_FIFO_STAT_ADDR: begin
-          // Read TX FIFO status (occupancy count)
+        REG_OFFSET_UART_GNT_ID_PEEK: begin
+          // Read grant peek register
           mem_rresp_o = 2'b00;  // OKAY
-          mem_rdata_o = {'0, tx_fifo_count_i};
+          mem_rdata_o = UART_GNT_PEEK_ID;
         end
 
-        REG_RX_FIFO_STAT_ADDR: begin
-          // Read RX FIFO status (occupancy count)
-          mem_rresp_o = 2'b00;  // OKAY
-          mem_rdata_o = {'0, rx_fifo_count_i};
+        REG_OFFSET_UART_GNT_ID_POP: begin
+          // Read grant pop register
+          if (UART_GNT_POP_VALID) begin
+            mem_rresp_o = 2'b00;  // OKAY
+            mem_rdata_o = UART_GNT_POP_ID;
+            UART_GNT_POP_READY = 1'b1;  // Pop when reading
+          end
         end
 
-        REG_RX_FIFO_DATA_ADDR: begin
+        REG_OFFSET_UART_CFG: begin
+          // Read configuration register
+          mem_rresp_o = 2'b00;  // OKAY
+          mem_rdata_o = {
+            10'b0,
+            UART_CFG_PARITY_TYPE,
+            UART_CFG_PARITY_EN,
+            UART_CFG_CLK_DIVIDER
+          };
+        end
+
+        REG_OFFSET_UART_TX_DATA: begin
+          // TX data register is write-only, read returns 0
+          mem_rresp_o = 2'b00;  // OKAY
+          mem_rdata_o = '0;
+        end
+
+        REG_OFFSET_UART_RX_DATA: begin
           // Read RX FIFO data (destructive read - pops from FIFO)
-          if (rx_fifo_data_valid_i) begin
+          if (UART_RX_DATA_VALID) begin
             mem_rresp_o = 2'b00;  // OKAY
-            rx_fifo_data_ready_o = 1'b1;  // Assert ready to pop data
-            mem_rdata_o = {'0, rx_fifo_data_i};
+            mem_rdata_o = {24'b0, UART_RX_DATA_DATA};
+            UART_RX_DATA_READY = 1'b1;  // Assert ready to pop data
           end
         end
 
-        REG_RX_FIFO_PEEK_ADDR: begin
-          // Peek RX FIFO data (non-destructive read - does not pop)
-          if (rx_fifo_data_valid_i) begin
+        REG_OFFSET_UART_RX_DATA_PEEK: begin
+          // Peek RX FIFO data (non-destructive read)
+          if (UART_RX_DATA_VALID) begin
             mem_rresp_o = 2'b00;  // OKAY
-            mem_rdata_o = {'0, rx_fifo_data_i};
+            mem_rdata_o = {24'b0, UART_RX_DATA_PEEK_DATA};
           end
         end
 
-        REG_ACCESS_ID_GNT_ADDR: begin
-          // Read Access ID grant (destructive): return the granted ID
-          // when available and assert ready to consume the grant entry.
-          if (access_id_gnt_valid_i) begin
-            mem_rresp_o = 2'b00;
-            access_id_gnt_ready_o = 1'b1;
-            mem_rdata_o = {'0, access_id_gnt_i};
-          end
+        REG_OFFSET_UART_TX_FIFO_COUNT: begin
+          // Read TX FIFO count
+          mem_rresp_o = 2'b00;  // OKAY
+          mem_rdata_o = {24'b0, UART_TX_FIFO_COUNT};
         end
 
-        REG_ACCESS_ID_GNT_PEEK_ADDR: begin
-          // Peek Access ID grant (non-destructive): return the next
-          // grant value without consuming it (no ready asserted).
-          if (access_id_gnt_valid_i) begin
-            mem_rresp_o = 2'b00;
-            mem_rdata_o = {'0, access_id_gnt_i};
-          end
+        REG_OFFSET_UART_RX_FIFO_COUNT: begin
+          // Read RX FIFO count
+          mem_rresp_o = 2'b00;  // OKAY
+          mem_rdata_o = {24'b0, UART_RX_FIFO_COUNT};
         end
 
       endcase
@@ -271,67 +275,62 @@ module uart_regif
   // ==========================================================================
   // Register Update Logic (Sequential)
   // ==========================================================================
-  // Updates register values on successful writes. Registers are reset to
-  // default values on async reset.
-  // ==========================================================================
   always_ff @(posedge clk_i or negedge arst_ni) begin
     if (~arst_ni) begin
       // Reset all registers to default values
-      ctrl_clk_en_o          <= '0;
-      tx_fifo_flush_o        <= '0;
-      rx_fifo_flush_o        <= '0;
-      cfg_parity_en_o        <= '0;
-      cfg_parity_type_o      <= '0;
-      cfg_stop_bits_o        <= '0;
-      cfg_rx_parity_err_en_o <= '0;
-      cfg_rx_valid_en_o      <= '0;
-      cfg_rx_near_full_en_o  <= '0;
-      cfg_rx_full_en_o       <= '0;
-      cfg_tx_near_full_en_o  <= '0;
-      cfg_tx_full_en_o       <= '0;
-      clk_div_o              <= 'h28B1;
+      UART_CTRL_TX_EN            <= '0;
+      UART_CTRL_TX_FIFO_FLUSH    <= '0;
+      UART_CTRL_TX_IRQ_EMPTY     <= '0;
+      UART_CTRL_TX_IRQ_NEAR_FULL <= '0;
+      UART_CTRL_TX_IRQ_FULL      <= '0;
+      UART_CTRL_RX_EN            <= '0;
+      UART_CTRL_RX_FIFO_FLUSH    <= '0;
+      UART_CTRL_RX_IRQ_EMPTY     <= '0;
+      UART_CTRL_RX_IRQ_NEAR_FULL <= '0;
+      UART_CTRL_RX_IRQ_FULL      <= '0;
+      
+      UART_CFG_PARITY_EN         <= '0;
+      UART_CFG_PARITY_TYPE       <= '0;
+      UART_CFG_CLK_DIVIDER       <= 20'h28B1;  // Default baud rate divider
+      
+      UART_REQ_ID_ID             <= '0;
     end else begin
       // Update registers on successful write (OKAY response)
-      if (mem_wresp_o == 0) begin
-        unique case (mem_waddr_i)
+      if (mem_wresp_o == 2'b00) begin
+        case (mem_waddr_i)
 
-          REG_CTRL_ADDR: begin
+          REG_OFFSET_UART_CTRL: begin
             // Update control register fields
-            ctrl_clk_en_o   <= mem_wdata_i[0];  // Bit 0: Clock enable
-            tx_fifo_flush_o <= mem_wdata_i[1];  // Bit 1: TX FIFO flush
-            rx_fifo_flush_o <= mem_wdata_i[2];  // Bit 2: RX FIFO flush
+            UART_CTRL_TX_EN            <= mem_wdata_i[0];
+            UART_CTRL_TX_FIFO_FLUSH    <= mem_wdata_i[1];
+            UART_CTRL_TX_IRQ_EMPTY     <= mem_wdata_i[2];
+            UART_CTRL_TX_IRQ_NEAR_FULL <= mem_wdata_i[3];
+            UART_CTRL_TX_IRQ_FULL      <= mem_wdata_i[4];
+            UART_CTRL_RX_EN            <= mem_wdata_i[5];
+            UART_CTRL_RX_FIFO_FLUSH    <= mem_wdata_i[6];
+            UART_CTRL_RX_IRQ_EMPTY     <= mem_wdata_i[7];
+            UART_CTRL_RX_IRQ_NEAR_FULL <= mem_wdata_i[8];
+            UART_CTRL_RX_IRQ_FULL      <= mem_wdata_i[9];
           end
 
-          REG_CFG_ADDR: begin
+          REG_OFFSET_UART_CFG: begin
             // Update configuration register fields
-            cfg_parity_en_o <= mem_wdata_i[0];  // Bit 0: Parity enable
-            cfg_parity_type_o <= mem_wdata_i[1];  // Bit 1: Parity type
-            cfg_stop_bits_o <= mem_wdata_i[2];  // Bit 2: Stop bits
-            cfg_rx_parity_err_en_o <= mem_wdata_i[3];  // Bit 3: RX parity error flag (CONFIG)
-            cfg_rx_valid_en_o <= mem_wdata_i[4];  // Bit 4: RX data valid flag (CONFIG)
-            cfg_rx_near_full_en_o <= mem_wdata_i[5];  // Bit 5: RX near-full threshold flag (CONFIG)
-            cfg_rx_full_en_o <= mem_wdata_i[6];  // Bit 6: RX FIFO full flag (CONFIG)
-            cfg_tx_near_full_en_o <= mem_wdata_i[7];  // Bit 7: TX near-full threshold flag (CONFIG)
-            cfg_tx_full_en_o <= mem_wdata_i[8];  // Bit 8: TX FIFO full flag (CONFIG)
+            UART_CFG_CLK_DIVIDER <= mem_wdata_i[19:0];
+            UART_CFG_PARITY_EN   <= mem_wdata_i[20];
+            UART_CFG_PARITY_TYPE <= mem_wdata_i[21];
           end
 
-          REG_CLK_DIV_ADDR: begin
-            // Update clock divisor register (full 32-bit value)
-            clk_div_o <= mem_wdata_i[DATA_WIDTH-1:0];
-          end
-
-          REG_TX_FIFO_DATA_ADDR: begin
-            // TX FIFO data write - no register state to update
-            // Data is pushed to FIFO via tx_fifo_data_o and tx_fifo_data_valid_o
-          end
-
-          REG_ACCESS_ID_REQ_ADDR: begin
-            // Access ID write - no register state to update
-            // Data is pushed to FIFO via access_id_req_o and access_id_req_valid_o
+          REG_OFFSET_UART_REQ_ID_PUSH: begin
+            // Update request ID register
+            UART_REQ_ID_ID <= mem_wdata_i;
           end
 
         endcase
       end
+      
+      // Auto-clear flush bits after one cycle
+      UART_CTRL_TX_FIFO_FLUSH <= 1'b0;
+      UART_CTRL_RX_FIFO_FLUSH <= 1'b0;
     end
   end
 

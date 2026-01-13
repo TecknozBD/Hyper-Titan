@@ -1,6 +1,14 @@
 `include "axi/typedef.svh"
 
-module rv64g_ss
+// Performance core subsystem (p_core_ss)
+// - Instantiates the Ariane performance core, a local DTCM (axi_ram),
+//   a DMA engine, and an AXI crossbar to connect these masters/slaves
+//   to the rest of the system.
+// - Provides boot/ID inputs and interrupt sources to the core, and
+//   exposes master/slave AXI-typed ports for integration.
+module p_core_ss
+  // Import typed channel definitions, address map constants, and
+  // xbar rule/config types used by the instantiated modules.
   import axi_pkg::xbar_rule_32_t;
   import hyper_titan_pkg::rs_s_axi_aw_chan_t;
   import hyper_titan_pkg::rs_s_axi_w_chan_t;
@@ -45,23 +53,29 @@ module rv64g_ss
   // SIGNALS
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
-  rs_m_axi_req_t  xbar_mp_req [3];
-  rs_m_axi_resp_t xbar_mp_resp[3];
-  rs_s_axi_req_t  xbar_sp_req [3];
-  rs_s_axi_resp_t xbar_sp_resp[3];
+  // Local arrays of typed AXI request/response channels used to
+  // connect the three master/slave ports of the local crossbar.
+  // Index 0: core/DTCM, 1: DMA, 2: external system connection.
+  rs_m_axi_req_t  [2:0] xbar_mp_req;
+  rs_m_axi_resp_t [2:0] xbar_mp_resp;
+  rs_s_axi_req_t  [2:0] xbar_sp_req;
+  rs_s_axi_resp_t [2:0] xbar_sp_resp;
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
   // INSTANTIATIONS
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
+  // Performance core (Ariane) instance. The core's AXI slave port is
+  // connected to `xbar_sp_req[0]`/`xbar_sp_resp[0]` so the crossbar
+  // can route instruction/data access to local masters (DTCM/DMA).
   ariane #(
       .DmBaseAddress(RAM_START),
       .CachedAddrBeg(RAM_START)
   ) u_core (
       .clk_i(clk_i),
       .rst_ni(arst_ni),
-      .boot_addr_i({'h0, boot_addr_i}),
-      .hart_id_i({'h0, hart_id_i}),
+      .boot_addr_i({32'h0, boot_addr_i}),
+      .hart_id_i({32'h0, hart_id_i}),
       .irq_i(irq_i),
       .ipi_i(ipi_i),
       .time_irq_i(time_irq_i),
@@ -70,19 +84,25 @@ module rv64g_ss
       .axi_resp_i(xbar_sp_resp[0])
   );
 
+  // Local DTCM RAM attached as an AXI master port to the crossbar.
+  // Provides low-latency memory for the performance core.
   axi_ram #(
       .MEM_BASE    (RAM_START),
       .MEM_SIZE    ($clog2(RAM_END - RAM_START + 1)),
       .ALLOW_WRITES('1),
       .req_t       (rs_m_axi_req_t),
       .resp_t      (rs_m_axi_resp_t)
-  ) u_tcdm (
+  ) u_dtcm (
       .clk_i  (clk_i),
       .arst_ni(arst_ni),
       .req_i  (xbar_mp_req[0]),
       .resp_o (xbar_mp_resp[0])
   );
 
+
+  // DMA engine: provides high-throughput memory transfers and is
+  // exposed as a master on the local crossbar (mp) and as a slave
+  // (sp) for configuration/control.
   axi_dma #(
       .mp_aw_chan_t(rs_m_axi_aw_chan_t),
       .mp_w_chan_t (rs_m_axi_w_chan_t),
@@ -107,6 +127,10 @@ module rv64g_ss
       .sp_resp_i(xbar_sp_resp[1])
   );
 
+  // Local crossbar: routes slave ports from the core/DMA to master
+  // ports (DTCM/DMA/external). Address mapping rules are provided by
+  // `rs_rules`/`rs_link_cfg` and the `rule_t` describes matching
+  // behavior for each route.
   axi_xbar #(
       .Cfg          (rs_link_cfg),
       .ATOPs        ('0),
@@ -142,6 +166,9 @@ module rv64g_ss
   // ASSIGNMENTS
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
+  // Wire external master/slave interfaces into the local xbar port 2
+  // so that the rest of the system can access the p_core resources
+  // and vice-versa.
   assign rs_m_axi_req_o  = xbar_mp_req[2];
   assign xbar_mp_resp[2] = rs_m_axi_resp_i;
   assign xbar_sp_req[2]  = rs_s_axi_req_i;
