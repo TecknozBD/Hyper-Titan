@@ -1,10 +1,11 @@
--sv
++incdir+${SOC}/include/vip
++incdir+${APB}/include
++incdir+${AXI}/include
 
--i ${SOC}/include/vip
--i ${AXI}/include
-
+${APB}/src/apb_pkg.sv
 ${AXI}/src/axi_pkg.sv
 ${HYPER_TITAN}/hardware/package/RvvAxiPkg.sv
+${HYPER_TITAN}/hardware/package/hyper_titan_pkg.sv
 
 ${HYPER_TITAN}/hardware/testbench/ddr3_tb.sv
 

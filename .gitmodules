@@ -16,3 +16,24 @@
 [submodule "submodule/hardware"]
 	path = submodule/hardware
 	url = https://github.com/squared-studio/hardware.git
+[submodule "submodule/apb"]
+	path = submodule/apb
+	url = https://github.com/pulp-platform/apb.git
+[submodule "submodule/udma_i2s"]
+	path = submodule/udma_i2s
+	url = https://github.com/pulp-platform/udma_i2s.git
+[submodule "submodule/udma_qspi"]
+	path = submodule/udma_qspi
+	url = https://github.com/pulp-platform/udma_qspi.git
+[submodule "submodule/udma_sdio"]
+	path = submodule/udma_sdio
+	url = https://github.com/pulp-platform/udma_sdio.git
+[submodule "submodule/udma_i2c"]
+	path = submodule/udma_i2c
+	url = https://github.com/pulp-platform/udma_i2c.git
+[submodule "submodule/udma_uart"]
+	path = submodule/udma_uart
+	url = https://github.com/pulp-platform/udma_uart.git
+[submodule "submodule/udma_core"]
+	path = submodule/udma_core
+	url = https://github.com/pulp-platform/udma_core.git

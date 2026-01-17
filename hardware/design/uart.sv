@@ -29,8 +29,8 @@ module uart #(
   // Import FIFO sizes from base package
   //----------------------------------------------------------------------------
 
-  import uart_pkg::TX_FIFO_SIZE;
-  import uart_pkg::RX_FIFO_SIZE;
+  localparam int TX_FIFO_SIZE = 8;
+  localparam int RX_FIFO_SIZE = 8;
 
   //----------------------------------------------------------------------------
   // Memory-mapped interface signals (between bus converter and register IF)

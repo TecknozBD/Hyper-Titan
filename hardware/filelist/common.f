@@ -1,5 +1,3 @@
--sv
-
 ${COMMON}/rtl/gray_to_bin.sv
 ${COMMON}/rtl/bin_to_gray.sv
 ${COMMON}/rtl/register.sv

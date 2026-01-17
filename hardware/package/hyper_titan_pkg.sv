@@ -1,3 +1,4 @@
+`include "apb/typedef.svh"
 `include "axi/typedef.svh"
 
 package hyper_titan_pkg;
@@ -132,7 +133,7 @@ package hyper_titan_pkg;
   `AXI_TYPEDEF_ALL(cl_m_axi, logic [CL_MP_AW-1:0], logic [CL_MP_IW-1:0], logic [CL_MP_DW-1:0],
                    logic [CL_MP_DW/8-1:0], logic [CL_MP_UW-1:0])
 
-  localparam int NUM_CL_RULES = 5;
+  localparam int NUM_CL_RULES = 3;
   localparam xbar_rule_32_t [NUM_CL_RULES-1:0] cl_rules = '{
       '{idx: 0, start_addr: DTCM_E_CORE_START, end_addr: DTCM_E_CORE_END},
       '{idx: 0, start_addr: ITCM_E_CORE_START, end_addr: ITCM_E_CORE_END},
@@ -172,9 +173,6 @@ package hyper_titan_pkg;
   localparam int SL_MP_AW = SL_SP_AW;
   localparam int SL_MP_UW = SL_SP_UW;
   localparam int SL_MP_DW = SL_SP_DW;
-
-  localparam int SL_NUM_SP = 1;
-  localparam int SL_NUM_MP = 6;
 
   `AXI_TYPEDEF_ALL(sl_s_axi, logic [SL_SP_AW-1:0], logic [SL_SP_IW-1:0], logic [SL_SP_DW-1:0],
                    logic [SL_SP_DW/8-1:0], logic [SL_SP_UW-1:0])
@@ -308,11 +306,11 @@ package hyper_titan_pkg;
   // RE-ALIAS
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
-  typedef RvvAxiPkg::rvv_axi ec_cl_s_req_t;
-  typedef RvvAxiPkg::rvv_axi ec_cl_s_resp_t;
+  typedef RvvAxiPkg::rvv_axi_req_t ec_cl_s_req_t;
+  typedef RvvAxiPkg::rvv_axi_resp_t ec_cl_s_resp_t;
 
-  typedef RvvAxiPkg::rvv_axi cl_ec_d_req_t;
-  typedef RvvAxiPkg::rvv_axi cl_ec_d_resp_t;
+  typedef RvvAxiPkg::rvv_axi_req_t cl_ec_d_req_t;
+  typedef RvvAxiPkg::rvv_axi_resp_t cl_ec_d_resp_t;
 
   typedef rs_m_axi_req_t pc_cl_s_req_t;
   typedef rs_m_axi_resp_t pc_cl_s_resp_t;

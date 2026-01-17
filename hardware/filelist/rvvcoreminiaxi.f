@@ -1,6 +1,3 @@
--work rvvcoreminiaxi 
--sv
--d XSIM
--d VERILATOR
+-work rvvcoreminiaxi
 
 ${SUBMODULE}/rvvcoreminiaxi.sv

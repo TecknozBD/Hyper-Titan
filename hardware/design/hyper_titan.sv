@@ -248,8 +248,8 @@ module hyper_titan
       .test_i               ('0),
       .slv_ports_req_i      ({ap_sl_req, cl_sl_d_req}),
       .slv_ports_resp_o     ({ap_sl_resp, cl_sl_d_resp}),
-      .mst_ports_req_o      ({sl_pl_s_req, sl_ram_req, sl_rom_req, cl_sl_d_req}),
-      .mst_ports_resp_i     ({sl_pl_s_resp, sl_ram_resp, sl_rom_resp, cl_sl_d_resp}),
+      .mst_ports_req_o      ({sl_pl_s_req, sl_ram_req, sl_rom_req, sl_cl_s_req}),
+      .mst_ports_resp_i     ({sl_pl_s_resp, sl_ram_resp, sl_rom_resp, sl_cl_s_resp}),
       .addr_map_i           (sl_rules),
       .en_default_mst_port_i('1),
       .default_mst_port_i   ('b1010)
@@ -289,24 +289,24 @@ module hyper_titan
     ap_sl_req.aw.burst = 1;
     ap_sl_req.aw.prot = axil_req.aw.prot;
     ap_sl_req.aw_valid = axil_req.aw_valid;
-    axil_req.aw_ready = ap_sl_req.aw_ready;
+    axil_resp.aw_ready = ap_sl_resp.aw_ready;
     ap_sl_req.w.data = axil_req.w.data;
     ap_sl_req.w.strb = axil_req.w.strb;
     ap_sl_req.w_valid = axil_req.w_valid;
-    axil_req.w_ready = ap_sl_req.w_ready;
-    axil_resp.b.resp = ap_sl_req.b.resp;
-    axil_resp.b_valid = ap_sl_req.b_valid;
-    ap_sl_req.b_ready = axil_resp.b_ready;
+    axil_resp.w_ready = ap_sl_resp.w_ready;
+    axil_resp.b.resp = ap_sl_resp.b.resp;
+    axil_resp.b_valid = ap_sl_resp.b_valid;
+    ap_sl_req.b_ready = axil_req.b_ready;
     ap_sl_req.ar.addr = axil_req.ar.addr;
     ap_sl_req.ar.size = 2;
     ap_sl_req.ar.burst = 1;
     ap_sl_req.ar.prot = axil_req.ar.prot;
     ap_sl_req.ar_valid = axil_req.ar_valid;
-    axil_req.ar_ready = ap_sl_req.ar_ready;
-    axil_resp.r.data = ap_sl_req.r.data;
-    axil_resp.r.resp = ap_sl_req.r.resp;
-    axil_resp.r_valid = ap_sl_req.r_valid;
-    ap_sl_req.r_ready = axil_resp.r_ready;
+    axil_resp.ar_ready = ap_sl_resp.ar_ready;
+    axil_resp.r.data = ap_sl_resp.r.data;
+    axil_resp.r.resp = ap_sl_resp.r.resp;
+    axil_resp.r_valid = ap_sl_resp.r_valid;
+    ap_sl_req.r_ready = axil_req.r_ready;
   end
 
   apb_2_axil #(
@@ -359,10 +359,10 @@ module hyper_titan
 
   // System controller: manages clocking, resets, and boot configuration
   sys_ctrl #(
-      .req_t   (),
-      .resp_t  (),
+      .req_t   (pl_sc_req_t),
+      .resp_t  (pl_sc_resp_t),
       .MEM_BASE('h0000_2000),
-      .MEM_SIZE(12)
+      .MEM_SIZE(32)
   ) u_sys_ctrl (
       .arst_ni               (arst_sl_n),
       .clk_i                 (clk_sl),
