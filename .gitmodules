@@ -19,6 +19,9 @@
 [submodule "submodule/apb"]
 	path = submodule/apb
 	url = https://github.com/pulp-platform/apb.git
+[submodule "submodule/AXI-DMA"]
+	path = submodule/AXI-DMA
+	url = https://github.com/sikderAmit/AXI-DMA.git
 [submodule "submodule/udma_i2s"]
 	path = submodule/udma_i2s
 	url = https://github.com/pulp-platform/udma_i2s.git
