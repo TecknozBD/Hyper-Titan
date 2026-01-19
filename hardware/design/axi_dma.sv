@@ -16,6 +16,7 @@ module axi_dma
   import amba_axi_pkg::*;
   import dma_utils_pkg::*;
 #(
+    parameter longint CSR_BASE = 'h0000_F000,
     parameter int  DMA_ID_VAL = 0,
     parameter type mp_aw_chan_t = logic,
     parameter type mp_w_chan_t  = logic,
@@ -57,8 +58,10 @@ module axi_dma
   output logic dma_error_o
 );
 
-  `AXI_LITE_TYPEDEF_REQ_T(axil_req_t, axi_lite_aw_t, axi_lite_w_t, axi_lite_ar_t)
-  `AXI_LITE_TYPEDEF_RESP_T(axil_resp_t, axi_lite_b_t, axi_lite_r_t)
+  // -------------------------------------------------
+  // AXI-Lite Type Definitions
+  // -------------------------------------------------
+  `AXI_LITE_TYPEDEF_ALL(axil, logic [63:0], logic [63:0], logic [7:0])
 
   // -------------------------------------------------
   // DMA Structures
@@ -108,14 +111,14 @@ module axi_dma
   // -------------------------------------------------
   always_comb begin
     // AXI4 Lite interface
-    dma_s_mosi.awaddr      = csr_axil_req.aw.addr - 'h0000_F000;
+    dma_s_mosi.awaddr      = csr_axil_req.aw.addr - CSR_BASE;
     dma_s_mosi.awprot      = csr_axil_req.aw.prot;
     dma_s_mosi.awvalid     = csr_axil_req.aw_valid;
     dma_s_mosi.wdata       = csr_axil_req.w.wdata;
     dma_s_mosi.wstrb       = csr_axil_req.w.strb;
     dma_s_mosi.wvalid      = csr_axil_req.w_valid;
     dma_s_mosi.bready      = csr_axil_req.b_ready;
-    dma_s_mosi.araddr      = csr_axil_req.ar.addr - 'h0000_F000;
+    dma_s_mosi.araddr      = csr_axil_req.ar.addr - CSR_BASE;
     dma_s_mosi.arprot      = csr_axil_req.ar.prot;
     dma_s_mosi.arvalid     = csr_axil_req.ar_valid;
     dma_s_mosi.rready      = csr_axil_req.r_ready;
@@ -140,6 +143,7 @@ module axi_dma
     sp_req_o.aw.prot    = dma_m_mosi.awprot;
     sp_req_o.aw.qos     = dma_m_mosi.awqos;
     sp_req_o.aw.region  = dma_m_mosi.awregion;
+    sp_req_o.aw.atop    = '0;
     sp_req_o.aw.user    = dma_m_mosi.awuser;
     sp_req_o.aw_valid   = dma_m_mosi.awvalid;
     sp_req_o.w.data     = dma_m_mosi.wdata;
