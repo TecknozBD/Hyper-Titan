@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////
+ ////////////////////////////////////////////////////////////////////////////////
  // File              : dma_axi_wrapper.sv
  // Description       : AXI DMA wrapper implemented using PULP AXI structs.
  //                     This wrapper cleanly separates the control and data paths:
@@ -31,8 +31,6 @@ module axi_dma
     parameter type mp_resp_t    = logic,
     parameter type sp_req_t     = logic,
     parameter type sp_resp_t    = logic
-
-
 )(
   // ----------------------------
   // Clock and Reset  
@@ -83,12 +81,12 @@ module axi_dma
   // AXI to AXI-Lite converter instance
   // -------------------------------------------------
   axi_to_axi_lite #(
-    .AxiAddrWidth    ( 64     ),
-    .AxiDataWidth    ( 8     ),
-    .AxiIdWidth      ( 8       ),
-    .AxiUserWidth    ( 1     ),
-    .AxiMaxWriteTxns ( 2 ),
-    .AxiMaxReadTxns  ( 2  ),
+    .AxiAddrWidth    ( AXI_ADDR_WIDTH     ),
+    .AxiDataWidth    ( AXI_DATA_WIDTH     ),
+    .AxiIdWidth      ( AXI_ID_WIDTH       ),
+    .AxiUserWidth    ( AXI_USER_WIDTH     ),
+    .AxiMaxWriteTxns ( AXI_MAX_WRITE_TXNS ),
+    .AxiMaxReadTxns  ( AXI_MAX_READ_TXNS  ),
     .full_req_t      ( mp_req_t           ),
     .full_resp_t     ( mp_resp_t          ),
     .lite_req_t      ( axil_req_t         ),
@@ -113,16 +111,14 @@ module axi_dma
   always_comb begin
     // AXI4 Lite interface
     dma_s_mosi.awaddr      = csr_axil_req.aw.addr - CSR_BASE;
-    //dma_s_mosi.awprot    = csr_axil_req.aw.prot;
+    dma_s_mosi.awprot      = csr_axil_req.aw.prot;
     dma_s_mosi.awvalid     = csr_axil_req.aw_valid;
-    dma_s_mosi.wdata       = csr_axil_req.w.data;
+    dma_s_mosi.wdata       = csr_axil_req.w.wdata;
     dma_s_mosi.wstrb       = csr_axil_req.w.strb;
     dma_s_mosi.wvalid      = csr_axil_req.w_valid;
     dma_s_mosi.bready      = csr_axil_req.b_ready;
-
-
     dma_s_mosi.araddr      = csr_axil_req.ar.addr - CSR_BASE;
-    //dma_s_mosi.arprot      = csr_axil_req.ar.prot;
+    dma_s_mosi.arprot      = csr_axil_req.ar.prot;
     dma_s_mosi.arvalid     = csr_axil_req.ar_valid;
     dma_s_mosi.rready      = csr_axil_req.r_ready;
 
