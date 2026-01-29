@@ -1,4 +1,3 @@
-
 # AXI DMA RTL files
 ${SUBMODULE}/AXI-DMA/rtl/amba_axi_pkg.sv
 ${SUBMODULE}/AXI-DMA/rtl/dma_pkg.svh
