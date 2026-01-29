@@ -113,7 +113,7 @@ module axi_dma
     dma_s_mosi.awaddr      = csr_axil_req.aw.addr - CSR_BASE;
     dma_s_mosi.awprot      = csr_axil_req.aw.prot;
     dma_s_mosi.awvalid     = csr_axil_req.aw_valid;
-    dma_s_mosi.wdata       = csr_axil_req.w.wdata;
+    dma_s_mosi.wdata       = csr_axil_req.w.data;
     dma_s_mosi.wstrb       = csr_axil_req.w.strb;
     dma_s_mosi.wvalid      = csr_axil_req.w_valid;
     dma_s_mosi.bready      = csr_axil_req.b_ready;
