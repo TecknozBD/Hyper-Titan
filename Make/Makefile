@@ -24,8 +24,8 @@ export HARDWARE := $(HYPER_TITAN)/hardware
 export SOC := $(SUBMODULE)/SoC
 #export CORE_DDR3_CONTROLLER := $(SUBMODULE)/core_ddr3_controller
 #xport XILINX_IPS := $(SUBMODULE)/xilinx
-
-TB_TOP := tb_axi_dma
+export SOURCE = $(SUBMODULE)/common_cells/src
+TB_TOP := tb_dma_simple
 
 FLST := $(REPO_ROOT)/Make/flist2.f
 #INC_DIRS := +incdir+$(REPO_ROOT)/submodule/axi/include
@@ -53,7 +53,7 @@ test_args: | build
 all: test_args
 	@echo "Starting DMA simulation..."
 	@cd "$(BUILD_DIR)" && xvlog -sv $(INC_DIRS) -f "$(FLST)"
-	@cd "$(BUILD_DIR)" && xelab "$(TB_TOP)" -s "$(SIM_SNAP)"
+	@cd "$(BUILD_DIR)" && xelab "$(TB_TOP)" -timescale=1ns/1ps -s "$(SIM_SNAP)"
 	# @cd "$(BUILD_DIR)" && xsim "$(SIM_SNAP)" -runall -f test_args
 
 .PHONY: compile

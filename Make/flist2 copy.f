@@ -5,21 +5,6 @@
 ${AXI}/src/axi_pkg.sv
 ${COMMON_CELLS}/src/cf_math_pkg.sv
 
-
-${SOURCE}/stream_register.sv
-${SOURCE}/fifo_v3.sv
-${SOURCE}/counter.sv
-${SOURCE}/delta_counter.sv
-${SOURCE}/lzc.sv
-${SOURCE}/id_queue.sv
-${SOURCE}/onehot_to_bin.sv
-${SOURCE}/rr_arb_tree.sv
-
-#../submodule/SoC/package/soc_pkg.sv
-#../submodule/SoC/source/axi_ram.sv
-
-
-
 ${AXI}/src/axi_intf.sv
 ${AXI}/src/axi_atop_filter.sv
 ${AXI}/src/axi_burst_splitter_gran.sv
@@ -109,8 +94,6 @@ ${SUBMODULE}/AXI-DMA/rtl/rggen_or_reducer.v
 ${SUBMODULE}/AXI-DMA/rtl/rggen_or_reducer.v
 
 ${HARDWARE}/design/axi_dma.sv
-
-
-#../hardware/design/mem_ss.sv
+../hardware/design/mem_ss.sv
 $REPO_ROOT/hardware/Testbench/tb_dma_simple.sv
 
